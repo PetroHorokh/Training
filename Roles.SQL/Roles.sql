@@ -1,0 +1,81 @@
+IF DATABASE_PRINCIPAL_ID('Tenant_Role') IS NULL
+CREATE ROLE [Tenant_Role];
+GO
+
+GRANT SELECT
+ON OBJECT::[Asset]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT
+ON OBJECT::[Room]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT
+ON OBJECT::[Accommodation]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT
+ON OBJECT::[AccommodationRoom]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT
+ON OBJECT::[Bill]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT, INSERT
+ON OBJECT::[Payment]
+TO [Tenant_Role];
+GO
+
+IF DATABASE_PRINCIPAL_ID('Owner_Role') IS NULL
+CREATE ROLE [Owner_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE
+ON OBJECT::[Asset]
+TO [Owner_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE
+ON OBJECT::[Room]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE
+ON OBJECT::[Accommodation]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE
+ON OBJECT::[AccommodationRoom]
+TO [Tenant_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON OBJECT::[Bill]
+TO [Owner_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON OBJECT::[Payment]
+TO [Owner_Role];
+GO
+
+IF DATABASE_PRINCIPAL_ID('Administrator_Role') IS NULL
+CREATE ROLE [Administrator_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON OBJECT::[RoomType]
+TO [Administrator_Role];
+GO
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON OBJECT::[Accommodation]
+TO [Administrator_Role];
+GO
