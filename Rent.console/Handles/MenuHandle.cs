@@ -17,6 +17,7 @@ public class MenuHandle
             OwnerMenu,
             RoomMenu,
             ViewMenu,
+            AddressMenu,
             () => Task.Run(() =>
             {
                 Program.Working = false;
@@ -35,7 +36,8 @@ public class MenuHandle
                           "\n2.Owner menu" +
                           "\n3.Room menu" +
                           "\n4.View menu" +
-                          "\n5.Exit");
+                          "\n5.Address menu" +
+                          "\n6.Exit");
         
         Console.Write("\nSelect an option: ");
         string input = Console.ReadLine()!;
@@ -58,13 +60,15 @@ public class MenuHandle
             "\n5.Get tenant address information" +
             "\n6.Get tenant rents" +
             "\n7.Get tenant bills" +
-            "\n8.Create tenant" +
-            "\n9.Create rent" +
-            "\n10.Create payment" +
-            "\n11.Update tenant" +
-            "\n12.Cancel rent" +
-            "\n13.Delete tenant" +
-            "\n14.Exit");
+            "\n8.Get available assets" +
+            "\n9.Get booking for a asset" +
+            "\n10.Create tenant" +
+            "\n11.Create rent" +
+            "\n12.Create payment" +
+            "\n13.Update tenant" +
+            "\n14.Cancel rent" +
+            "\n15.Delete tenant" +
+            "\n16.Exit");
 
         Console.Write("\nSelect an option: ");
         string input = Console.ReadLine()!;
@@ -138,5 +142,21 @@ public class MenuHandle
         _ = int.TryParse(input, out int select);
 
         await ViewHandle.ViewMenu[select - 1]();
+    }
+
+    private static async Task AddressMenu()
+    {
+        PrevSelector = 5;
+        Console.WriteLine(
+            "\nAddress menu" +
+            "\n1.Get all addresses" +
+            "\n2.Get address by id" +
+            "\n3.Exit");
+
+        Console.Write("\nSelect an option: ");
+        string input = Console.ReadLine()!;
+        _ = int.TryParse(input, out int select);
+
+        await AddressHandle.AddressMenu[select - 1]();
     }
 }

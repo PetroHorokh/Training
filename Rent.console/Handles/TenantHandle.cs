@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Rent.ADO.NET.Services;
+using Rent.ADO.NET.Services.Contracts;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
@@ -13,10 +15,12 @@ public static class TenantHandle
     public static List<TenantHandleDelegate> TenantMenu { get; set; }
 
     private static readonly ITenantService TenantService;
+    private static readonly IDisconnectedArchitecture DisconnectedArchitectureService;
 
     static TenantHandle()
     {
-        TenantService = Program.Services.GetRequiredService<ITenantService>();
+        TenantService = Program.BllServices.GetRequiredService<ITenantService>();
+        DisconnectedArchitectureService = Program.AdoNetServiced.GetRequiredService<IDisconnectedArchitecture>();
         TenantMenu =
         [ 
             GetAllTenantsAsync,
@@ -26,6 +30,8 @@ public static class TenantHandle
             GetTenantAddressAsync,
             GetTenantRentsAsync,
             GetTenantBillsAsync,
+            GetAvailableAssets,
+            GetAssetBookingAsync,
             CreateTenantAsync,
             CreateRentAsync,
             CreatePaymentAsync,
@@ -153,6 +159,55 @@ public static class TenantHandle
                 foreach (var bill in bills)
                 {
                     Console.WriteLine(bill);
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("\nWrong id format");
+        }
+    }
+
+    private static async Task GetAvailableAssets()
+    {
+        Console.Write("\nPlease enter desirable date: ");
+        string input = Console.ReadLine()!;
+
+        if (DateTime.TryParse(input, out DateTime dateTime))
+        {
+            var assets = (await DisconnectedArchitectureService.GetAvailableAssetsAsync(dateTime)).ToList();
+
+            if (assets.IsNullOrEmpty()) Console.WriteLine("\nThere are no available assets");
+            else
+            {
+                Console.WriteLine("\nAvailable asset ids: ");
+                foreach (var asset in assets)
+                {
+                    Console.WriteLine(asset);
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("\nWrong id format");
+        }
+    }
+
+    private static async Task GetAssetBookingAsync()
+    {
+        Console.Write("\nPlease enter asset id: ");
+        string input = Console.ReadLine()!;
+
+        if (Guid.TryParse(input, out Guid assetId))
+        {
+            var rents = (await DisconnectedArchitectureService.GetAssetBookingAsync(assetId)).ToList();
+
+            if (rents.IsNullOrEmpty()) Console.WriteLine("\nThere are no booking for this asset");
+            else
+            {
+                foreach (var rent in rents)
+                {
+                    Console.WriteLine(rent);
                 }
             }
         }

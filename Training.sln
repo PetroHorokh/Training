@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.Console", "Rent.consol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.BLL", "Rent.BLL\Rent.BLL.csproj", "{24435FC0-ED1F-41F9-8DCC-BD75A188A99C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roles.SQL", "Roles.SQL\Roles.SQL.csproj", "{19B21CDE-DF26-4493-B239-2104626FB538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roles.SQL", "Roles.SQL\Roles.SQL.csproj", "{19B21CDE-DF26-4493-B239-2104626FB538}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.ADO.NET", "Rent.ADO.NET\Rent.ADO.NET.csproj", "{771BB827-CC5D-4DD5-803B-6F0E9FC31121}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{19B21CDE-DF26-4493-B239-2104626FB538}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19B21CDE-DF26-4493-B239-2104626FB538}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19B21CDE-DF26-4493-B239-2104626FB538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
