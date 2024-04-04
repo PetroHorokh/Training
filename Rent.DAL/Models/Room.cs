@@ -18,9 +18,9 @@ public partial class Room
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = new List<AccommodationRoom>();
+    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = [];
 
-    public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
+    public virtual ICollection<Asset> Assets { get; set; } = [];
 
     public virtual RoomType RoomType { get; set; } = null!;
 }
