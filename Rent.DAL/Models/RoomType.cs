@@ -17,7 +17,7 @@ public partial class RoomType
 
     public DateTime? ModifiedDateTime { get; set; }
 
-    public virtual ICollection<Price> Prices { get; set; } = new List<Price>();
+    public virtual ICollection<Price> Prices { get; set; } = [];
 
-    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+    public virtual ICollection<Room> Rooms { get; set; } = [];
 }

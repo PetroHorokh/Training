@@ -27,9 +27,9 @@ public partial class Tenant
 
     public virtual Address? Address { get; set; } = null!;
 
-    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+    public virtual ICollection<Bill> Bills { get; set; } = [];
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual ICollection<Payment> Payments { get; set; } = [];
 
-    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
+    public virtual ICollection<Rent> Rents { get; set; } = [];
 }

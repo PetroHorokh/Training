@@ -18,7 +18,7 @@ public partial class Address
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<Owner> Owners { get; set; } = new List<Owner>();
+    public virtual ICollection<Owner> Owners { get; set; } = [];
 
-    public virtual ICollection<Tenant> Tenants { get; set; } = new List<Tenant>();
+    public virtual ICollection<Tenant> Tenants { get; set; } = [];
 }

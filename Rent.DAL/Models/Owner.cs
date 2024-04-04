@@ -18,5 +18,5 @@ public partial class Owner
 
     public virtual Address Address { get; set; } = null!;
 
-    public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
+    public virtual ICollection<Asset> Assets { get; set; } = [];
 }
