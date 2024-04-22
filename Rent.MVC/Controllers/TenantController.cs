@@ -18,7 +18,6 @@ namespace Rent.MVC.Controllers;
 
 [Route("/Tenant/[action]")]
 public class TenantController(
-    IHttpContextAccessor httpContextAccessor,
     ITenantService tenantService,
     IConnectedArchitecture connectedArchitecture,
     IMemoryCache memoryCache) : BaseController
