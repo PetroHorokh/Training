@@ -1,5 +1,6 @@
 ﻿using Rent.DAL.DTO;
 using Rent.DAL.Models;
+using Rent.DAL.RequestsAndResponses;
 using Rent.DAL.Responses;
 
 namespace Rent.BLL.Services.Contracts;
@@ -7,6 +8,8 @@ namespace Rent.BLL.Services.Contracts;
 public interface ITenantService
 {
     Task<IEnumerable<TenantToGetDto>> GetAllTenantsAsync();
+
+    Task<IEnumerable<TenantToGetDto>> GetTenantsPartialAsync(GetRequest request);
 
     Task<IEnumerable<BillToGetDto>> GetAllBillsAsync();
 
