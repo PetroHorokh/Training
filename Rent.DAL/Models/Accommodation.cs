@@ -14,5 +14,5 @@ public partial class Accommodation
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = [];
+    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = new List<AccommodationRoom>();
 }

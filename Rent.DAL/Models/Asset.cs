@@ -1,4 +1,6 @@
-﻿namespace Rent.DAL.Models;
+﻿using temp;
+
+namespace Rent.DAL.Models;
 
 public partial class Asset
 {
@@ -18,7 +20,7 @@ public partial class Asset
 
     public virtual Owner Owner { get; set; } = null!;
 
-    public virtual ICollection<Rent> Rents { get; set; } = [];
+    public virtual ICollection<global::Rent.DAL.Models.Rent> Rents { get; set; } = new List<global::Rent.DAL.Models.Rent>();
 
     public virtual Room Room { get; set; } = null!;
 }

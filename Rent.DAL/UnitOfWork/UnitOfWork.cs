@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Rent.DAL.Context;
 using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
@@ -20,6 +20,9 @@ public class UnitOfWork(
     Lazy<IRoomRepository> roomRepository,
     Lazy<IRoomTypeRepository> roomTypeRepository,
     Lazy<ITenantRepository> tenantRepository,
+    Lazy<IUserRepository> userRepository,
+    Lazy<IRepositoryBase<Role>> roleRepository,
+    Lazy<IRepositoryBase<UserRole>> userRoleRepository,
     Lazy<IViewRepository> viewRepository) : IUnitOfWork
 {
     private readonly RentContext _rentContext = rentContext;
@@ -37,6 +40,9 @@ public class UnitOfWork(
     private readonly Lazy<IRoomRepository> _roomRepository = roomRepository;
     private readonly Lazy<IRoomTypeRepository> _roomTypeRepository = roomTypeRepository;
     private readonly Lazy<ITenantRepository> _tenantRepository = tenantRepository;
+    private readonly Lazy<IUserRepository> _userRepository = userRepository;
+    private readonly Lazy<IRepositoryBase<Role>> _roleRepository = roleRepository;
+    private readonly Lazy<IRepositoryBase<UserRole>> _userRoleRepository = userRoleRepository;
     private readonly Lazy<IViewRepository> _viewRepository = viewRepository;
 
     public IAccommodationRepository Accommodations => _accommodationRepository.Value;
@@ -52,6 +58,9 @@ public class UnitOfWork(
     public IRoomRepository Rooms => _roomRepository.Value;
     public IRoomTypeRepository RoomTypes => _roomTypeRepository.Value;
     public ITenantRepository Tenants => _tenantRepository.Value;
+    public IUserRepository Users => _userRepository.Value;
+    public IRepositoryBase<Role> Roles => _roleRepository.Value;
+    public IRepositoryBase<UserRole> UserRoles => _userRoleRepository.Value;
     public IViewRepository Views => _viewRepository.Value;
 
     public async Task SaveAsync() => await _rentContext.SaveChangesAsync();

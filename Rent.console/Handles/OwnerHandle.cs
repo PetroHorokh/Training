@@ -16,7 +16,7 @@ public class OwnerHandle
 
     static OwnerHandle()
     {
-        OwnerService = Program.BllServices.GetRequiredService<IOwnerService>();
+        OwnerService = Program.Services.GetRequiredService<IOwnerService>();
         OwnerMenu =
         [
             GetAllOwnersAsync,

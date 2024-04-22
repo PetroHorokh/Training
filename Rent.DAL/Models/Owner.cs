@@ -1,10 +1,14 @@
-﻿namespace Rent.DAL.Models;
+﻿using temp;
+
+namespace Rent.DAL.Models;
 
 public partial class Owner
 {
     public Guid OwnerId { get; set; }
 
     public string Name { get; set; } = null!;
+
+    public Guid UserId { get; set; }
 
     public Guid AddressId { get; set; }
 
@@ -18,5 +22,7 @@ public partial class Owner
 
     public virtual Address Address { get; set; } = null!;
 
-    public virtual ICollection<Asset> Assets { get; set; } = [];
+    public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
+
+    public virtual User User { get; set; } = null!;
 }

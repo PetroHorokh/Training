@@ -1,4 +1,6 @@
-﻿namespace Rent.DAL.Models;
+﻿using temp;
+
+namespace Rent.DAL.Models;
 
 public partial class Payment
 {

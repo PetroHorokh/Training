@@ -15,7 +15,7 @@ public class ViewHandle
 
     static ViewHandle()
     {
-        ViewService = Program.BllServices.GetRequiredService<IViewService>();
+        ViewService = Program.Services.GetRequiredService<IViewService>();
         ViewMenu = 
         [
             CertificateForTenant, 

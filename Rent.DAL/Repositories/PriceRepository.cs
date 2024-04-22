@@ -4,6 +4,7 @@ using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Net;
 using Rent.DAL.Models;
+using Rent.DAL.Context;
 
 namespace Rent.DAL.Repositories;
 

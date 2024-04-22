@@ -16,7 +16,7 @@ public static class AddressHandle
 
     static AddressHandle()
     {
-        ConnectedArchitectureService = Program.AdoNetServiced.GetRequiredService<IConnectedArchitecture>();
+        ConnectedArchitectureService = Program.Services.GetRequiredService<IConnectedArchitecture>();
         AddressMenu =
         [
             GetAllOwnersAsync,

@@ -9,8 +9,12 @@ internal class Program
 {
     public static bool Working = true;
 
-    public static ServiceProvider BllServices = BllServiceProvider.ServiceConfiguration();
-    public static ServiceProvider AdoNetServiced = AdoNetServiceProvider.ServiceConfiguration();
+    public static IServiceProvider Services { get; private set; }
+
+    static Program()
+    {
+        Services = new ServiceCollection().BllServiceInject().AdoNetServiceInject().BuildServiceProvider();
+    }
 
     private static async Task Main()
     {

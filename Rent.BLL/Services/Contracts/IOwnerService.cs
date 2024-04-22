@@ -11,11 +11,15 @@ public interface IOwnerService
 
     Task<OwnerToGetDto?> GetOwnerByIdAsync(Guid ownerId);
 
+    Task<AssetToGetDto?> GetAssetByIdAsync(Guid assetId);
+
     Task<AddressToGetDto?> GetOwnerAddressAsync(Guid ownerId);
 
     Task<IEnumerable<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId);
 
     Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner);
+
+    Task<UpdatingResponse> UpdateOwnerAsync(OwnerToGetDto newOwner);
 
     Task<UpdatingResponse> DeleteOwnerAsync(Guid ownerId);
 

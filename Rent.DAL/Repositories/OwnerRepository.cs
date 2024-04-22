@@ -9,6 +9,7 @@ using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.Responses;
+using Rent.DAL.Context;
 
 namespace Rent.DAL.Repositories;
 
@@ -27,11 +28,12 @@ public class OwnerRepository(RentContext context, IConfiguration configuration, 
 
         DynamicParameters parameters = new();
         parameters.Add("Name", owner.Name);
+        parameters.Add("UserId", owner.UserId);
         parameters.Add("AddressId", owner.AddressId);
         try
         {
             logger.LogInformation("Querying 'sp_Owner_Insert' stored procedures");
-            logger.LogInformation($"Parameters: @Name = {owner.Name}, @AddressId = {owner.AddressId}");
+            logger.LogInformation($"Parameters: @Name = {owner.Name}, @UserId = {owner.UserId}, @AddressId = {owner.AddressId}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.OwnerId).FirstOrDefault();
             if (result != null) response.CreatedId = result;

@@ -1,0 +1,95 @@
+﻿@using Rent.DAL.DTO
+@(Html.DevExtreme().DataGrid<RentToGetDto>()
+    .ID("rentGrid")
+    .Width(600)
+    .RenderAsync(true)
+    .DataSource(ds => ds.Mvc()
+        .Controller("Rent")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .Key("RentId")
+        .OnBeforeSend("grid_dataSource_beforeSend")
+    )
+    .RemoteOperations(true)
+    .RepaintChangesOnly(true)
+    .Columns(columns =>
+        {
+            columns.AddFor(m => m.TenantId).Caption("Tenant").Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("Rent").LoadAction("TenantLookup").Key("Value").OnBeforeSend("grid_dataSource_beforeSend"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text"));
+
+            columns.AddFor(m => m.AssetId).Caption("Asset").Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("Rent").LoadAction("AssetLookup").Key("Value").OnBeforeSend("grid_dataSource_beforeSend"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text"));
+
+            columns.AddFor(m => m.StartDate).Caption("Start date");
+
+            columns.AddFor(m => m.EndDate).Caption("End date");
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowAdding(true);
+        editing.Popup(p => p
+            .Width(700)
+            .Height(250)
+            );
+        editing.Form(f => f
+            .ColCount(2)
+            .Items(items =>
+        {
+
+            items.AddSimpleFor(m => m.TenantId)
+                .Label(l => l.Text("Tenant"))
+                .Editor(e => e.Lookup().Width(200));
+
+            items.AddSimpleFor(m => m.AssetId)
+                .Label(l => l.Text("Asset"))
+                .Editor(e => e.Lookup().Width(200));
+
+            items.AddSimpleFor(m => m.StartDate)
+                .Label(l => l.Text("Start date"))
+                .Editor(e => e.DateBox().Width(200));
+
+            items.AddSimpleFor(m => m.EndDate)
+                .Label(l => l.Text("End date"))
+                .Editor(e => e.DateBox().Width(200));
+        }));
+    })
+    .ShowBorders(true)
+    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+    .Paging(paging => paging.PageSize(5))
+    .Pager(pager =>
+    {
+        pager.Visible(true);
+        pager.DisplayMode(GridPagerDisplayMode.Full);
+        pager.ShowPageSizeSelector(true);
+        pager.AllowedPageSizes(new JS("[5, 10, 20]"));
+        pager.ShowNavigationButtons(true);
+    })
+    .SearchPanel(sp =>
+    {
+        sp.Visible(true);
+        sp.HighlightSearchText(false);
+    })
+    .FilterRow(filter =>
+    {
+        filter.Visible(true);
+    })
+    .Toolbar(toolbar =>
+    {
+        toolbar.Items(items =>
+        {
+            items.Add()
+                .Location(ToolbarItemLocation.Before)
+                .Widget(w => w.Button()
+                    .Icon("refresh")
+                    .OnClick(@<text>function () {$("#rentGrid").dxDataGrid("getDataSource").reload();}</text>));
+
+            items.Add().Name("addRowButton");
+            items.Add().Name("searchPanel");
+        });
+    })
+)

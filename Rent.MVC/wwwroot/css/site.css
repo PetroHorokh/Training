@@ -1,0 +1,37 @@
+﻿.userAction {
+    margin: auto auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vh;
+}
+
+.userAction div {
+    margin: 0 auto;
+    border-radius: 1vh;
+    font-size: 17px;
+    box-shadow: 2px 3px 4px grey;
+}
+
+form {
+    margin: 10px 10px 15px;
+}
+
+.last-group {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+.last-group .dx-item-content {
+    align-items: start;
+    justify-content: center;
+}
+.last-group .dx-field-item {
+    padding: 0 !important;
+}
+.buttons-group {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}
+.buttons-group .dx-item-content {
+    gap: 10px;
+}

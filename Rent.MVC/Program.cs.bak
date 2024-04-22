@@ -1,0 +1,60 @@
+using Microsoft.AspNetCore.Http.Features;
+using Rent.ADO.NET;
+using Rent.BLL;
+using Rent.MVC.Filters;
+using Serilog;
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(typeof(CustomExceptionFilter));
+});
+
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+builder.Services.BllServiceInject();
+builder.Services.AdoNetServiceInject();
+
+IConfiguration config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("./appsettings.json")
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(config)
+    .CreateLogger();
+
+builder.Host.UseSerilog(Log.Logger);
+
+builder.Services.AddCors(option => option.AddPolicy("Policy", 
+    policyBuilder => { 
+    policyBuilder.AllowAnyHeader();
+    policyBuilder.AllowAnyMethod();
+}));
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseSerilogRequestLogging();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapRazorPages();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();

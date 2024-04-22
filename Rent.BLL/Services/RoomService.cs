@@ -24,7 +24,7 @@ public class RoomService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerSe
         var result = rooms.Select(mapper.Map<RoomToGetDto>);
 
         logger.LogInformation("Exiting RoomService, GetAllRoomsAsync");
-        return result.ToList();
+        return result;
     }
 
     public async Task<IEnumerable<RoomTypeToGetDto>> GetAllRoomTypesAsync()

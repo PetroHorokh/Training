@@ -21,7 +21,7 @@ BEGIN
 		SELECT @AddressId AS [AddressId];
     END TRY
     BEGIN CATCH
-        DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE()
+        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
         RAISERROR( @Message , 11, 3);
     END CATCH;
 END;
@@ -29,11 +29,20 @@ GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Owner_Insert]
 @AddressId [uniqueidentifier],
+@UserId [uniqueidentifier],
 @Name [nvarchar](50)
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
+		IF NOT EXISTS(SELECT 1
+			FROM [dbo].[User]
+			WHERE [UserId] = @UserId
+		)
+		BEGIN
+			RAISERROR('There is no such user' ,11 ,7);
+		END;
+
 		IF NOT EXISTS(SELECT 1
 			FROM [dbo].[Address]
 			WHERE [AddressId] = @AddressId
@@ -42,14 +51,21 @@ BEGIN
 			RAISERROR('There is no such address' ,11 ,7);
 		END;
 
+		IF EXISTS(SELECT 1
+			FROM [dbo].[Owner] [Owner]
+			WHERE [Owner].[Name] = @Name)
+		BEGIN
+			RAISERROR('There is already such owner', 11, 13);
+		END;
+
 		DECLARE @OwnerId [uniqueidentifier] = NEWID();
-		INSERT INTO [dbo].[Owner] ([OwnerId], [Name], [AddressId])
-		SELECT @OwnerId, @Name, @AddressId;
+		INSERT INTO [dbo].[Owner] ([OwnerId], [UserId], [Name], [AddressId])
+		SELECT @OwnerId, @UserId, @Name, @AddressId;
 		SELECT @OwnerId AS [OwnerId];
 
     END TRY
     BEGIN CATCH
-        DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE()
+        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
         RAISERROR( @Message , 11, 7);
     END CATCH;
 END;
@@ -57,6 +73,7 @@ GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Tenant_Insert]
 @AddressId [uniqueidentifier],
+@UserId [uniqueidentifier],
 @Name [nvarchar](50),
 @BankName [nvarchar](50),
 @Director [nvarchar](50),
@@ -65,6 +82,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
+		IF NOT EXISTS(SELECT 1
+			FROM [dbo].[User]
+			WHERE [UserId] = @UserId
+		)
+		BEGIN
+			RAISERROR('There is no such user' ,11 ,7);
+		END;
+
 		IF NOT EXISTS(SELECT 1 
 			FROM [dbo].[Address] [Address]
 			WHERE [Address].[AddressId] = @AddressId)
@@ -72,13 +97,20 @@ BEGIN
 			RAISERROR('There is no such address', 11, 13);
 		END;
 
+		IF EXISTS(SELECT 1
+			FROM [dbo].[Tenant] [Tenant]
+			WHERE [Tenant].[Name] = @Name)
+		BEGIN
+			RAISERROR('There is already such tenant', 11, 13);
+		END;
+
 		DECLARE @TenantId [uniqueidentifier] = NEWID();
-		INSERT INTO [dbo].[Tenant] ([TenantId], [Name], [BankName], [AddressId], [Director], [Description])
-		SELECT @TenantId, @Name, @BankName, @AddressId, @Director, @Description;
+		INSERT INTO [dbo].[Tenant] ([TenantId], [UserId], [Name], [BankName], [AddressId], [Director], [Description])
+		SELECT @TenantId, @UserId, @Name, @BankName, @AddressId, @Director, @Description;
 		SELECT @TenantId AS [TenantId];
     END TRY
     BEGIN CATCH
-        DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE()
+        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
         RAISERROR( @Message , 11, 13);
     END CATCH;
 END;
@@ -116,7 +148,7 @@ BEGIN
 		SELECT @RoomTypeId AS [RoomTypeId];
     END TRY
     BEGIN CATCH
-        DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 13);
     END CATCH;
 END;
@@ -154,14 +186,15 @@ BEGIN
 		IF @@TRANCOUNT > 0
 		BEGIN
 			ROLLBACK TRANSACTION;
-			DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
-			RAISERROR( @Message , 11, 9);
-		END
+		END;
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
+		RAISERROR( @Message , 11, 9);
     END CATCH;
 END;
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_Room_Insert]
+@AddressId [uniqueidentifier],
 @Number [int],
 @Area [numeric](18,2),
 @RoomTypeId [nvarchar](20)
@@ -179,6 +212,14 @@ BEGIN
 		END;
 
 		IF NOT EXISTS(SELECT 1
+		    FROM [dbo].[Address] [Address]
+			WHERE [Address].[AddressId] = @AddressId
+		)
+		BEGIN
+		    RAISERROR( 'There is no such address' , 11, 12) WITH NOWAIT;
+		END;
+
+		IF NOT EXISTS(SELECT 1
 		    FROM [dbo].[RoomType] [RoomType]
 			WHERE [RoomType].[RoomTypeId] = @RoomTypeId
 		)
@@ -188,12 +229,12 @@ BEGIN
 
 		DECLARE @RoomId [uniqueidentifier];
 		SELECT @RoomId = NEWID();
-		INSERT INTO [dbo].[Room] ([RoomId], [Number], [Area], [RoomTypeId])
-		SELECT @RoomId, @Number, @Area, @RoomTypeId;
+		INSERT INTO [dbo].[Room] ([RoomId], [AddressId], [Number], [Area], [RoomTypeId])
+		SELECT @RoomId, @AddressId, @Number, @Area, @RoomTypeId;
 		SELECT @RoomId AS [RoomId];
     END TRY
     BEGIN CATCH
-		DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 12);
     END CATCH;
 END;
@@ -237,7 +278,7 @@ BEGIN
 		SELECT @AssetId AS [AssetId]
     END TRY
     BEGIN CATCH
-		DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 1);
     END CATCH;
 END;
@@ -246,6 +287,7 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[sp_Bill_Insert]
 @TenantId [uniqueidentifier],
 @RentId [uniqueidentifier],
+@IssueDate [datetime2],
 @Amount [numeric](18,2)
 AS
 BEGIN
@@ -268,12 +310,12 @@ BEGIN
 		END;
 			
 		DECLARE @BillId [uniqueidentifier] = NEWID();
-		INSERT INTO [dbo].[Bill] ([BillId], [TenantId], [RentId], [BillAmount])
-		SELECT @BillId, @TenantId, @RentId, @Amount;
+		INSERT INTO [dbo].[Bill] ([BillId], [TenantId], [RentId], [BillAmount], [IssueDate])
+		SELECT @BillId, @TenantId, @RentId, @Amount, @IssueDate;
 		SELECT @BillId AS [BillId];
     END TRY
     BEGIN CATCH
-		    DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 5);
     END CATCH;
 END;
@@ -282,9 +324,7 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[sp_Impost_Insert]
 @Tax [decimal](4,2),
 @Fine [decimal](3,2),
-@PaymentDay [int],
-@StartDay [datetime2],
-@EndDay [datetime2]
+@PaymentDay [int]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -307,9 +347,9 @@ BEGIN
         IF @@TRANCOUNT > 0
 		BEGIN
 			ROLLBACK TRANSACTION;
-			DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE()
-            RAISERROR( @Message , 11, 6);
-		END
+		END;
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
+        RAISERROR( @Message , 11, 6);
     END CATCH;
 END;
 GO
@@ -344,7 +384,7 @@ BEGIN
 		SELECT @PaymentId AS [PaymentId];
     END TRY
     BEGIN CATCH
-		    DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		    DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 8);
     END CATCH;
 END;
@@ -387,9 +427,31 @@ BEGIN
 		INSERT INTO [dbo].[Rent] ([RentId], [AssetId], [TenantId], [StartDate], [EndDate])
 		SELECT @RentId, @AssetId, @TenantId, @StartDate, @EndDate;
 		SELECT @RentId AS [RentId];
+
+		DECLARE @BillDate [date];
+
+		SELECT @BillDate = CASE WHEN @EndDate < EOMONTH(GETDATE()) THEN @EndDate ELSE EOMONTH(GETDATE()) END;
+
+		DECLARE @BillAmount [decimal](18,2);
+
+		SELECT @BillAmount = [Data].[Area] * [Data].[Price] * DATEDIFF(DAY, CAST(GETDATE() AS [date]), @BillDate) / DAY(EOMONTH(GETDATE()))
+		FROM(SELECT [Room].[Area],
+			[Price].[Value] AS [Price]
+			FROM [dbo].[Rent] [Rent]
+			LEFT JOIN [dbo].[Asset] AS [Asset] ON [Asset].[AssetId] = [Rent].[AssetId]
+			LEFT JOIN [dbo].[Room] AS [Room] ON [Room].[RoomId] = [Asset].[RoomId]
+			LEFT JOIN [dbo].[Price] AS [Price] ON [Price].[RoomTypeId] = [Room].[RoomTypeId]
+			WHERE [Rent].[RentId] = @RentId
+				AND [Price].[EndDate] IS NULL
+		) AS [Data];
+
+		DECLARE @BillId [uniqueidentifier] = NEWID();
+		INSERT INTO [dbo].[Bill] ([BillId],[TenantId],[RentId],[BillAmount],[IssueDate])
+		SELECT @BillId, @TenantId, @RentId, @BillAmount, CAST(GETDATE() AS [date])
+		SELECT @BillId AS [BillId];
     END TRY
     BEGIN CATCH
-		DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 10);
     END CATCH;
 END;
@@ -431,7 +493,7 @@ BEGIN
 		END
     END TRY
     BEGIN CATCH
-		DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
         RAISERROR( @Message , 11, 1);
     END CATCH;
     END;
@@ -450,7 +512,7 @@ BEGIN
 			WHERE [AccommodationId] = @AccommodationId
 		)
 		BEGIN
-			RAISERROR('There is no such accommodation' , 11, 2);
+			RAISERROR('There is no such accommodation' , 11, 2) WITH NOWAIT;
 		END;
 
 		IF NOT EXISTS(SELECT 1
@@ -458,7 +520,7 @@ BEGIN
 			WHERE [RoomId] = @RoomId
 		)
 		BEGIN
-			RAISERROR('There is no such room' , 11, 2);
+			RAISERROR('There is no such room' , 11, 2) WITH NOWAIT;
 		END;
 
 		DECLARE @AccommodationRoomId [uniqueidentifier] = NEWID();
@@ -472,9 +534,133 @@ BEGIN
         IF @@TRANCOUNT > 0
 		BEGIN
 			ROLLBACK TRANSACTION;
-			DECLARE @Message [nvarchar](100) = 'An error occurred: ' + ERROR_MESSAGE();
-            RAISERROR( @Message , 11, 2);
-		END
+		END;
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
+        RAISERROR( @Message , 11, 2);
     END CATCH;
     END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Role_Insert]
+@Name [nvarchar](255),
+@NormilizedName [nvarchar](255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+		IF EXISTS(SELECT 1
+			FROM [dbo].[Role] [Role]
+			WHERE [Role].[Name] = @Name
+		)
+		BEGIN
+			RAISERROR('There is aleady such role' , 11, 2) WITH NOWAIT;
+		END;
+
+		DECLARE @RoleId [int];
+
+			WITH Ids(Id) AS
+			(
+				SELECT Id = 1
+				UNION ALL
+				SELECT Id + 1
+				FROM Ids
+				WHERE Id IN(SELECT [RoleId] FROM [dbo].[Role])
+			)
+			SELECT TOP 1 @RoleId = Id
+			FROM Ids
+			ORDER BY [id] DESC;
+
+		BEGIN TRANSACTION;
+			INSERT INTO [dbo].[Role] ([RoleId], [Name], [NormalizedName])
+			SELECT @RoleId, @Name, @NormilizedName;
+		COMMIT TRANSACTION;
+		SELECT @RoleId AS [RoleId];
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+		BEGIN
+			ROLLBACK TRANSACTION;
+		END;
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
+        RAISERROR( @Message , 11, 2);
+    END CATCH;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_UserRole_Insert]
+@UserId [uniqueidentifier],
+@RoleId [int]
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+		IF EXISTS(SELECT 1
+			FROM [dbo].[UserRole] [UserRole]
+			WHERE [UserRole].[UserId] = @UserId AND [UserRole].[RoleId] = @RoleId
+		)
+		BEGIN
+			RAISERROR('This user already has given role' , 11, 2) WITH NOWAIT;
+		END;
+
+		DECLARE @UserRoleId [uniqueidentifier] = NEWID();
+		BEGIN TRANSACTION;
+			INSERT INTO [dbo].[UserRole] ([UserRoleId], [UserId], [RoleId])
+			SELECT @UserRoleId, @UserId, @RoleId;
+		COMMIT TRANSACTION;
+		SELECT @UserRoleId AS [UserRoleId];
+    END TRY
+    BEGIN CATCH
+		IF @@TRANCOUNT > 0
+		BEGIN
+			ROLLBACK TRANSACTION;
+		END;
+		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
+        RAISERROR( @Message , 11, 2);
+    END CATCH;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_User_Insert]
+@Name [nvarchar](255),
+@NormalizedName [nvarchar](255),
+@Password [nvarchar](255),
+@Email [nvarchar](255),
+@NormalizedEmail [nvarchar](255),
+@PhoneNumber [nvarchar](255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+		IF EXISTS(SELECT 1 
+			FROM [dbo].[User] [User]
+			WHERE [User].[Email] = @Email)
+		BEGIN
+			RAISERROR('There is alreayd user with this email', 11, 13);
+		END;
+
+		IF EXISTS(SELECT 1
+			FROM [dbo].[User] [User]
+			WHERE [User].[Name] = @Name)
+		BEGIN
+			RAISERROR('There is already user with such login', 11, 13);
+		END;
+
+		DECLARE @UserId [uniqueidentifier] = NEWID();
+		BEGIN TRANSACTION;
+			INSERT INTO [dbo].[User] ([UserId], [Name], [NormalizedName], [Password], [Email], [NormalizedEmail], [EmailConfirmed], [PhoneNumber], [PhoneNumberConfirmed])
+			SELECT @UserId, @Name, @NormalizedName, @Password, @Email, @NormalizedEmail, 0, @PhoneNumber, 0;
+		COMMIT TRANSACTION;
+		EXEC [dbo].[sp_UserRole_Insert] @UserId = @UserId, @RoleId = 2;
+
+		SELECT @UserId AS [UserId];
+    END TRY
+    BEGIN CATCH
+		IF @@TRANCOUNT > 0
+		BEGIN
+			ROLLBACK TRANSACTION;
+		END;
+        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
+        RAISERROR( @Message , 11, 13);
+    END CATCH;
+END;
 GO

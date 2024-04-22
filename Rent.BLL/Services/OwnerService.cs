@@ -17,7 +17,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         logger.LogInformation("Entering OwnerService, GetAllOwnersAsync");
 
         logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
-        var owners = await unitOfWork.Owners.GetAllAsync();
+        var owners = (await unitOfWork.Owners.GetByConditionAsync(_ => true, owner => owner.Address!)).ToList();
         logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
 
         logger.LogInformation($"Mapping owners to OwnerToGetDto");
@@ -47,13 +47,30 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         logger.LogInformation("Entering OwnerService, GetOwnerByIdAsync");
 
         logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId);
+        logger.LogInformation($"Parameter: ownerId = {ownerId}");
+        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId, owner => owner.Address!);
         logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
 
         logger.LogInformation($"Mapping owner to OwnerToGetDto");
         var result = mapper.Map<OwnerToGetDto>(owner);
 
         logger.LogInformation("Exiting OwnerService, GetOwnerByIdAsync");
+        return result;
+    }
+
+    public async Task<AssetToGetDto?> GetAssetByIdAsync(Guid assetId)
+    {
+        logger.LogInformation("Entering OwnerService, GetAssetByIdAsync");
+
+        logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
+        logger.LogInformation($"Parameter: assetId = {assetId}");
+        var asset = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
+        logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
+
+        logger.LogInformation($"Mapping asset to AssetToGetDto");
+        var result = mapper.Map<AssetToGetDto>(asset);
+
+        logger.LogInformation("Exiting OwnerService, GetAssetByIdAsync");
         return result;
     }
 
@@ -100,6 +117,50 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
 
         logger.LogInformation("Exiting OwnerService, CreateOwnerAsync");
         return result;
+    }
+
+    public async Task<UpdatingResponse> UpdateOwnerAsync(OwnerToGetDto newOwner)
+    {
+        logger.LogInformation("Entering OwnerService, UpdateOwnerAsync");
+
+        Exception? error = null;
+
+        logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
+        logger.LogInformation($"Parameters: AddressId = {newOwner.AddressId}, Name = {newOwner.Name}");
+        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == newOwner.OwnerId);
+        logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
+
+        try
+        {
+            if (owner != null)
+            {
+                owner.Name = newOwner.Name;
+                owner.AddressId = newOwner.AddressId;
+
+                logger.LogInformation("Calling OwnerRepository, method Update");
+                unitOfWork.Owners.Update(owner);
+                logger.LogInformation("Finished calling OwnerRepository, method Update");
+
+                await unitOfWork.SaveAsync();
+            }
+            else
+            {
+                throw new SqlNullValueException("Couldn't find owner");
+            }
+        }
+        catch (DbUpdateException ex)
+        {
+            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
+            error = ex;
+        }
+        catch (SqlNullValueException ex)
+        {
+            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
+            error = ex;
+        }
+
+        logger.LogInformation("Exiting OwnerService, UpdateOwnerAsync");
+        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
     }
 
     public async Task<UpdatingResponse> DeleteOwnerAsync(Guid ownerId)
