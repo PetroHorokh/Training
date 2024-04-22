@@ -1,0 +1,672 @@
+[00:00:09 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[00:00:09 INF] No cached response available for this request.
+[00:00:09 INF] The response could not be cached for this request.
+[00:00:09 INF] HTTP GET /js/devextreme/bootstrap.js.map responded 404 in 9.3518 ms
+[00:00:09 INF] Request finished HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - 404 0 null 20.0683ms
+[00:00:09 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[00:00:09 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/js/devextreme/bootstrap.js.map, Response status code: 404
+[00:00:09 INF] No cached response available for this request.
+[00:00:09 INF] The response could not be cached for this request.
+[00:00:09 INF] HTTP GET /css/devextreme/bootstrap.css.map responded 404 in 0.9643 ms
+[00:00:09 INF] Request finished HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - 404 0 null 6.7708ms
+[00:00:09 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/css/devextreme/bootstrap.css.map, Response status code: 404
+[00:00:16 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[00:00:16 INF] No cached response available for this request.
+[00:00:16 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:00:16 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[00:00:16 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[00:00:16 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0516ms.
+[00:00:16 INF] Executing ViewResult, running view Index.
+[00:00:17 INF] Executed ViewResult - view Index executed in 887.6976ms.
+[00:00:17 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 889.2569ms
+[00:00:17 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:00:17 INF] The response could not be cached for this request.
+[00:00:17 INF] HTTP GET / responded 200 in 894.6504 ms
+[00:00:17 WRN] Unable to configure Browser Link script injection on the response. 
+[00:00:17 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[00:00:17 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 914.6257ms
+[00:00:17 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[00:00:17 INF] No cached response available for this request.
+[00:00:17 INF] The response could not be cached for this request.
+[00:00:17 INF] HTTP GET /js/devextreme/bootstrap.js.map responded 404 in 2.5945 ms
+[00:00:17 INF] Request finished HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - 404 0 null 4.0516ms
+[00:00:17 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/js/devextreme/bootstrap.js.map, Response status code: 404
+[00:00:17 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[00:00:17 INF] No cached response available for this request.
+[00:00:17 INF] The response could not be cached for this request.
+[00:00:17 INF] HTTP GET /css/devextreme/bootstrap.css.map responded 404 in 0.3344 ms
+[00:00:17 INF] Request finished HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - 404 0 null 1.0813ms
+[00:00:17 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/css/devextreme/bootstrap.css.map, Response status code: 404
+[00:00:28 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[00:00:28 INF] No cached response available for this request.
+[00:00:28 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:00:28 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[00:00:28 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[00:00:28 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0295ms.
+[00:00:28 INF] Executing ViewResult, running view Index.
+[00:00:29 INF] Executed ViewResult - view Index executed in 760.9533ms.
+[00:00:29 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 761.8836ms
+[00:00:29 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:00:29 INF] The response could not be cached for this request.
+[00:00:29 INF] HTTP GET / responded 200 in 764.7771 ms
+[00:00:29 WRN] Unable to configure Browser Link script injection on the response. 
+[00:00:29 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[00:00:29 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 773.7283ms
+[00:00:30 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[00:00:30 INF] No cached response available for this request.
+[00:00:30 INF] The response could not be cached for this request.
+[00:00:30 INF] HTTP GET /js/devextreme/bootstrap.js.map responded 404 in 0.5082 ms
+[00:00:30 INF] Request finished HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - 404 0 null 1.0075ms
+[00:00:30 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/js/devextreme/bootstrap.js.map, Response status code: 404
+[00:00:30 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[00:00:30 INF] No cached response available for this request.
+[00:00:30 INF] The response could not be cached for this request.
+[00:00:30 INF] HTTP GET /css/devextreme/bootstrap.css.map responded 404 in 0.4866 ms
+[00:00:30 INF] Request finished HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - 404 0 null 3.2434ms
+[00:00:30 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/css/devextreme/bootstrap.css.map, Response status code: 404
+[00:01:55 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[00:01:55 INF] Now listening on: https://localhost:7102
+[00:01:55 INF] Now listening on: http://localhost:5098
+[00:01:55 INF] Application started. Press Ctrl+C to shut down.
+[00:01:55 INF] Hosting environment: Development
+[00:01:55 INF] Content root path: C:\Training\Rent.MVC
+[00:01:56 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[00:01:56 INF] No cached response available for this request.
+[00:01:56 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:01:56 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[00:01:56 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[00:01:56 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.5362ms.
+[00:01:59 INF] Executing ViewResult, running view Index.
+[00:02:00 INF] Executed ViewResult - view Index executed in 3892.1871ms.
+[00:02:00 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 3909.5589ms
+[00:02:00 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[00:02:00 INF] The response could not be cached for this request.
+[00:02:00 INF] HTTP GET / responded 200 in 4083.3567 ms
+[00:02:00 WRN] Unable to configure Browser Link script injection on the response. 
+[00:02:00 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[00:02:00 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 4254.4658ms
+[00:02:02 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[00:02:02 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[00:02:02 INF] Route matched with {action = "Index", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[00:02:02 INF] Executing action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC) - Validation state: "Valid"
+[00:02:06 INF] Executed action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.RedirectToActionResult in 4163.0448ms.
+[00:02:06 INF] Executing RedirectResult, redirecting to /Tenant/TenantNotAuthenticatedGrid.
+[00:02:06 INF] Executed action Rent.MVC.Controllers.TenantController.Index (Rent.MVC) in 4672.8671ms
+[00:02:06 INF] Executed endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[00:02:07 INF] HTTP GET /Tenant/Index responded 302 in 5760.1972 ms
+[00:02:08 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/TenantNotAuthenticatedGrid - null null
+[00:02:08 INF] Request finished HTTP/2 GET https://localhost:7102/Tenant/Index - 302 0 null 6440.1296ms
+[00:02:08 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.TenantNotAuthenticatedGrid (Rent.MVC)'
+[00:02:08 INF] Route matched with {action = "TenantNotAuthenticatedGrid", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult TenantNotAuthenticatedGrid() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[00:02:08 INF] Executing action method Rent.MVC.Controllers.TenantController.TenantNotAuthenticatedGrid (Rent.MVC) - Validation state: "Valid"
+[00:02:11 INF] Executed action method Rent.MVC.Controllers.TenantController.TenantNotAuthenticatedGrid (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 2433.7244ms.
+[00:02:11 INF] Executing ViewResult, running view TenantNotAuthenticatedGrid.
+[00:02:12 INF] Executed ViewResult - view TenantNotAuthenticatedGrid executed in 1056.9678ms.
+[00:02:12 INF] Executed action Rent.MVC.Controllers.TenantController.TenantNotAuthenticatedGrid (Rent.MVC) in 3513.4619ms
+[00:02:12 INF] Executed endpoint 'Rent.MVC.Controllers.TenantController.TenantNotAuthenticatedGrid (Rent.MVC)'
+[00:02:13 INF] HTTP GET /Tenant/TenantNotAuthenticatedGrid responded 200 in 5003.5994 ms
+[00:02:14 INF] Request finished HTTP/2 GET https://localhost:7102/Tenant/TenantNotAuthenticatedGrid - 200 1739 text/html; charset=utf-8 5576.9722ms
+[10:22:39 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:22:40 INF] Now listening on: https://localhost:7102
+[10:22:40 INF] Now listening on: http://localhost:5098
+[10:22:40 INF] Application started. Press Ctrl+C to shut down.
+[10:22:40 INF] Hosting environment: Development
+[10:22:40 INF] Content root path: C:\Training\Rent.MVC
+[10:22:40 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:22:41 INF] No cached response available for this request.
+[10:22:41 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:22:41 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:22:41 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:22:41 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.5869ms.
+[10:22:44 INF] Executing ViewResult, running view Index.
+[10:22:45 INF] Executed ViewResult - view Index executed in 3996.6911ms.
+[10:22:45 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 4016.2319ms
+[10:22:45 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:22:45 INF] The response could not be cached for this request.
+[10:22:45 INF] HTTP GET / responded 200 in 4224.0550 ms
+[10:22:45 WRN] Unable to configure Browser Link script injection on the response. 
+[10:22:45 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:22:45 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 4621.4088ms
+[10:22:45 INF] Request starting HTTP/2 GET https://localhost:7102/css/site.css - null null
+[10:22:45 INF] Sending file. Request path: '/css/site.css'. Physical path: 'C:\Training\Rent.MVC\wwwroot\css\site.css'
+[10:22:45 INF] HTTP GET /css/site.css responded 200 in 16.4809 ms
+[10:22:45 INF] Request finished HTTP/2 GET https://localhost:7102/css/site.css - 200 640 text/css 18.4965ms
+[10:23:53 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:23:54 INF] No cached response available for this request.
+[10:23:54 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:23:54 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:23:54 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:23:54 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0559ms.
+[10:23:54 INF] Executing ViewResult, running view Index.
+[10:23:54 INF] Executed ViewResult - view Index executed in 9.5195ms.
+[10:23:54 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 11.0697ms
+[10:23:54 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:23:54 INF] The response could not be cached for this request.
+[10:23:54 INF] HTTP GET / responded 200 in 18.3423 ms
+[10:23:54 WRN] Unable to configure Browser Link script injection on the response. 
+[10:23:54 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:23:54 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 48.0414ms
+[10:23:57 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:23:57 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:23:57 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:23:58 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:23:58 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.2038ms.
+[10:23:58 INF] Executing ViewResult, running view Index.
+[10:23:58 INF] Executed ViewResult - view Index executed in 981.9091ms.
+[10:23:58 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 1278.1446ms
+[10:23:58 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:23:58 INF] HTTP GET /User responded 200 in 1288.2006 ms
+[10:23:59 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 2812 text/html; charset=utf-8 1292.831ms
+[10:23:59 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:23:59 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:23:59 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:23:59 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:23:59 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0255ms.
+[10:23:59 INF] Executing ViewResult, running view Index.
+[10:23:59 INF] Executed ViewResult - view Index executed in 1.0603ms.
+[10:23:59 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 14.132ms
+[10:23:59 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:23:59 INF] HTTP GET /User responded 200 in 16.8871 ms
+[10:23:59 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 2812 text/html; charset=utf-8 18.1014ms
+[10:24:01 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:24:01 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:24:01 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:24:01 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:24:01 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0234ms.
+[10:24:01 INF] Executing ViewResult, running view Index.
+[10:24:01 INF] Executed ViewResult - view Index executed in 2.0337ms.
+[10:24:01 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 26.058ms
+[10:24:01 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:24:01 INF] HTTP GET /User responded 200 in 27.6851 ms
+[10:24:01 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 2812 text/html; charset=utf-8 28.4475ms
+[10:26:19 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:26:19 INF] No cached response available for this request.
+[10:26:19 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:26:19 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:26:19 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:26:19 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0225ms.
+[10:26:19 INF] Executing ViewResult, running view Index.
+[10:26:20 INF] Executed ViewResult - view Index executed in 804.3897ms.
+[10:26:20 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 804.8168ms
+[10:26:20 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:26:20 INF] The response could not be cached for this request.
+[10:26:20 INF] HTTP GET / responded 200 in 806.3408 ms
+[10:26:20 WRN] Unable to configure Browser Link script injection on the response. 
+[10:26:20 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:26:20 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 818.5036ms
+[10:26:21 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:26:21 INF] No cached response available for this request.
+[10:26:21 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:26:21 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:26:21 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:26:21 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0177ms.
+[10:26:21 INF] Executing ViewResult, running view Index.
+[10:26:21 INF] Executed ViewResult - view Index executed in 2.2053ms.
+[10:26:21 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 2.7882ms
+[10:26:21 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:26:21 INF] The response could not be cached for this request.
+[10:26:21 INF] HTTP GET /User responded 200 in 4.0858 ms
+[10:26:21 WRN] Unable to configure Browser Link script injection on the response. 
+[10:26:21 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:26:21 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 null text/html; charset=utf-8 8.0759ms
+[10:26:23 INF] Request starting HTTP/2 GET https://localhost:7102/User/Login - null null
+[10:26:24 INF] No cached response available for this request.
+[10:26:24 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Login (Rent.MVC)'
+[10:26:24 INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:26:24 INF] Executing action method Rent.MVC.Controllers.UserController.Login (Rent.MVC) - Validation state: "Valid"
+[10:26:24 INF] Executed action method Rent.MVC.Controllers.UserController.Login (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.3813ms.
+[10:26:24 INF] Executing ViewResult, running view Login.
+[10:26:24 INF] Executed ViewResult - view Login executed in 747.6543ms.
+[10:26:24 INF] Executed action Rent.MVC.Controllers.UserController.Login (Rent.MVC) in 748.6654ms
+[10:26:24 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Login (Rent.MVC)'
+[10:26:24 INF] The response could not be cached for this request.
+[10:26:24 INF] HTTP GET /User/Login responded 200 in 788.4809 ms
+[10:26:24 WRN] Unable to configure Browser Link script injection on the response. 
+[10:26:24 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:26:24 INF] Request finished HTTP/2 GET https://localhost:7102/User/Login - 200 null text/html; charset=utf-8 795.4338ms
+[10:27:05 INF] Request starting HTTP/2 GET https://localhost:7102/User/LoginAction?Email=admin%40gmail.com&Password=adminpassword - application/json null
+[10:27:05 INF] No cached response available for this request.
+[10:27:05 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.LoginAction (Rent.MVC)'
+[10:27:06 INF] Route matched with {action = "LoginAction", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] LoginAction(Rent.DAL.Authentication.SignInUser) on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:27:06 INF] Executing action method Rent.MVC.Controllers.UserController.LoginAction (Rent.MVC) - Validation state: "Valid"
+[10:27:08 INF] Executed DbCommand (153ms) [Parameters=[@__signInModel_Email_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[UserId], [u].[CreatedBy], [u].[CreatedDateTime], [u].[Email], [u].[EmailConfirmed], [u].[ModifiedBy], [u].[ModifiedDateTime], [u].[Name], [u].[NormalizedEmail], [u].[NormalizedName], [u].[Password], [u].[PhoneNumber], [u].[PhoneNumberConfirmed], [u].[ValidFrom], [u].[ValidTo]
+FROM [User] AS [u]
+WHERE [u].[Email] = @__signInModel_Email_0
+[10:27:09 INF] Executed DbCommand (12ms) [Parameters=[@__user_UserId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [u].[UserRoleId], [u].[CreatedBy], [u].[CreatedDateTime], [u].[ModifiedBy], [u].[ModifiedDateTime], [u].[RoleId], [u].[UserId], [u].[ValidFrom], [u].[ValidTo]
+FROM [UserRole] AS [u]
+WHERE [u].[UserId] = @__user_UserId_0
+[10:27:09 INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[RoleId], [r].[CreatedBy], [r].[CreatedDateTime], [r].[ModifiedBy], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[ValidFrom], [r].[ValidTo]
+FROM [Role] AS [r]
+[10:27:09 INF] Executed action method Rent.MVC.Controllers.UserController.LoginAction (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 3380.919ms.
+[10:27:09 INF] Executing OkObjectResult, writing value of type 'Rent.DAL.Authentication.AuthToken'.
+[10:27:09 INF] Executed action Rent.MVC.Controllers.UserController.LoginAction (Rent.MVC) in 3448.6386ms
+[10:27:09 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.LoginAction (Rent.MVC)'
+[10:27:09 INF] The response could not be cached for this request.
+[10:27:09 INF] HTTP GET /User/LoginAction responded 200 in 3482.1035 ms
+[10:27:09 INF] Request finished HTTP/2 GET https://localhost:7102/User/LoginAction?Email=admin%40gmail.com&Password=adminpassword - 200 null application/json; charset=utf-8 3504.1808ms
+[10:27:11 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[10:27:11 INF] No cached response available for this request.
+[10:27:11 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:27:11 INF] Route matched with {action = "Index", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[10:27:11 INF] Executing action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC) - Validation state: "Valid"
+[10:27:11 INF] Executed action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.6311ms.
+[10:27:11 INF] Executing ViewResult, running view Index.
+[10:27:12 INF] Executed ViewResult - view Index executed in 931.7367ms.
+[10:27:12 INF] Executed action Rent.MVC.Controllers.TenantController.Index (Rent.MVC) in 1114.654ms
+[10:27:12 INF] Executed endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:27:12 INF] The response could not be cached for this request.
+[10:27:12 INF] HTTP GET /Tenant/Index responded 200 in 1126.5114 ms
+[10:27:12 WRN] Unable to configure Browser Link script injection on the response. 
+[10:27:12 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:27:12 INF] Request finished HTTP/2 GET https://localhost:7102/Tenant/Index - 200 null text/html; charset=utf-8 1131.7849ms
+[10:27:28 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[10:27:28 INF] No cached response available for this request.
+[10:27:28 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:27:28 INF] Route matched with {action = "Index", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[10:27:28 INF] Executing action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC) - Validation state: "Valid"
+[10:28:28 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:28:28 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:28:28 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:29:10 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:29:10 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:29:10 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:29:33 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:29:34 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:29:34 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:32:10 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:32:11 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:32:11 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:32:38 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:32:39 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:32:39 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:35:13 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:35:14 FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+[10:35:14 ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Rent.BLL.Services.Contracts.IUserService' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+[10:36:20 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:36:20 INF] Now listening on: https://localhost:7102
+[10:36:20 INF] Now listening on: http://localhost:5098
+[10:36:20 INF] Application started. Press Ctrl+C to shut down.
+[10:36:20 INF] Hosting environment: Development
+[10:36:20 INF] Content root path: C:\Training\Rent.MVC
+[10:36:21 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:36:21 INF] No cached response available for this request.
+[10:36:21 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:36:21 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:36:21 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:36:21 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.7865ms.
+[10:36:24 INF] Executing ViewResult, running view Index.
+[10:36:25 INF] Executed ViewResult - view Index executed in 3689.445ms.
+[10:36:25 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 3715.1751ms
+[10:36:25 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:36:25 INF] The response could not be cached for this request.
+[10:36:25 INF] HTTP GET / responded 200 in 3872.5165 ms
+[10:36:25 WRN] Unable to configure Browser Link script injection on the response. 
+[10:36:25 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:36:25 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 4220.8496ms
+[10:36:31 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[10:36:31 INF] No cached response available for this request.
+[10:36:31 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:36:31 INF] Route matched with {action = "Index", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[10:36:32 INF] Executing action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC) - Validation state: "Valid"
+[10:36:43 INF] Executed action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 11033.7902ms.
+[10:36:43 INF] Executing ViewResult, running view Index.
+[10:36:44 INF] Executed ViewResult - view Index executed in 1593.6291ms.
+[10:36:44 INF] Executed action Rent.MVC.Controllers.TenantController.Index (Rent.MVC) in 12717.824ms
+[10:36:44 INF] Executed endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:36:44 INF] The response could not be cached for this request.
+[10:36:44 INF] HTTP GET /Tenant/Index responded 200 in 12789.5032 ms
+[10:36:44 WRN] Unable to configure Browser Link script injection on the response. 
+[10:36:44 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:36:44 INF] Request finished HTTP/2 GET https://localhost:7102/Tenant/Index - 200 null text/html; charset=utf-8 12812.732ms
+[10:36:51 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:36:51 INF] Now listening on: https://localhost:7102
+[10:36:51 INF] Now listening on: http://localhost:5098
+[10:36:52 INF] Application started. Press Ctrl+C to shut down.
+[10:36:52 INF] Hosting environment: Development
+[10:36:52 INF] Content root path: C:\Training\Rent.MVC
+[10:36:52 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:36:55 INF] No cached response available for this request.
+[10:36:55 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:36:55 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:36:55 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:36:55 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.6561ms.
+[10:36:58 INF] Executing ViewResult, running view Index.
+[10:36:59 INF] Executed ViewResult - view Index executed in 3469.9269ms.
+[10:36:59 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 3489.6083ms
+[10:36:59 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:36:59 INF] The response could not be cached for this request.
+[10:36:59 INF] HTTP GET / responded 200 in 3668.4919 ms
+[10:37:01 WRN] Unable to configure Browser Link script injection on the response. 
+[10:37:01 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:37:02 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 9995.0883ms
+[10:37:04 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[10:38:30 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:38:30 INF] Now listening on: https://localhost:7102
+[10:38:30 INF] Now listening on: http://localhost:5098
+[10:38:30 INF] Application started. Press Ctrl+C to shut down.
+[10:38:30 INF] Hosting environment: Development
+[10:38:30 INF] Content root path: C:\Training\Rent.MVC
+[10:38:30 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:42:07 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:42:07 INF] Now listening on: https://localhost:7102
+[10:42:07 INF] Now listening on: http://localhost:5098
+[10:42:07 INF] Application started. Press Ctrl+C to shut down.
+[10:42:07 INF] Hosting environment: Development
+[10:42:07 INF] Content root path: C:\Training\Rent.MVC
+[10:42:08 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:44:21 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:44:21 INF] Now listening on: https://localhost:7102
+[10:44:21 INF] Now listening on: http://localhost:5098
+[10:44:21 INF] Application started. Press Ctrl+C to shut down.
+[10:44:21 INF] Hosting environment: Development
+[10:44:21 INF] Content root path: C:\Training\Rent.MVC
+[10:44:21 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:44:31 INF] No cached response available for this request.
+[10:44:31 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:44:31 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:44:31 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:44:31 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.4331ms.
+[10:44:35 INF] Executing ViewResult, running view Index.
+[10:44:36 INF] Executed ViewResult - view Index executed in 4819.3465ms.
+[10:44:36 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 4833.9622ms
+[10:44:36 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:44:36 INF] The response could not be cached for this request.
+[10:44:36 INF] HTTP GET / responded 200 in 4995.9482 ms
+[10:44:37 INF] Request starting HTTP/2 GET https://localhost:7102/js/temp.js - null null
+[10:44:37 WRN] Unable to configure Browser Link script injection on the response. 
+[10:44:37 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:44:38 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 17168.1707ms
+[10:44:45 INF] Sending file. Request path: '/js/temp.js'. Physical path: 'C:\Training\Rent.MVC\wwwroot\js\temp.js'
+[10:44:45 INF] HTTP GET /js/temp.js responded 200 in 66.2734 ms
+[10:44:46 INF] Request finished HTTP/2 GET https://localhost:7102/js/temp.js - 200 203 text/javascript 8478.3057ms
+[10:44:56 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[10:44:56 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[10:46:01 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:46:02 INF] Now listening on: https://localhost:7102
+[10:46:02 INF] Now listening on: http://localhost:5098
+[10:46:02 INF] Application started. Press Ctrl+C to shut down.
+[10:46:02 INF] Hosting environment: Development
+[10:46:02 INF] Content root path: C:\Training\Rent.MVC
+[10:46:02 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:46:07 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:46:08 INF] Now listening on: https://localhost:7102
+[10:46:08 INF] Now listening on: http://localhost:5098
+[10:46:08 INF] Application started. Press Ctrl+C to shut down.
+[10:46:08 INF] Hosting environment: Development
+[10:46:08 INF] Content root path: C:\Training\Rent.MVC
+[10:46:08 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:46:09 INF] No cached response available for this request.
+[10:46:09 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:46:09 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:46:09 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:46:09 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.4968ms.
+[10:46:11 INF] Executing ViewResult, running view Index.
+[10:46:12 INF] Executed ViewResult - view Index executed in 3440.3404ms.
+[10:46:12 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 3457.7673ms
+[10:46:12 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:46:12 INF] The response could not be cached for this request.
+[10:46:12 INF] HTTP GET / responded 200 in 3616.1339 ms
+[10:46:12 WRN] Unable to configure Browser Link script injection on the response. 
+[10:46:12 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:46:12 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 3962.2484ms
+[10:46:12 INF] Request starting HTTP/2 GET https://localhost:7102/js/temp.js - null null
+[10:46:12 INF] Sending file. Request path: '/js/temp.js'. Physical path: 'C:\Training\Rent.MVC\wwwroot\js\temp.js'
+[10:46:12 INF] HTTP GET /js/temp.js responded 200 in 41.6310 ms
+[10:46:12 INF] Request finished HTTP/2 GET https://localhost:7102/js/temp.js - 200 223 text/javascript 50.6466ms
+[10:46:16 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[10:46:16 INF] No cached response available for this request.
+[10:46:16 INF] The response could not be cached for this request.
+[10:46:16 INF] HTTP GET /js/devextreme/bootstrap.js.map responded 404 in 7.0797 ms
+[10:46:16 INF] Request finished HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - 404 0 null 25.1325ms
+[10:46:16 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/js/devextreme/bootstrap.js.map, Response status code: 404
+[10:46:16 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[10:46:16 INF] No cached response available for this request.
+[10:46:16 INF] The response could not be cached for this request.
+[10:46:16 INF] HTTP GET /css/devextreme/bootstrap.css.map responded 404 in 1.1657 ms
+[10:46:16 INF] Request finished HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - 404 0 null 2.2378ms
+[10:46:16 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/css/devextreme/bootstrap.css.map, Response status code: 404
+[10:46:19 INF] Request starting HTTP/2 GET https://localhost:7102/Tenant/Index - null null
+[10:46:19 INF] No cached response available for this request.
+[10:46:19 INF] Executing endpoint 'Rent.MVC.Controllers.TenantController.Index (Rent.MVC)'
+[10:46:19 INF] Route matched with {action = "Index", controller = "Tenant"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.TenantController (Rent.MVC).
+[10:46:19 INF] Executing action method Rent.MVC.Controllers.TenantController.Index (Rent.MVC) - Validation state: "Valid"
+[10:47:53 INF] User profile is available. Using 'C:\Users\petro.horokh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+[10:47:54 INF] Now listening on: https://localhost:7102
+[10:47:54 INF] Now listening on: http://localhost:5098
+[10:47:54 INF] Application started. Press Ctrl+C to shut down.
+[10:47:54 INF] Hosting environment: Development
+[10:47:54 INF] Content root path: C:\Training\Rent.MVC
+[10:47:54 INF] Request starting HTTP/2 GET https://localhost:7102/ - null null
+[10:47:55 INF] No cached response available for this request.
+[10:47:55 INF] Executing endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:47:55 INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.HomeController (Rent.MVC).
+[10:47:55 INF] Executing action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC) - Validation state: "Valid"
+[10:47:55 INF] Executed action method Rent.MVC.Controllers.HomeController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.5925ms.
+[10:47:58 INF] Executing ViewResult, running view Index.
+[10:47:59 INF] Executed ViewResult - view Index executed in 3904.8583ms.
+[10:47:59 INF] Executed action Rent.MVC.Controllers.HomeController.Index (Rent.MVC) in 3924.6612ms
+[10:47:59 INF] Executed endpoint 'Rent.MVC.Controllers.HomeController.Index (Rent.MVC)'
+[10:47:59 INF] The response could not be cached for this request.
+[10:47:59 INF] HTTP GET / responded 200 in 4091.7647 ms
+[10:47:59 WRN] Unable to configure Browser Link script injection on the response. 
+[10:47:59 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:47:59 INF] Request finished HTTP/2 GET https://localhost:7102/ - 200 null text/html; charset=utf-8 4488.4493ms
+[10:47:59 INF] Request starting HTTP/2 GET https://localhost:7102/js/temp.js - null null
+[10:47:59 INF] The file /js/temp.js was not modified
+[10:47:59 INF] HTTP GET /js/temp.js responded 304 in 7.7318 ms
+[10:47:59 INF] Request finished HTTP/2 GET https://localhost:7102/js/temp.js - 304 null text/javascript 22.7935ms
+[10:48:01 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:48:01 INF] No cached response available for this request.
+[10:48:01 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:48:01 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:48:01 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:48:01 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.2534ms.
+[10:48:01 INF] Executing ViewResult, running view Index.
+[10:48:01 INF] Executed ViewResult - view Index executed in 542.0819ms.
+[10:48:01 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 543.8885ms
+[10:48:01 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:48:01 INF] The response could not be cached for this request.
+[10:48:01 INF] HTTP GET /User responded 200 in 566.7713 ms
+[10:48:01 WRN] Unable to configure Browser Link script injection on the response. 
+[10:48:01 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:48:01 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 null text/html; charset=utf-8 593.011ms
+[10:48:04 INF] Request starting HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - null null
+[10:48:04 INF] No cached response available for this request.
+[10:48:04 INF] The response could not be cached for this request.
+[10:48:04 INF] HTTP GET /js/devextreme/bootstrap.js.map responded 404 in 2.7866 ms
+[10:48:04 INF] Request finished HTTP/2 GET https://localhost:7102/js/devextreme/bootstrap.js.map - 404 0 null 4.2506ms
+[10:48:04 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/js/devextreme/bootstrap.js.map, Response status code: 404
+[10:48:04 INF] Request starting HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - null null
+[10:48:04 INF] No cached response available for this request.
+[10:48:04 INF] The response could not be cached for this request.
+[10:48:04 INF] HTTP GET /css/devextreme/bootstrap.css.map responded 404 in 0.2950 ms
+[10:48:04 INF] Request finished HTTP/2 GET https://localhost:7102/css/devextreme/bootstrap.css.map - 404 0 null 1.2435ms
+[10:48:04 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7102/css/devextreme/bootstrap.css.map, Response status code: 404
+[10:48:23 INF] Request starting HTTP/2 GET https://localhost:7102/User/Login - null null
+[10:48:23 INF] No cached response available for this request.
+[10:48:24 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Login (Rent.MVC)'
+[10:48:24 INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:48:24 INF] Executing action method Rent.MVC.Controllers.UserController.Login (Rent.MVC) - Validation state: "Valid"
+[10:48:24 INF] Executed action method Rent.MVC.Controllers.UserController.Login (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.2981ms.
+[10:48:24 INF] Executing ViewResult, running view Login.
+[10:48:24 INF] Executed ViewResult - view Login executed in 574.9516ms.
+[10:48:24 INF] Executed action Rent.MVC.Controllers.UserController.Login (Rent.MVC) in 575.7583ms
+[10:48:24 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Login (Rent.MVC)'
+[10:48:24 INF] Request starting HTTP/2 GET https://localhost:7102/js/temp.js - null null
+[10:48:24 INF] The file /js/temp.js was not modified
+[10:48:24 INF] HTTP GET /js/temp.js responded 304 in 1.7291 ms
+[10:48:24 INF] Request finished HTTP/2 GET https://localhost:7102/js/temp.js - 304 null text/javascript 3.5143ms
+[10:48:24 INF] The response could not be cached for this request.
+[10:48:24 INF] HTTP GET /User/Login responded 200 in 620.4228 ms
+[10:48:24 WRN] Unable to configure Browser Link script injection on the response. 
+[10:48:24 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:48:24 INF] Request finished HTTP/2 GET https://localhost:7102/User/Login - 200 null text/html; charset=utf-8 629.7524ms
+[10:48:45 INF] Request starting HTTP/2 GET https://localhost:7102/User - null null
+[10:48:45 INF] No cached response available for this request.
+[10:48:45 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:48:45 INF] Route matched with {action = "Index", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:48:45 INF] Executing action method Rent.MVC.Controllers.UserController.Index (Rent.MVC) - Validation state: "Valid"
+[10:48:45 INF] Executed action method Rent.MVC.Controllers.UserController.Index (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.0189ms.
+[10:48:45 INF] Executing ViewResult, running view Index.
+[10:48:45 INF] Executed ViewResult - view Index executed in 0.7822ms.
+[10:48:45 INF] Executed action Rent.MVC.Controllers.UserController.Index (Rent.MVC) in 1.0131ms
+[10:48:45 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.Index (Rent.MVC)'
+[10:48:45 INF] The response could not be cached for this request.
+[10:48:45 INF] HTTP GET /User responded 200 in 3.5011 ms
+[10:48:45 WRN] Unable to configure Browser Link script injection on the response. 
+[10:48:45 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:48:45 INF] Request finished HTTP/2 GET https://localhost:7102/User - 200 null text/html; charset=utf-8 17.4995ms
+[10:48:45 INF] Request starting HTTP/2 GET https://localhost:7102/js/temp.js - null null
+[10:48:45 INF] The file /js/temp.js was not modified
+[10:48:45 INF] HTTP GET /js/temp.js responded 304 in 0.1788 ms
+[10:48:45 INF] Request finished HTTP/2 GET https://localhost:7102/js/temp.js - 304 null text/javascript 0.8063ms
+[10:48:46 INF] Request starting HTTP/2 GET https://localhost:7102/User/SignUp - null null
+[10:48:46 INF] No cached response available for this request.
+[10:48:46 INF] Executing endpoint 'Rent.MVC.Controllers.UserController.SignUp (Rent.MVC)'
+[10:48:46 INF] Route matched with {action = "SignUp", controller = "User"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult SignUp() on controller Rent.MVC.Controllers.UserController (Rent.MVC).
+[10:48:46 INF] Executing action method Rent.MVC.Controllers.UserController.SignUp (Rent.MVC) - Validation state: "Valid"
+[10:48:46 INF] Executed action method Rent.MVC.Controllers.UserController.SignUp (Rent.MVC), returned result Microsoft.AspNetCore.Mvc.ViewResult in 0.2314ms.
+[10:48:46 INF] Executing ViewResult, running view SignUp.
+[10:48:46 INF] Executed ViewResult - view SignUp executed in 150.6941ms.
+[10:48:46 INF] Executed action Rent.MVC.Controllers.UserController.SignUp (Rent.MVC) in 151.2013ms
+[10:48:46 INF] Executed endpoint 'Rent.MVC.Controllers.UserController.SignUp (Rent.MVC)'
+[10:48:46 INF] The response could not be cached for this request.
+[10:48:46 INF] HTTP GET /User/SignUp responded 200 in 157.9488 ms
+[10:48:46 WRN] Unable to configure Browser Link script injection on the response. 
+[10:48:46 WRN] Unable to configure browser refresh script injection on the response. Consider manually adding '<script src="/_framework/aspnetcore-browser-refresh.js"></script>' to the body of the page.
+[10:48:46 INF] Request finished HTTP/2 GET https://localhost:7102/User/SignUp - 200 null text/html; charset=utf-8 162.1068ms

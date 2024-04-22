@@ -25,7 +25,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.BLL", "Rent.BLL\Rent.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roles.SQL", "Roles.SQL\Roles.SQL.csproj", "{19B21CDE-DF26-4493-B239-2104626FB538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.ADO.NET", "Rent.ADO.NET\Rent.ADO.NET.csproj", "{771BB827-CC5D-4DD5-803B-6F0E9FC31121}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.ADO.NET", "Rent.ADO.NET\Rent.ADO.NET.csproj", "{771BB827-CC5D-4DD5-803B-6F0E9FC31121}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.MVC", "Rent.MVC\Rent.MVC.csproj", "{84D880E3-BE54-4495-99EE-EC9AFA6D5DF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevExtreme NuGet.config", "DevExtreme NuGet.config", "{1672720F-B9FB-43BB-ABB6-947DFAF0BD60}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +88,10 @@ Global
 		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{771BB827-CC5D-4DD5-803B-6F0E9FC31121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D880E3-BE54-4495-99EE-EC9AFA6D5DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D880E3-BE54-4495-99EE-EC9AFA6D5DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D880E3-BE54-4495-99EE-EC9AFA6D5DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D880E3-BE54-4495-99EE-EC9AFA6D5DF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

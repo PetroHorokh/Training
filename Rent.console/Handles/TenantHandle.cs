@@ -19,13 +19,12 @@ public static class TenantHandle
 
     static TenantHandle()
     {
-        TenantService = Program.BllServices.GetRequiredService<ITenantService>();
-        DisconnectedArchitectureService = Program.AdoNetServiced.GetRequiredService<IDisconnectedArchitecture>();
+        TenantService = Program.Services.GetRequiredService<ITenantService>();
+        DisconnectedArchitectureService = Program.Services.GetRequiredService<IDisconnectedArchitecture>();
         TenantMenu =
         [ 
             GetAllTenantsAsync,
             GetAllBillsAsync,
-            GetTenantByIdAsync, 
             GetTenantByNameAsync,
             GetTenantAddressAsync,
             GetTenantRentsAsync,
@@ -67,25 +66,6 @@ public static class TenantHandle
             {
                 Console.WriteLine(bill);
             }
-        }
-    }
-
-    private static async Task GetTenantByIdAsync()
-    {
-        Console.Write("\nPlease enter required tenant id: ");
-        string input = Console.ReadLine()!;
-
-        if (Guid.TryParse(input, out Guid tenantId))
-        {
-            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
-
-            Console.WriteLine( tenant != null ?
-                tenant:
-                "\nThere is no such tenant");
-        }
-        else
-        {
-            Console.WriteLine("\nWrong id format");
         }
     }
 
@@ -359,9 +339,9 @@ public static class TenantHandle
         Console.Write("\nPlease enter required tenant id for update: ");
         string input = Console.ReadLine()!;
 
-        if (Guid.TryParse(input, out Guid tenantId))
+        if (input.Length != 0)
         {
-            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
+            var tenant = await TenantService.GetTenantByNameAsync(input);
 
             if (tenant != null)
             {
@@ -387,9 +367,8 @@ public static class TenantHandle
                 EditGuidProp(ref tenantAddressId, "address id");
                 tenant.AddressId = tenantAddressId;
 
-                var tenantToUpdate = new TenantToUpdateDto()
+                var tenantToUpdate = new TenantToGetDto()
                 {
-                    TenantId = tenantId,
                     Name = tenant.Name,
                     BankName = tenant.BankName,
                     Director = tenant.Director,
@@ -410,7 +389,7 @@ public static class TenantHandle
         }
         else
         {
-            Console.WriteLine("\nWrong id format");
+            Console.WriteLine("\nWrong name format");
         }
     }
 

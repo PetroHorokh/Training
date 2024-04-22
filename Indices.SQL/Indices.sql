@@ -16,6 +16,18 @@ BEGIN
 END;
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Tenant_Director' AND object_id = OBJECT_ID('[dbo].[Tenant]'))
+BEGIN
+	CREATE INDEX IX_Tenant_Director ON [dbo].[Tenant] ([Director]);
+END;
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Tenant_BankName' AND object_id = OBJECT_ID('[dbo].[Tenant]'))
+BEGIN
+	CREATE INDEX IX_Tenant_BankName ON [dbo].[Tenant] ([BankName]);
+END;
+GO
+
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Room_Number' AND object_id = OBJECT_ID('[dbo].[Room]'))
 BEGIN
 	CREATE UNIQUE INDEX IX_Room_Number ON [dbo].[Room] ([Number]);

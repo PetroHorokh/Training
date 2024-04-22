@@ -5,6 +5,88 @@ GO
 USE [Rent];
 GO
 
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='User' and xtype='U')
+CREATE TABLE [dbo].[User](
+    [UserId] [uniqueidentifier] NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+	[NormalizedName] [nvarchar](255) NOT NULL,
+	[Password] [nvarchar](255) NOT NULL,
+	[Email] [nvarchar](255) NOT NULL,
+	[NormalizedEmail] [nvarchar](255) NOT NULL,
+	[EmailConfirmed] [bit]  NOT NULL,
+	[PhoneNumber] [nvarchar](255) NOT NULL,
+	[PhoneNumberConfirmed] [bit] NOT NULL,
+	[CreatedBy] [uniqueidentifier] NOT NULL,
+    [CreatedDateTime] [datetime2] NOT NULL,
+    [ModifiedBy] [uniqueidentifier] NOT NULL,
+    [ModifiedDateTime] [datetime2] NOT NULL,
+    CONSTRAINT [PK_User] PRIMARY KEY ([UserId]),
+	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+)
+WITH
+(
+    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[User_History])
+);
+GO
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Role' and xtype='U')
+CREATE TABLE [dbo].[Role](
+    [RoleId] [int] NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+	[NormalizedName] [nvarchar](255) NOT NULL,
+	[CreatedBy] [uniqueidentifier] NOT NULL,
+    [CreatedDateTime] [datetime2] NOT NULL,
+    [ModifiedBy] [uniqueidentifier] NOT NULL,
+    [ModifiedDateTime] [datetime2] NOT NULL,
+    CONSTRAINT [PK_Role] PRIMARY KEY ([RoleId]),
+	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+)
+WITH
+(
+    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[Role_History])
+);
+GO
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='UserRole' and xtype='U')
+CREATE TABLE [dbo].UserRole(
+    [UserRoleId] [uniqueidentifier] NOT NULL,
+    [UserId] [uniqueidentifier] NOT NULL,
+	[RoleId] [int] NOT NULL,
+	[CreatedBy] [uniqueidentifier] NOT NULL,
+    [CreatedDateTime] [datetime2] NOT NULL,
+    [ModifiedBy] [uniqueidentifier] NOT NULL,
+    [ModifiedDateTime] [datetime2] NOT NULL,
+    CONSTRAINT [PK_UserRole] PRIMARY KEY ([UserRoleId]),
+	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+)
+WITH
+(
+    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[UserRole_History])
+);
+GO
+IF NOT EXISTS(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = 'FK_UserRole_UserId_User_UserId'
+)
+ALTER TABLE [dbo].[UserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_UserId_User_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([UserId]);
+GO
+IF NOT EXISTS(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = 'FK_UserRole_RoleId_Role_RoleId'
+)
+ALTER TABLE [dbo].[UserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_RoleId_Role_RoleId] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[Role] ([RoleId]);
+GO
+
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Accommodation' and xtype='U')
 CREATE TABLE [dbo].[Accommodation](
 	[AccommodationId] [int] NOT NULL,
@@ -78,6 +160,7 @@ CREATE TABLE [dbo].[Room](
     [RoomId] [uniqueidentifier] NOT NULL,
     [Number] [int] NOT NULL,
     [Area] [numeric](18, 2)  NOT NULL,
+	[AddressId] [uniqueidentifier] NOT NULL,
     [RoomTypeId] [int] NOT NULL,
     [CreatedBy] [uniqueidentifier] NOT NULL,
     [CreatedDateTime] [datetime2] NOT NULL,
@@ -85,6 +168,14 @@ CREATE TABLE [dbo].[Room](
     [ModifiedDateTime] [datetime2] NOT NULL,
     CONSTRAINT [PK_Room] PRIMARY KEY ([RoomId])
 )
+GO
+IF NOT EXISTS(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = 'FK_Room_AddressId_Address_AddressId'
+)
+ALTER TABLE [dbo].[Room]  WITH CHECK ADD  CONSTRAINT [FK_Room_AddressId_Address_AddressId] FOREIGN KEY([AddressId])
+REFERENCES [dbo].[Address] ([AddressId])
 GO
 IF NOT EXISTS(
     SELECT 1
@@ -130,6 +221,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Owner' and xtype='U')
 CREATE TABLE [dbo].[Owner](
     [OwnerId] [uniqueidentifier] NOT NULL,
     [Name] [nvarchar](50) NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
     [AddressId] [uniqueidentifier] NOT NULL,
     [CreatedBy] [uniqueidentifier] NOT NULL,
     [CreatedDateTime] [datetime2] NOT NULL,
@@ -145,6 +237,14 @@ IF NOT EXISTS(
 )
 ALTER TABLE [dbo].[Owner]  WITH CHECK ADD  CONSTRAINT [FK_Owner_AddressId_Address_AddressId] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([AddressId])
+GO
+IF NOT EXISTS(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = 'FK_Owner_UserId_User_UserId'
+)
+ALTER TABLE [dbo].[Owner]  WITH CHECK ADD  CONSTRAINT [FK_Owner_UserId_User_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([UserId])
 GO
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Asset' and xtype='U')
@@ -179,6 +279,7 @@ GO
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Tenant' and xtype='U')
 CREATE TABLE [dbo].[Tenant](
     [TenantId] [uniqueidentifier] NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
     [Name] [nvarchar](50) NOT NULL,
     [BankName] [nvarchar](50) NOT NULL,
     [AddressId] [uniqueidentifier] NOT NULL,
@@ -198,6 +299,14 @@ IF NOT EXISTS(
 )
 ALTER TABLE [dbo].[Tenant]  WITH CHECK ADD  CONSTRAINT [FK_Tenant_AddressId_Address_AddressId] FOREIGN KEY([AddressId])
 REFERENCES [dbo].[Address] ([AddressId])
+GO
+IF NOT EXISTS(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = 'FK_Tenant_UserId_User_UserId'
+)
+ALTER TABLE [dbo].[Tenant]  WITH CHECK ADD  CONSTRAINT FK_Tenant_UserId_User_UserId FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([UserId])
 GO
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Bill' and xtype='U')
@@ -315,79 +424,4 @@ IF NOT EXISTS(
 )
 ALTER TABLE [dbo].[Payment]  WITH CHECK ADD  CONSTRAINT [FK_Payment_TenantId_Tenant_TenantId] FOREIGN KEY([TenantId])
 REFERENCES [dbo].[Tenant] ([TenantId])
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='User' and xtype='U')
-CREATE TABLE [dbo].[User](
-    [UserId] [uniqueidentifier] NOT NULL,
-    [Name] [nvarchar](50) NOT NULL,
-	[Password] [nvarchar](255) NOT NULL,
-	[CreatedBy] [uniqueidentifier] NOT NULL,
-    [CreatedDateTime] [datetime2] NOT NULL,
-    [ModifiedBy] [uniqueidentifier] NOT NULL,
-    [ModifiedDateTime] [datetime2] NOT NULL,
-    CONSTRAINT [PK_User] PRIMARY KEY ([UserId]),
-	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
-    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
-    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
-)
-WITH
-(
-    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[User_History])
-);
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Role' and xtype='U')
-CREATE TABLE [dbo].[Role](
-    [RoleId] [int] NOT NULL,
-    [Name] [nvarchar](50) NOT NULL,
-	[CreatedBy] [uniqueidentifier] NOT NULL,
-    [CreatedDateTime] [datetime2] NOT NULL,
-    [ModifiedBy] [uniqueidentifier] NOT NULL,
-    [ModifiedDateTime] [datetime2] NOT NULL,
-    CONSTRAINT [PK_Role] PRIMARY KEY ([RoleId]),
-	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
-    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
-    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
-)
-WITH
-(
-    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[Role_History])
-);
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='UserRole' and xtype='U')
-CREATE TABLE [dbo].UserRole(
-    [UserRoleId] [uniqueidentifier] NOT NULL,
-    [UserId] [uniqueidentifier] NOT NULL,
-	[RoleId] [int] NOT NULL,
-	[CreatedBy] [uniqueidentifier] NOT NULL,
-    [CreatedDateTime] [datetime2] NOT NULL,
-    [ModifiedBy] [uniqueidentifier] NOT NULL,
-    [ModifiedDateTime] [datetime2] NOT NULL,
-    CONSTRAINT [PK_UserRole] PRIMARY KEY ([UserRoleId]),
-	ValidFrom DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
-    ValidTo DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
-    PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
-)
-WITH
-(
-    SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[UserRole_History])
-);
-GO
-IF NOT EXISTS(
-    SELECT 1
-    FROM sys.foreign_keys
-    WHERE name = 'FK_UserRole_UserId_User_UserId'
-)
-ALTER TABLE [dbo].[UserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_UserId_User_UserId] FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([UserId]);
-GO
-IF NOT EXISTS(
-    SELECT 1
-    FROM sys.foreign_keys
-    WHERE name = 'FK_UserRole_RoleId_Role_RoleId'
-)
-ALTER TABLE [dbo].[UserRole]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_RoleId_Role_RoleId] FOREIGN KEY([RoleId])
-REFERENCES [dbo].[Role] ([RoleId]);
 GO

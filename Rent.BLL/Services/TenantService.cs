@@ -2,7 +2,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
@@ -18,7 +17,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         logger.LogInformation("Entering TenantService, GetAllTenantsAsync");
 
         logger.LogInformation("Calling TenantRepository, method GetAllAsync");
-        var tenants = (await unitOfWork.Tenants.GetAllAsync()).ToList();
+        var tenants = await unitOfWork.Tenants.GetAllAsync(tenant => tenant.Address!);
         logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
         logger.LogInformation($"Mapping tenants to TenantToGetDto");
@@ -33,7 +32,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         logger.LogInformation("Entering TenantService, GetAllBillsAsync");
 
         logger.LogInformation("Calling BillRepository, method GetAllAsync");
-        var bills = (await unitOfWork.Bills.GetAllAsync()).ToList();
+        var bills = await unitOfWork.Bills.GetAllAsync();
         logger.LogInformation("Finished calling BillRepository, method GetAllAsync");
 
         logger.LogInformation($"Mapping bills to BillToGetDto");
@@ -48,7 +47,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         logger.LogInformation("Entering TenantService, GetAllRentsAsync");
 
         logger.LogInformation("Calling RentRepository, method GetAllAsync");
-        var rents = (await unitOfWork.Rents.GetAllAsync()).ToList();
+        var rents = await unitOfWork.Rents.GetAllAsync();
         logger.LogInformation("Finished calling RentRepository, method GetAllAsync");
 
         logger.LogInformation($"Mapping rents to RentToGetDto");
@@ -56,6 +55,22 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
 
         logger.LogInformation("Exiting TenantService, GetAllRentsAsync");
         return result.ToList();
+    }
+
+    public async Task<TenantToGetDto?> GetTenantByNameAsync(string value)
+    {
+        logger.LogInformation("Entering TenantService, GetTenantByNameAsync");
+
+        logger.LogInformation("Calling TenantRepository, method GetByConditionAsync");
+        logger.LogInformation($"Parameter: value = {value}");
+        var tenant = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.Name == value);
+        logger.LogInformation("Finished calling TenantRepository, method GetByConditionAsync");
+
+        logger.LogInformation($"Mapping tenant to TenantToGetDto");
+        var result = mapper.Map<TenantToGetDto>(tenant);
+
+        logger.LogInformation("Exiting TenantService, GetTenantByNameAsync");
+        return result;
     }
 
     public async Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId)
@@ -71,22 +86,6 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         var result = mapper.Map<TenantToGetDto>(tenant);
 
         logger.LogInformation("Exiting TenantService, GetTenantByIdAsync");
-        return result;
-    }
-
-    public async Task<TenantToGetDto?> GetTenantByNameAsync(string tenantName)
-    {
-        logger.LogInformation("Entering TenantService, GetTenantByNameAsync");
-
-        logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: TenantName = {tenantName}");
-        var tenant = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.Name == tenantName);
-        logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
-
-        logger.LogInformation($"Mapping tenant to TenantToGetDto");
-        var result = mapper.Map<TenantToGetDto>(tenant);
-
-        logger.LogInformation("Exiting TenantService, GetTenantByNameAsync");
         return result;
     }
 
@@ -113,7 +112,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
 
         logger.LogInformation("Calling RentRepository, method GetByConditionAsync");
         logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var rents = (await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId));
+        var rents = await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId);
         logger.LogInformation("Finished calling RentRepository, method GetByConditionAsync");
 
         logger.LogInformation($"Mapping rents to RentToGetDto");
@@ -129,7 +128,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
 
         logger.LogInformation("Calling BillRepository, method GetByConditionAsync");
         logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var bills = (await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId));
+        var bills = await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId);
         logger.LogInformation("Finished calling BillRepository, method GetByConditionAsync");
 
         logger.LogInformation($"Mapping bills to BillToGetDto");
@@ -145,7 +144,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
 
         logger.LogInformation("Calling PaymentRepository, method GetByConditionAsync");
         logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var bills = (await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId));
+        var bills = await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId);
         logger.LogInformation("Finished calling PaymentRepository, method GetByConditionAsync");
 
         logger.LogInformation($"Mapping bills to BillToGetDto");
@@ -221,7 +220,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
     }
 
-    public async Task<UpdatingResponse> UpdateTenantAsync(TenantToUpdateDto newTenant)
+    public async Task<UpdatingResponse> UpdateTenantAsync(TenantToGetDto newTenant)
     {
         logger.LogInformation("Entering TenantService, UpdateTenantAsync");
 

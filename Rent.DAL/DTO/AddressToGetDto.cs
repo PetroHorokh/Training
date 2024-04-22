@@ -1,16 +1,24 @@
-﻿using Rent.DAL.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Rent.DAL.Models;
 
 namespace Rent.DAL.DTO;
 
 public class AddressToGetDto
 {
+    [Required]
+    [Column(TypeName = "uniqueidentifier")]
     public Guid AddressId { get; set; }
 
+    [Required]
+    [Column(TypeName = "nvarchar(255)")]
     public string City { get; set; } = null!;
 
+    [Required]
+    [Column(TypeName = "nvarchar(255)")]
     public string Street { get; set; } = null!;
 
+    [Required]
+    [Column(TypeName = "nvarchar(255)")]
     public string Building { get; set; } = null!;
-
-    public override string ToString() => $"\nAddress with id {AddressId} information\nCity: {City}\nStreet: {Street}\nBuilding: {Building}";
 }

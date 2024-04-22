@@ -16,7 +16,7 @@ public static class RoomHandle
 
     static RoomHandle()
     {
-        RoomService = Program.BllServices.GetRequiredService<IRoomService>();
+        RoomService = Program.Services.GetRequiredService<IRoomService>();
         RoomMenu = 
         [
             GetAllRooms, 
