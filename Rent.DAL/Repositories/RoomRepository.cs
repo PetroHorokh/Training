@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Rent.DAL.Context;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
@@ -28,12 +29,13 @@ public class RoomRepository(RentContext context, IConfiguration configuration, I
 
         DynamicParameters parameters = new ();
         parameters.Add("Number", room.Number);
+        parameters.Add("AddressId", room.AddressId);
         parameters.Add("Area", room.Area);
         parameters.Add("RoomTypeId", room.RoomTypeId);
         try
         {
             logger.LogInformation("Querying 'sp_Room_Insert' stored procedures");
-            logger.LogInformation($"Parameters: @Number = {room.Number}, @Area = {room.Area}, @RoomTypeId = {room.RoomTypeId}");
+            logger.LogInformation($"Parameters: @Number = {room.Number}, @AddressId = {room.AddressId}, @Area = {room.Area}, @RoomTypeId = {room.RoomTypeId}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.RoomId).FirstOrDefault();
             if (result != null) response.CreatedId = result;

@@ -55,20 +55,19 @@ public class MenuHandle
             "\nTenant menu" +
             "\n1.Get all tenants" +
             "\n2.Get all bills" +
-            "\n3.Get tenant by id" +
-            "\n4.Get tenant by name" +
-            "\n5.Get tenant address information" +
-            "\n6.Get tenant rents" +
-            "\n7.Get tenant bills" +
-            "\n8.Get available assets" +
-            "\n9.Get booking for a asset" +
-            "\n10.Create tenant" +
-            "\n11.Create rent" +
-            "\n12.Create payment" +
-            "\n13.Update tenant" +
-            "\n14.Cancel rent" +
-            "\n15.Delete tenant" +
-            "\n16.Exit");
+            "\n3.Get tenant by name" +
+            "\n4.Get tenant address information" +
+            "\n5.Get tenant rents" +
+            "\n6.Get tenant bills" +
+            "\n7.Get available assets" +
+            "\n8.Get booking for a asset" +
+            "\n9.Create tenant" +
+            "\n10.Create rent" +
+            "\n11.Create payment" +
+            "\n12.Update tenant" +
+            "\n13.Cancel rent" +
+            "\n14.Delete tenant" +
+            "\n15.Exit");
 
         Console.Write("\nSelect an option: ");
         string input = Console.ReadLine()!;

@@ -1,4 +1,6 @@
-﻿namespace Rent.DAL.Models;
+﻿using temp;
+
+namespace Rent.DAL.Models;
 
 public partial class Address
 {
@@ -18,7 +20,9 @@ public partial class Address
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<Owner> Owners { get; set; } = [];
+    public virtual ICollection<Owner> Owners { get; set; } = new List<Owner>();
 
-    public virtual ICollection<Tenant> Tenants { get; set; } = [];
+    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<Tenant> Tenants { get; set; } = new List<Tenant>();
 }

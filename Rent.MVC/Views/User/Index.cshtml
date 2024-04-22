@@ -1,0 +1,27 @@
+﻿<div class="userAction">
+    @(Html.DevExtreme().Button()
+        .Text("Login")
+        .Type(ButtonType.Normal)
+        .StylingMode(ButtonStylingMode.Contained)
+        .Width(300)
+        .OnClick("Login")
+    )
+
+    @(Html.DevExtreme().Button()
+        .Text("SingUp")
+        .Type(ButtonType.Normal)
+        .StylingMode(ButtonStylingMode.Contained)
+        .Width(300)
+        .OnClick("SignUp")
+    )
+</div>
+
+<script>
+    function Login() {
+        window.location.href = '@Url.Action("Login", "User")';
+    }
+
+    function SignUp() {
+        window.location.href = '@Url.Action("SignUp", "User")';
+    }
+</script>

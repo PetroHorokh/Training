@@ -12,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Data;
 using Microsoft.Extensions.Logging;
 using Rent.DAL.Responses;
+using Rent.DAL.Context;
 
 namespace Rent.DAL.Repositories;
 
@@ -30,6 +31,7 @@ public class TenantRepository(RentContext context, IConfiguration configuration,
 
         DynamicParameters parameters = new();
         parameters.Add("Name", tenant.Name);
+        parameters.Add("UserID",tenant.UserId);
         parameters.Add("AddressId", tenant.AddressId);
         parameters.Add("Description", tenant.Description);
         parameters.Add("BankName", tenant.BankName);
@@ -38,7 +40,7 @@ public class TenantRepository(RentContext context, IConfiguration configuration,
         {
             logger.LogInformation("Querying 'sp_Tenant_Insert' stored procedures");
             logger.LogInformation(
-                $"Parameters: @Name = {tenant.Name}, @AddressId = {tenant.AddressId}, @Description = {tenant.Description}, @BankName = {tenant.BankName}, @Director = {tenant.Director}");
+                $"Parameters: @Name = {tenant.Name}, @UserId = {tenant.UserId}, @AddressId = {tenant.AddressId}, @Description = {tenant.Description}, @BankName = {tenant.BankName}, @Director = {tenant.Director}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.TenantId).FirstOrDefault();
             if (result != null) response.CreatedId = result;

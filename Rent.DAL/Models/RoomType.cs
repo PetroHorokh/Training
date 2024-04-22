@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using temp;
 
 namespace Rent.DAL.Models;
 
@@ -13,11 +12,11 @@ public partial class RoomType
 
     public DateTime CreatedDateTime { get; set; }
 
-    public Guid? ModifiedBy { get; set; }
+    public Guid ModifiedBy { get; set; }
 
-    public DateTime? ModifiedDateTime { get; set; }
+    public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<Price> Prices { get; set; } = [];
+    public virtual ICollection<Price> Prices { get; set; } = new List<Price>();
 
-    public virtual ICollection<Room> Rooms { get; set; } = [];
+    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
 }

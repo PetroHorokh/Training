@@ -12,9 +12,9 @@ public interface ITenantService
 
     Task<IEnumerable<RentToGetDto>> GetAllRentsAsync();
 
-    Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId);
+    Task<TenantToGetDto?> GetTenantByNameAsync(string value);
 
-    Task<TenantToGetDto?> GetTenantByNameAsync(string tenantName);
+    Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId);
 
     Task<AddressToGetDto?> GetTenantAddressAsync(Guid tenantId);
 
@@ -22,11 +22,13 @@ public interface ITenantService
 
     Task<IEnumerable<BillToGetDto>> GetTenantBillsAsync(Guid tenantId);
 
+    Task<IEnumerable<BillToGetDto>> GetTenantPaymentsAsync(Guid tenantId);
+
     Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant);
 
     Task<CreationResponse> CreateRentAsync(RentToCreateDto rent);
 
-    Task<UpdatingResponse> UpdateTenantAsync(TenantToUpdateDto newTenant);
+    Task<UpdatingResponse> UpdateTenantAsync(TenantToGetDto newTenant);
 
     Task<UpdatingResponse> DeleteTenantAsync(Guid tenantId);
 

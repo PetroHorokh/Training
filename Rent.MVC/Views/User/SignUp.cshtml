@@ -1,0 +1,138 @@
+﻿@using Rent.DAL.Authentication
+@using (Html.BeginForm())
+{
+    using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.AntiForgeryToken()
+
+        @(Html.DevExtreme().Form<SignUpUser>()
+            .ID("form")
+            .OnInitialized("onInitialized")
+            .ShowValidationSummary(true)
+            .Items(items =>
+            {
+                items.AddGroup()
+                    .Caption("Login")
+                    .Items(groupItems =>
+                    {
+                        groupItems.AddSimpleFor(m => m.Email)
+                            .Editor(e => e.TextBox()
+                                .Mode(TextBoxMode.Email)
+                                .InputAttr("aria-label", "Email")
+                                .ValueChangeEvent("keyup")
+                            );
+                        groupItems.AddSimpleFor(m => m.PhoneNumber)
+                            .Editor(e => e.TextBox()
+                                .Mode(TextBoxMode.Email)
+                                .InputAttr("aria-label", "PhoneNumber")
+                                .ValueChangeEvent("keyup")
+                            );
+                        groupItems.AddSimpleFor(m => m.Password)
+                            .Editor(e => e.TextBox()
+                                .Mode(TextBoxMode.Password)
+                                .InputAttr("aria-label", "Password")
+                                .ValueChangeEvent("keyup")
+                                .Buttons(buttons =>
+                                {
+                                    buttons.Add()
+                                        .Name("password")
+                                        .Location(TextEditorButtonLocation.After)
+                                        .Widget(w => w.Button()
+                                            .Type(ButtonType.Default)
+                                            .Icon("eyeopen")
+                                            .StylingMode(ButtonStylingMode.Text)
+                                            .OnClick("() => changePasswordMode('Password')")
+                                        );
+                                })
+                            );
+                        groupItems.AddSimpleFor(m => m.ConfirmPassword)
+                            .Editor(e => e.TextBox()
+                                .Mode(TextBoxMode.Password)
+                                .InputAttr("aria-label", "ConfirmPassword")
+                                .ValueChangeEvent("keyup")
+                                .Buttons(buttons =>
+                                {
+                                    buttons.Add()
+                                        .Name("password")
+                                        .Location(TextEditorButtonLocation.After)
+                                        .Widget(w => w.Button()
+                                            .Type(ButtonType.Default)
+                                            .Icon("eyeopen")
+                                            .StylingMode(ButtonStylingMode.Text)
+                                            .OnClick("() => changePasswordMode('ConfirmPassword')")
+                                        );
+                                })
+                            );
+                    });
+
+                items.AddGroup()
+                    .CssClass("last-group")
+                    .ColCountByScreen(c => c.Lg(0))
+                    .Items(groupItems =>
+                    {
+                        groupItems.AddGroup()
+                            .ColCountByScreen(c => c.Lg(2))
+                            .CssClass("buttons-group")
+                            .Items(secondGroupItems =>
+                            {
+                                secondGroupItems.AddButton()
+                                    .Name("Reset")
+                                    .ButtonOptions(b => b.Text("Reset")
+                                        .Icon(Url.Content("refresh"))
+                                        .Width(120)
+                                        .Disabled(true)
+                                        .OnClick("onResetButtonClick")
+                                    );
+
+                                secondGroupItems.AddButton()
+                                    .ButtonOptions(b => b.Text("SignUp")
+                                        .Type(ButtonType.Default)
+                                        .Width(120)
+                                        .OnClick("signUpFormSubmit")
+                                    );
+                            });
+                    });
+            })
+            .FormData(Model)
+        )
+    }
+}
+<script>
+    let formInstance;
+
+    function onInitialized(e) {
+        formInstance = e.component;
+    }
+
+    function onResetButtonClick(e) {
+        formInstance.reset();
+    }
+
+    function changePasswordMode(name) {
+        let editor = formInstance.getEditor(name);
+        editor.option('mode', editor.option('mode') === 'text' ? 'password' : 'text');
+    }
+
+    function signUpFormSubmit() {
+        var values = $("#form").dxForm("instance").option('formData');
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("SignUpAction", "User")",
+            contentType: "application/json",
+            dataType: "json",
+            data: values,
+            success: function(data) {
+                notify('Successfully registered new user', 'success', 2000);
+                formInstance.reset();
+            },
+            error: function (data) {
+                notify(data.responseText, 'error', 2000);
+                formInstance.reset();
+            }
+        });
+    }
+    function notify(message, type, time){
+        DevExpress.ui.notify(message, type, time);
+    }
+</script>

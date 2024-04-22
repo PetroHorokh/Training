@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using temp;
 
 namespace Rent.DAL.Models;
 
 public partial class Tenant
 {
     public Guid TenantId { get; set; }
+
+    public Guid UserId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -25,11 +26,13 @@ public partial class Tenant
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual Address? Address { get; set; } = null!;
+    public virtual Address Address { get; set; } = null!;
 
-    public virtual ICollection<Bill> Bills { get; set; } = [];
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
-    public virtual ICollection<Payment> Payments { get; set; } = [];
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual ICollection<Rent> Rents { get; set; } = [];
+    public virtual ICollection<global::Rent.DAL.Models.Rent> Rents { get; set; } = new List<global::Rent.DAL.Models.Rent>();
+
+    public virtual User User { get; set; } = null!;
 }

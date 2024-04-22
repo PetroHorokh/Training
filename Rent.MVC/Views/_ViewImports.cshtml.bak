@@ -1,0 +1,3 @@
+﻿@using Rent.MVC
+@using Rent.MVC.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

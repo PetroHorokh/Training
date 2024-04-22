@@ -1,0 +1,84 @@
+﻿@using Rent.DAL.DTO
+
+@Html.Label("ownerGrid", "Owner control")
+
+@(Html.DevExtreme().DataGrid<OwnerToGetDto>()
+    .ID("ownerGrid")
+    .RenderAsync(true)
+    .DataSource(ds => ds.Mvc()
+        .Controller("Owner")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("OwnerId")
+        .OnBeforeSend("grid_dataSource_beforeSend")
+    )
+    .RemoteOperations(true)
+    .RepaintChangesOnly(true)
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Name);
+
+        columns.AddFor(m => m.AddressId).Caption("Address").Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("Tenant").LoadAction("AddressesLookup").Key("Value").OnBeforeSend("grid_dataSource_beforeSend"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+        editing.Popup(p => p
+            .Width(700)
+            .Height(250)
+            );
+        editing.Form(f => f
+            .ColCount(2)
+            .Items(items =>
+        {
+
+            items.AddSimpleFor(m => m.Name)
+                .Label(l => l.Text("Name"))
+                .Editor(e => e.TextBox().Width(200));
+
+            items.AddSimpleFor(m => m.AddressId)
+                .Label(l => l.Text("Address"))
+                .Editor(e => e.Lookup().Width(200));
+        }));
+    })
+    .ShowBorders(true)
+    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+    .Paging(paging => paging.PageSize(5))
+    .Pager(pager =>
+    {
+        pager.Visible(true);
+        pager.DisplayMode(GridPagerDisplayMode.Full);
+        pager.ShowPageSizeSelector(true);
+        pager.AllowedPageSizes(new JS("[5, 10, 20]"));
+        pager.ShowNavigationButtons(true);
+    })
+    .SearchPanel(sp =>
+    {
+        sp.Visible(true);
+        sp.HighlightSearchText(false);
+    })
+    .FilterRow(r => r.Visible(true))
+    .Toolbar(toolbar =>
+    {
+        toolbar.Items(items =>
+        {
+            items.Add()
+                .Location(ToolbarItemLocation.Before)
+                .Widget(w => w.Button()
+                    .Icon("refresh")
+                    .OnClick(@<text>function () {$("#ownerGrid").dxDataGrid("getDataSource").reload();}</text>));
+
+            items.Add().Name("addRowButton");
+            items.Add().Name("searchPanel");
+        });
+    })
+)

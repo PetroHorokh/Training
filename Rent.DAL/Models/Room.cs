@@ -1,4 +1,6 @@
-﻿namespace Rent.DAL.Models;
+﻿using temp;
+
+namespace Rent.DAL.Models;
 
 public partial class Room
 {
@@ -7,6 +9,8 @@ public partial class Room
     public int Number { get; set; }
 
     public decimal Area { get; set; }
+
+    public Guid AddressId { get; set; }
 
     public int RoomTypeId { get; set; }
 
@@ -18,9 +22,11 @@ public partial class Room
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = [];
+    public virtual ICollection<AccommodationRoom> AccommodationRooms { get; set; } = new List<AccommodationRoom>();
 
-    public virtual ICollection<Asset> Assets { get; set; } = [];
+    public virtual Address Address { get; set; } = null!;
+
+    public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
 
     public virtual RoomType RoomType { get; set; } = null!;
 }

@@ -54,8 +54,8 @@ BEGIN
     SET NOCOUNT ON;
 	BEGIN TRY;
 	    BEGIN TRANSACTION;
-			INSERT INTO [dbo].[Bill]([BillId],[TenantId],[RentId],[BillAmount],[IssueDate],[EndDate],[CreatedBy],[CreatedDateTime])
-			SELECT [BillId],[TenantId],[RentId],[BillAmount],GETDATE(),[EndDate], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
+			INSERT INTO [dbo].[Bill]([BillId],[TenantId],[RentId],[BillAmount],[IssueDate],[CreatedBy],[CreatedDateTime])
+			SELECT [BillId],[TenantId],[RentId],[BillAmount],[IssueDate], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
 			FROM inserted;
 		COMMIT TRANSACTION;
 	END TRY
@@ -78,8 +78,8 @@ BEGIN
     SET NOCOUNT ON;
 	BEGIN TRY;
 	    BEGIN TRANSACTION;
-			INSERT INTO [dbo].[Owner]([OwnerId],[Name],[AddressId],[CreatedBy],[CreatedDateTime])
-			SELECT [OwnerId],[Name],[AddressId], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
+			INSERT INTO [dbo].[Owner]([OwnerId],[UserId],[Name],[AddressId],[CreatedBy],[CreatedDateTime])
+			SELECT [OwnerId],[UserId],[Name],[AddressId], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
 			FROM inserted;
 		COMMIT TRANSACTION;
 	END TRY
@@ -150,8 +150,8 @@ BEGIN
     SET NOCOUNT ON;
 	BEGIN TRY;
 	    BEGIN TRANSACTION;
-			INSERT INTO [dbo].[Room]([RoomId],[Number],[Area],[RoomTypeId],[CreatedBy],[CreatedDateTime])
-			SELECT [RoomId],[Number],[Area],[RoomTypeId], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
+			INSERT INTO [dbo].[Room]([RoomId],[AddressId],[Number],[Area],[RoomTypeId],[CreatedBy],[CreatedDateTime])
+			SELECT [RoomId],[AddressId],[Number],[Area],[RoomTypeId], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
 			FROM inserted;
 		COMMIT TRANSACTION;
 	END TRY
@@ -198,8 +198,8 @@ BEGIN
     SET NOCOUNT ON;
 	BEGIN TRY;
 	    BEGIN TRANSACTION;
-			INSERT INTO [dbo].[Tenant]([TenantId],[Name],[BankName],[AddressId],[Director],[Description],[CreatedBy],[CreatedDateTime])
-			SELECT [TenantId],[Name],[BankName],[AddressId],[Director],[Description], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
+			INSERT INTO [dbo].[Tenant]([TenantId],[UserId],[Name],[BankName],[AddressId],[Director],[Description],[CreatedBy],[CreatedDateTime])
+			SELECT [TenantId],[UserId],[Name],[BankName],[AddressId],[Director],[Description], CONVERT(UNIQUEIDENTIFIER, CONVERT(BINARY(16), SUSER_SID())) AS [CreatedBy], GETDATE()  AS [CreatedDateTime]
 			FROM inserted i;
 		COMMIT TRANSACTION;
 	END TRY
