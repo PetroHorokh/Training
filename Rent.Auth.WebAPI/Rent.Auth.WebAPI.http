@@ -1,0 +1,6 @@
+@Rent.Auth.WebAPI_HostAddress = http://localhost:5006
+
+GET {{Rent.Auth.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
