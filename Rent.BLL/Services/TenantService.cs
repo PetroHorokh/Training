@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
+using Rent.DAL.RequestsAndResponses;
 using Rent.DAL.Responses;
 using Rent.DAL.UnitOfWork;
 
@@ -24,6 +25,21 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         var result = tenants.Select(mapper.Map<TenantToGetDto>);
 
         logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
+        return result.ToList();
+    }
+
+    public async Task<IEnumerable<TenantToGetDto>> GetTenantsPartialAsync(GetRequest request)
+    {
+        logger.LogInformation("Entering TenantService, GetTenantsPartialAsync");
+
+        logger.LogInformation("Calling TenantRepository, method GetTenantsPartialAsync");
+        var tenants = await unitOfWork.Tenants.GetTenantsPartialAsync(request);
+        logger.LogInformation("Finished calling TenantRepository, method GetTenantsPartialAsync");
+
+        logger.LogInformation($"Mapping tenants to TenantToGetDto");
+        var result = tenants.Select(mapper.Map<TenantToGetDto>);
+
+        logger.LogInformation("Exiting TenantService, GetTenantsPartialAsync");
         return result.ToList();
     }
 
