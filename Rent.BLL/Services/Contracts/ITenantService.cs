@@ -1,41 +1,36 @@
 ﻿using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
-using Rent.DAL.Responses;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface ITenantService
 {
-    Task<IEnumerable<TenantToGetDto>> GetAllTenantsAsync();
+    Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync();
 
-    Task<IEnumerable<TenantToGetDto>> GetTenantsPartialAsync(GetRequest request);
+    Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request);
 
-    Task<IEnumerable<BillToGetDto>> GetAllBillsAsync();
+    Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync();
 
-    Task<IEnumerable<RentToGetDto>> GetAllRentsAsync();
+    Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync();
 
-    Task<TenantToGetDto?> GetTenantByNameAsync(string value);
+    Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId);
 
-    Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId);
+    Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId);
 
-    Task<AddressToGetDto?> GetTenantAddressAsync(Guid tenantId);
+    Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId);
 
-    Task<IEnumerable<RentToGetDto>> GetTenantRentsAsync(Guid tenantId);
-
-    Task<IEnumerable<BillToGetDto>> GetTenantBillsAsync(Guid tenantId);
-
-    Task<IEnumerable<BillToGetDto>> GetTenantPaymentsAsync(Guid tenantId);
+    Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId);
 
     Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant);
 
     Task<CreationResponse> CreateRentAsync(RentToCreateDto rent);
 
-    Task<UpdatingResponse> UpdateTenantAsync(TenantToGetDto newTenant);
+    Task<ModifyResponse<Tenant>> UpdateTenantAsync(TenantToGetDto newTenant);
 
-    Task<UpdatingResponse> DeleteTenantAsync(Guid tenantId);
+    Task<ModifyResponse<Tenant>> DeleteTenantAsync(Guid tenantId);
 
-    Task<UpdatingResponse> CancelRentAsync(Guid rentId);
+    Task<ModifyResponse<DAL.Models.Rent>> CancelRentAsync(Guid rentId);
 
     Task<CreationResponse> CreatePaymentAsync(PaymentToCreateDto payment);
 }

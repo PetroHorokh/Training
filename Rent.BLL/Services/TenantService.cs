@@ -1,173 +1,264 @@
 ﻿using System.Data.SqlTypes;
 using AutoMapper;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
-using Rent.DAL.Responses;
 using Rent.DAL.UnitOfWork;
 
 namespace Rent.BLL.Services;
 
 public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TenantService> logger) : ITenantService
 {
-    public async Task<IEnumerable<TenantToGetDto>> GetAllTenantsAsync()
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync()
     {
-        logger.LogInformation("Entering TenantService, GetAllTenantsAsync");
+        var result = new GetMultipleResponse<TenantToGetDto>();
 
-        logger.LogInformation("Calling TenantRepository, method GetAllAsync");
-        var tenants = await unitOfWork.Tenants.GetAllAsync(tenant => tenant.Address!);
-        logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetAllTenantsAsync");
 
-        logger.LogInformation($"Mapping tenants to TenantToGetDto");
-        var result = tenants.Select(mapper.Map<TenantToGetDto>);
+            logger.LogInformation("Calling TenantRepository, method GetAllAsync");
+            var response = await unitOfWork.Tenants.GetAllAsync();
+            logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping tenants to TenantToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<TenantToGetDto>> GetTenantsPartialAsync(GetRequest request)
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request)
     {
-        logger.LogInformation("Entering TenantService, GetTenantsPartialAsync");
+        var result = new GetMultipleResponse<TenantToGetDto>();
 
-        logger.LogInformation("Calling TenantRepository, method GetPartialAsync");
-        var tenants = await unitOfWork.Tenants.GetPartialAsync(request.Skip, request.Take);
-        logger.LogInformation("Finished calling TenantRepository, method GetPartialAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetTenantsPartialAsync");
 
-        logger.LogInformation($"Mapping tenants to TenantToGetDto");
-        var result = tenants.Select(mapper.Map<TenantToGetDto>);
+            logger.LogInformation("Calling TenantRepository, method GetPartialAsync");
+            var response = await unitOfWork.Tenants.GetPartialAsync(request.Skip, request.Take);
+            logger.LogInformation("Finished calling TenantRepository, method GetPartialAsync");
 
-        logger.LogInformation("Exiting TenantService, GetTenantsPartialAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping tenants to TenantToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetTenantsPartialAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<BillToGetDto>> GetAllBillsAsync()
+    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync()
     {
-        logger.LogInformation("Entering TenantService, GetAllBillsAsync");
+        var result = new GetMultipleResponse<BillToGetDto>();
 
-        logger.LogInformation("Calling BillRepository, method GetAllAsync");
-        var bills = await unitOfWork.Bills.GetAllAsync();
-        logger.LogInformation("Finished calling BillRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetAllBillsAsync");
 
-        logger.LogInformation($"Mapping bills to BillToGetDto");
-        var result = bills.Select(mapper.Map<BillToGetDto>);
+            logger.LogInformation("Calling BillRepository, method GetAllAsync");
+            var response = await unitOfWork.Bills.GetAllAsync();
+            logger.LogInformation("Finished calling BillRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting TenantService, GetAllBillsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping bills to BillToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<BillToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetAllBillsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<RentToGetDto>> GetAllRentsAsync()
+    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync()
     {
-        logger.LogInformation("Entering TenantService, GetAllRentsAsync");
+        var result = new GetMultipleResponse<RentToGetDto>();
 
-        logger.LogInformation("Calling RentRepository, method GetAllAsync");
-        var rents = await unitOfWork.Rents.GetAllAsync();
-        logger.LogInformation("Finished calling RentRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetAllRentsAsync");
 
-        logger.LogInformation($"Mapping rents to RentToGetDto");
-        var result = rents.Select(mapper.Map<RentToGetDto>);
+            logger.LogInformation("Calling RentRepository, method GetAllAsync");
+            var response = await unitOfWork.Rents.GetAllAsync();
+            logger.LogInformation("Finished calling RentRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting TenantService, GetAllRentsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping rents to RentToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<RentToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetAllRentsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<TenantToGetDto?> GetTenantByNameAsync(string value)
+    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId)
     {
-        logger.LogInformation("Entering TenantService, GetTenantByNameAsync");
+        var result = new GetSingleResponse<TenantToGetDto>();
 
-        logger.LogInformation("Calling TenantRepository, method GetByConditionAsync");
-        logger.LogInformation($"Parameter: value = {value}");
-        var tenant = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.Name == value);
-        logger.LogInformation("Finished calling TenantRepository, method GetByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetTenantByIdAsync");
 
-        logger.LogInformation($"Mapping tenant to TenantToGetDto");
-        var result = mapper.Map<TenantToGetDto>(tenant);
+            logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId);
+            logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting TenantService, GetTenantByNameAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping tenant to TenantToGetDto");
+            result.Entity = mapper.Map<TenantToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting TenantService, GetTenantByIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId)
     {
-        logger.LogInformation("Entering TenantService, GetTenantByIdAsync");
+        var result = new GetMultipleResponse<RentToGetDto>();
 
-        logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: tenantId = {tenantId}");
-        var tenant = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId);
-        logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetTenantRentsAsync");
 
-        logger.LogInformation($"Mapping tenant to TenantToGetDto");
-        var result = mapper.Map<TenantToGetDto>(tenant);
+            logger.LogInformation("Calling RentRepository, method GetByConditionAsync");
+            var response = await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId);
+            logger.LogInformation("Finished calling RentRepository, method GetByConditionAsync");
 
-        logger.LogInformation("Exiting TenantService, GetTenantByIdAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping rents to RentToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<RentToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetTenantRentsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<AddressToGetDto?> GetTenantAddressAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId)
     {
-        logger.LogInformation("Entering TenantService, GetTenantAddressAsync");
+        var result = new GetMultipleResponse<BillToGetDto>();
 
-        logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var address = (await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId,
-            tenant => tenant.Address!))!.Address;
-        logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetTenantBillsAsync");
 
-        logger.LogInformation($"Mapping address to AddressToGetDto");
-        var result = mapper.Map<AddressToGetDto>(address);
+            logger.LogInformation("Calling BillRepository, method GetByConditionAsync");
+            var response = await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId);
+            logger.LogInformation("Finished calling BillRepository, method GetByConditionAsync");
 
-        logger.LogInformation("Exiting TenantService, GetTenantAddressAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping bills to BillToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<BillToGetDto>);
+
+            logger.LogInformation("Exiting TenantService, GetTenantBillsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<RentToGetDto>> GetTenantRentsAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId)
     {
-        logger.LogInformation("Entering TenantService, GetTenantRentsAsync");
+        var result = new GetMultipleResponse<PaymentToGetDto>();
 
-        logger.LogInformation("Calling RentRepository, method GetByConditionAsync");
-        logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var rents = await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId);
-        logger.LogInformation("Finished calling RentRepository, method GetByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetTenantPaymentsAsync");
 
-        logger.LogInformation($"Mapping rents to RentToGetDto");
-        var result = rents.Select(mapper.Map<RentToGetDto>);
+            logger.LogInformation("Calling PaymentRepository, method GetByConditionAsync");
+            var response = await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId);
+            logger.LogInformation("Finished calling PaymentRepository, method GetByConditionAsync");
 
-        logger.LogInformation("Exiting TenantService, GetTenantRentsAsync");
-        return result;
-    }
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
 
-    public async Task<IEnumerable<BillToGetDto>> GetTenantBillsAsync(Guid tenantId)
-    {
-        logger.LogInformation("Entering TenantService, GetTenantBillsAsync");
+            logger.LogInformation($"Mapping payments to PaymentToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<PaymentToGetDto>);
 
-        logger.LogInformation("Calling BillRepository, method GetByConditionAsync");
-        logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var bills = await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId);
-        logger.LogInformation("Finished calling BillRepository, method GetByConditionAsync");
-
-        logger.LogInformation($"Mapping bills to BillToGetDto");
-        var result = bills.Select(mapper.Map<BillToGetDto>);
-
-        logger.LogInformation("Exiting TenantService, GetTenantBillsAsync");
-        return result;
-    }
-
-    public async Task<IEnumerable<BillToGetDto>> GetTenantPaymentsAsync(Guid tenantId)
-    {
-        logger.LogInformation("Entering TenantService, GetTenantPaymentsAsync");
-
-        logger.LogInformation("Calling PaymentRepository, method GetByConditionAsync");
-        logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var bills = await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId);
-        logger.LogInformation("Finished calling PaymentRepository, method GetByConditionAsync");
-
-        logger.LogInformation($"Mapping bills to BillToGetDto");
-        var result = bills.Select(mapper.Map<BillToGetDto>);
-
-        logger.LogInformation("Exiting TenantService, GetTenantPaymentsAsync");
-        return result;
+            logger.LogInformation("Exiting TenantService, GetTenantPaymentsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
     public async Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant)
@@ -197,134 +288,139 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<UpdatingResponse> DeleteTenantAsync(Guid tenantId)
+    public async Task<ModifyResponse<Tenant>> DeleteTenantAsync(Guid tenantId)
     {
-        logger.LogInformation("Entering TenantService, DeleteTenantAsync");
-        Exception? error = null;
+        var result = new ModifyResponse<Tenant>();
 
-        logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: TenantId = {tenantId}");
-        var tenant = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
         try
         {
-            if (tenant != null)
-            {
-                logger.LogInformation("Calling RoomRepository, method Delete");
-                unitOfWork.Tenants.Delete(tenant);
-                logger.LogInformation("Finished calling RoomRepository, method Delete");
+            logger.LogInformation("Entering TenantService, DeleteTenantAsync");
 
-                await unitOfWork.SaveAsync();
-            }
-            else
-            {
-                throw new SqlNullValueException("Couldn't find tenant");
-            }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Tenant entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Tenant entity: {ex.InnerException}");
-            error = ex;
-        }
+            logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId);
+            logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting TenantService, DeleteTenantAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            logger.LogInformation("Calling TenantRepository, method Delete");
+            var response2 = unitOfWork.Tenants.Delete(response1.Entity!);
+            logger.LogInformation("Finished calling TenantRepository, method Delete");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting TenantService, DeleteTenantAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<UpdatingResponse> UpdateTenantAsync(TenantToGetDto newTenant)
+    public async Task<ModifyResponse<Tenant>> UpdateTenantAsync(TenantToGetDto newTenant)
     {
-        logger.LogInformation("Entering TenantService, UpdateTenantAsync");
-
-        Exception? error = null;
-
-        logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameters: AddressId = {newTenant.AddressId}, Name = {newTenant.Name}, BankName = {newTenant.BankName}, Director = {newTenant.Director}, Description = {newTenant.Description}");
-        var tenant =
-            await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == newTenant.TenantId);
-        logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
+        var result = new ModifyResponse<Tenant>();
 
         try
         {
-            if (tenant != null)
+            logger.LogInformation("Entering TenantService, UpdateTenantAsync");
+
+            logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
+            var response1 =
+                await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == newTenant.TenantId);
+            logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
+
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
             {
-                tenant.Name = newTenant.Name;
-                tenant.BankName = newTenant.BankName;
-                tenant.AddressId = newTenant.AddressId;
-                tenant.Director = newTenant.Director;
-                tenant.Description = newTenant.Description;
-
-                logger.LogInformation("Calling TenantRepository, method Update");
-                unitOfWork.Tenants.Update(tenant);
-                logger.LogInformation("Finished calling TenantRepository, method Update");
-
-                await unitOfWork.SaveAsync();
+                throw response1.Error;
             }
-            else
+
+            response1.Entity!.Name = newTenant.Name;
+            response1.Entity!.Director = newTenant.Director;
+            response1.Entity!.Description = newTenant.Description;
+            response1.Entity!.BankName = newTenant.BankName;
+            response1.Entity!.AddressId = newTenant.AddressId;
+
+            logger.LogInformation("Calling TenantRepository, method Update");
+            var response2 = unitOfWork.Tenants.Update(response1.Entity!);
+            logger.LogInformation("Finished calling TenantRepository, method Update");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
             {
-                throw new SqlNullValueException("Couldn't find tenant");
+                throw response2.Error;
             }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Tenant entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Tenant entity: {ex.InnerException}");
-            error = ex;
-        }
 
-        logger.LogInformation("Exiting TenantService, UpdateTenantAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting TenantService, UpdateTenantAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<UpdatingResponse> CancelRentAsync(Guid rentId)
+    public async Task<ModifyResponse<DAL.Models.Rent>> CancelRentAsync(Guid rentId)
     {
-        logger.LogInformation("Entering TenantService, CancelRentAsync");
-
-        Exception? error = null;
-
-        logger.LogInformation("Calling RentRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameters: RentId = {rentId}");
-        var rent = await unitOfWork.Rents.GetSingleByConditionAsync(rent => rent.RentId == rentId);
-        logger.LogInformation("Finished calling RentRepository, method GetSingleByConditionAsync");
+        var result = new ModifyResponse<DAL.Models.Rent>();
 
         try
         {
-            if (rent != null)
+            logger.LogInformation("Entering TenantService, CancelRentAsync");
+
+            logger.LogInformation("Calling RentRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.Rents.GetSingleByConditionAsync(rent => rent.RentId == rentId);
+            logger.LogInformation("Finished calling RentRepository, method GetSingleByConditionAsync");
+
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
             {
-                rent.EndDate = DateTime.Now;
-
-                logger.LogInformation("Calling RentRepository, method Update");
-                unitOfWork.Rents.Update(rent);
-                logger.LogInformation("Finished calling RentRepository, method Update");
-
-                await unitOfWork.SaveAsync();
+                throw response1.Error;
             }
-            else
+
+            response1.Entity!.EndDate = DateTime.Now;
+
+            logger.LogInformation("Calling RentRepository, method Update");
+            var response2 = unitOfWork.Rents.Update(response1.Entity!);
+            logger.LogInformation("Finished calling RentRepository, method Update");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
             {
-                throw new SqlNullValueException("Couldn't find rent");
+                throw response2.Error;
             }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while updating Rent entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while updating Rent entity: {ex.InnerException}");
-            error = ex;
-        }
 
-        logger.LogInformation("Exiting TenantService, CancelRentAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting TenantService, CancelRentAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
     public async Task<CreationResponse> CreatePaymentAsync(PaymentToCreateDto payment)

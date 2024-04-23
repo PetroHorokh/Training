@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Azure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
@@ -38,12 +39,18 @@ public static class RoomHandle
 
     private static async Task GetAllRooms()
     {
-        var rooms = (await RoomService.GetAllRoomsAsync()).ToList();
+        var response = await RoomService.GetAllRoomsAsync();
 
-        if (rooms.IsNullOrEmpty()) Console.WriteLine("\nThere are no rooms");
+        if (response.Error is not null)
+        {
+            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            return;
+        }
+
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no rooms");
         else
         {
-            foreach (var room in rooms)
+            foreach (var room in response.Collection!)
             {
                 Console.WriteLine(room);
             }
@@ -52,12 +59,18 @@ public static class RoomHandle
 
     private static async Task GetAllRoomTypes()
     {
-        var roomTypes = (await RoomService.GetAllRoomTypesAsync()).ToList();
+        var response = await RoomService.GetAllRoomTypesAsync();
 
-        if (roomTypes.IsNullOrEmpty()) Console.WriteLine("\nThere are no room types");
+        if (response.Error is not null)
+        {
+            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            return;
+        }
+
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no room types");
         else
         {
-            foreach (var roomType in roomTypes)
+            foreach (var roomType in response.Collection!)
             {
                 Console.WriteLine(roomType);
             }
@@ -66,12 +79,18 @@ public static class RoomHandle
 
     private static async Task GetAllAccommodations()
     {
-        var accommodations = (await RoomService.GetAllAccommodationsAsync()).ToList();
+        var response = await RoomService.GetAllAccommodationsAsync();
 
-        if (accommodations.IsNullOrEmpty()) Console.WriteLine("\nThere are no accommodations");
+        if (response.Error is not null)
+        {
+            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            return;
+        }
+
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no accommodations");
         else
         {
-            foreach (var accommodation in accommodations)
+            foreach (var accommodation in response.Collection!)
             {
                 Console.WriteLine(accommodation);
             }
@@ -85,10 +104,16 @@ public static class RoomHandle
 
         if (Guid.TryParse(input, out Guid roomId))
         {
-            var room = await RoomService.GetRoomByRoomIdAsync(roomId);
+            var response = await RoomService.GetRoomByRoomIdAsync(roomId);
 
-            Console.WriteLine(room != null ?
-                room :
+            if (response.Error is not null)
+            {
+                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                return;
+            }
+
+            Console.WriteLine(response.Entity is not null ?
+                response.Entity :
                 "\nThere is no such room");
         }
         else
@@ -104,10 +129,16 @@ public static class RoomHandle
 
         if (int.TryParse(input, out int roomNumber))
         {
-            var room = await RoomService.GetRoomByNumberAsync(roomNumber);
+            var response = await RoomService.GetRoomByNumberAsync(roomNumber);
 
-            Console.WriteLine(room != null ?
-                room :
+            if (response.Error is not null)
+            {
+                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                return;
+            }
+
+            Console.WriteLine(response.Entity is not null ?
+                response.Entity :
                 "\nThere is no such room");
         }
         else
@@ -123,12 +154,18 @@ public static class RoomHandle
 
         if (Guid.TryParse(input, out Guid roomId))
         {
-            var accommodations = (await RoomService.GetAccommodationsOfRoomAsync(roomId)).ToList();
+            var response = await RoomService.GetAccommodationRoomsByRoomIdAsync(roomId);
 
-            if (accommodations.IsNullOrEmpty()) Console.WriteLine("\nThere are no accommodations for a room");
+            if (response.Error is not null)
+            {
+                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                return;
+            }
+
+            if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no accommodations for a room");
             else
             {
-                foreach (var accommodation in accommodations)
+                foreach (var accommodation in response.Collection!)
                 {
                     Console.WriteLine(accommodation);
                 }
@@ -173,9 +210,9 @@ public static class RoomHandle
             RoomTypeId = roomTypeId
         };
 
-        var result = await RoomService.CreateRoomAsync(room);
+        var response = await RoomService.CreateRoomAsync(room);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new room with id {result.CreatedId}");
+        Console.WriteLine(response.Error != null ? '\n' + response.Error.Message : $"\nSuccessfully created a new room with id {response.CreatedId}");
     }
 
     private static async Task CreateAccommodation()
@@ -261,13 +298,13 @@ public static class RoomHandle
 
         if (Guid.TryParse(input, out Guid accommodationRoomId))
         {
-            var accommodation = await RoomService.GetAccommodationRoomByIdAsync(accommodationRoomId);
+            var response = await RoomService.GetAccommodationRoomByIdAsync(accommodationRoomId);
 
-            if (accommodation != null)
+            if (response.Entity is not null)
             {
                 Console.WriteLine("\nRoom accommodation edit");
 
-                Console.WriteLine($"\nOld accommodation quantity: {accommodation.Quantity}");
+                Console.WriteLine($"\nOld accommodation quantity: {response.Entity.Quantity}");
 
                 do
                 {
@@ -284,7 +321,7 @@ public static class RoomHandle
                         input = Console.ReadLine()!;
                         if (int.TryParse(input, out int quantity))
                         {
-                            accommodation.Quantity = quantity;
+                            response.Entity.Quantity = quantity;
                             break;
                         }
                         else
@@ -295,10 +332,10 @@ public static class RoomHandle
                     } while (true);
                 }
 
-                var accommodationRoomToUpdateDto = new AccommodationRoomToUpdateDto()
+                var accommodationRoomToUpdateDto = new AccommodationRoomToGetDto()
                 {
-                    AccommodationRoomId = accommodation.AccommodationRoomId,
-                    Quantity = accommodation.Quantity,
+                    AccommodationRoomId = response.Entity.AccommodationRoomId,
+                    Quantity = response.Entity.Quantity,
                     
                 };
 

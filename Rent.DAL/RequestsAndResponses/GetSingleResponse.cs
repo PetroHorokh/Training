@@ -1,8 +1,8 @@
 ﻿namespace Rent.DAL.RequestsAndResponses;
 
-public class GetResponse
+public class GetSingleResponse<T> where T : class
 {
-    public object? Entity { get; set; }
+    public T? Entity { get; set; }
 
     public Exception? Error { get; set; }
 

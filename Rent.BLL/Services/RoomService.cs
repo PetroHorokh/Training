@@ -6,126 +6,273 @@ using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using System.Data.SqlTypes;
-using Rent.DAL.Responses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.BLL.Services;
 
 public class RoomService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerService> logger) : IRoomService
 {
-    public async Task<IEnumerable<RoomToGetDto>> GetAllRoomsAsync()
+    public async Task<GetMultipleResponse<RoomToGetDto>> GetAllRoomsAsync()
     {
-        logger.LogInformation("Entering RoomService, GetAllRoomsAsync");
+        var result = new GetMultipleResponse<RoomToGetDto>();
 
-        logger.LogInformation("Calling RoomRepository, method GetAllAsync");
-        var rooms = await unitOfWork.Rooms.GetAllAsync();
-        logger.LogInformation("Finished calling RoomRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetAllRoomsAsync");
 
-        logger.LogInformation($"Mapping rooms to RoomToGetDto");
-        var result = rooms.Select(mapper.Map<RoomToGetDto>);
+            logger.LogInformation("Calling RoomRepository, method GetAllAsync");
+            var response = await unitOfWork.Rooms.GetAllAsync();
+            logger.LogInformation("Finished calling RoomRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting RoomService, GetAllRoomsAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping rooms to RoomToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<RoomToGetDto>);
+
+            logger.LogInformation("Exiting RoomService, GetAllRoomsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<RoomTypeToGetDto>> GetAllRoomTypesAsync()
+    public async Task<GetMultipleResponse<RoomToGetDto>> GetPartialRoomsAsync(GetPartialRequest request)
     {
-        logger.LogInformation("Entering RoomService, GetAllRoomTypesAsync");
+        var result = new GetMultipleResponse<RoomToGetDto>();
 
-        logger.LogInformation("Calling RoomTypeRepository, method GetAllAsync");
-        var roomTypes = await unitOfWork.RoomTypes.GetAllAsync();
-        logger.LogInformation("Finished calling RoomTypeRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetPartialRoomsAsync");
 
-        logger.LogInformation($"Mapping room types to RoomToGetDto");
-        var result = roomTypes.Select(mapper.Map<RoomTypeToGetDto>);
+            logger.LogInformation("Calling RoomRepository, method GetAllAsync");
+            var response = await unitOfWork.Rooms.GetPartialAsync(request.Skip, request.Take);
+            logger.LogInformation("Finished calling RoomRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting RoomService, GetAllRoomsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping rooms to RoomToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<RoomToGetDto>);
+
+            logger.LogInformation("Exiting RoomService, GetPartialRoomsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<AccommodationToGetDto>> GetAllAccommodationsAsync()
+    public async Task<GetMultipleResponse<RoomTypeToGetDto>> GetAllRoomTypesAsync()
     {
-        logger.LogInformation("Entering RoomService, GetAllAccommodationsAsync");
+        var result = new GetMultipleResponse<RoomTypeToGetDto>();
 
-        logger.LogInformation("Calling AccommodationRepository, method GetAllAsync");
-        var accommodations = await unitOfWork.Accommodations.GetAllAsync();
-        logger.LogInformation("Finished calling AccommodationRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetAllRoomTypesAsync");
 
-        logger.LogInformation($"Mapping accommodations to AccommodationToGetDto");
-        var result = accommodations.Select(mapper.Map<AccommodationToGetDto>);
+            logger.LogInformation("Calling RoomTypeRepository, method GetAllAsync");
+            var response = await unitOfWork.RoomTypes.GetAllAsync();
+            logger.LogInformation("Finished calling RoomTypeRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting RoomService, GetAllAccommodationsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping room types to RoomToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<RoomTypeToGetDto>);
+
+            logger.LogInformation("Exiting RoomService, GetAllRoomTypesAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<RoomToGetDto?> GetRoomByRoomIdAsync(Guid roomId)
+    public async Task<GetMultipleResponse<AccommodationToGetDto>> GetAllAccommodationsAsync()
     {
-        logger.LogInformation("Entering RoomService, GetRoomByRoomIdAsync");
+        var result = new GetMultipleResponse<AccommodationToGetDto>();
 
-        logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
-        var room = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.RoomId == roomId);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetAllAccommodationsAsync");
 
-        logger.LogInformation($"Mapping room to RoomToGetDto");
-        var result = mapper.Map<RoomToGetDto>(room);
+            logger.LogInformation("Calling AccommodationRepository, method GetAllAsync");
+            var response = await unitOfWork.Accommodations.GetAllAsync();
+            logger.LogInformation("Finished calling AccommodationRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting RoomService, GetRoomByRoomIdAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping accommodations to AccommodationToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<AccommodationToGetDto>);
+
+            logger.LogInformation("Exiting RoomService, GetAllAccommodationsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<RoomToGetDto?> GetRoomByNumberAsync(int roomNumber)
+    public async Task<GetSingleResponse<RoomToGetDto>> GetRoomByRoomIdAsync(Guid roomId)
     {
-        logger.LogInformation("Entering RoomService, GetRoomByNumberAsync");
+        var result = new GetSingleResponse<RoomToGetDto>();
 
-        logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
-        var room = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.Number == roomNumber);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetRoomByRoomIdAsync");
 
-        logger.LogInformation($"Mapping room to RoomToGetDto");
-        var result = mapper.Map<RoomToGetDto>(room);
+            logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.RoomId == roomId);
+            logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting RoomService, GetRoomByNumberAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping room to RoomToGetDto");
+            result.Entity = mapper.Map<RoomToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting RoomService, GetRoomByRoomIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<AccommodationRoomToGetDto?> GetAccommodationRoomByIdAsync(Guid accommodationRoomId)
+    public async Task<GetSingleResponse<RoomToGetDto>> GetRoomByNumberAsync(int roomNumber)
     {
-        logger.LogInformation("Entering RoomService, GetAccommodationRoomByIdAsync");
+        var result = new GetSingleResponse<RoomToGetDto>();
 
-        logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
-        var room = await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodationRoom => accommodationRoom.AccommodationRoomId == accommodationRoomId);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetRoomByNumberAsync");
 
-        logger.LogInformation($"Mapping room to AccommodationRoomToGetDto");
-        var result = mapper.Map<AccommodationRoomToGetDto>(room);
+            logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.Number == roomNumber);
+            logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting RoomService, GetAccommodationRoomByIdAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping room to RoomToGetDto");
+            result.Entity = mapper.Map<RoomToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting RoomService, GetRoomByNumberAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<AccommodationRoomToGetDto>> GetAccommodationsOfRoomAsync(Guid roomId)
+    public async Task<GetSingleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomByIdAsync(Guid accommodationRoomId)
     {
-        logger.LogInformation("Entering RoomService, GetAccommodationsOfRoomAsync");
+        var result = new GetSingleResponse<AccommodationRoomToGetDto>();
 
-        logger.LogInformation("Calling AccommodationRoomRepository, method GetByConditionAsync");
-        var accommodations = await unitOfWork.AccommodationRooms.GetByConditionAsync(accommodation => accommodation.RoomId == roomId, accommodation => accommodation.Accommodation);
-        logger.LogInformation("Finished calling AccommodationRoomRepository, method GetByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetAccommodationRoomByIdAsync");
 
-        logger.LogInformation($"Mapping accommodations to AccommodationRoomToGetDto");
-        var result = accommodations.Select(mapper.Map<AccommodationRoomToGetDto>);
+            logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodationRoom =>
+                accommodationRoom.AccommodationRoomId == accommodationRoomId);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting RoomService, GetAccommodationsOfRoomAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping room accommodation to AccommodationRoomToGetDto");
+            result.Entity = mapper.Map<AccommodationRoomToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting RoomService, GetAccommodationRoomByIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
+    }
+
+    public async Task<GetMultipleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomsByRoomIdAsync(Guid roomId)
+    {
+        var result = new GetMultipleResponse<AccommodationRoomToGetDto>();
+
+        try
+        {
+            logger.LogInformation("Entering RoomService, GetAccommodationRoomsByRoomIdAsync");
+
+            logger.LogInformation("Calling AccommodationRoomRepository, method GetByConditionAsync");
+            var response =
+                await unitOfWork.AccommodationRooms.GetByConditionAsync(accommodationRoom =>
+                    accommodationRoom.RoomId == roomId);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method GetByConditionAsync");
+
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping room accommodations to AccommodationRoomToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<AccommodationRoomToGetDto>);
+
+            logger.LogInformation("Exiting RoomService, GetAccommodationRoomsByRoomIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
     public async Task<CreationResponse> CreateRoomAsync(RoomToCreateDto room)
     {
         logger.LogInformation("Entering RoomService, CreateRoom");
-        
+
         logger.LogInformation("Calling RoomRepository, method CreateWithProcedure");
-        logger.LogInformation($"Parameters: @Number = {room.Number}, @Area = {room.Area}, @RoomTypeId = {room.RoomTypeId}");
+        logger.LogInformation(
+            $"Parameters: @Number = {room.Number}, @Area = {room.Area}, @RoomTypeId = {room.RoomTypeId}");
         var result = await unitOfWork.Rooms.CreateWithProcedure(room);
         logger.LogInformation("Finished calling RoomRepository, method CreateWithProcedure");
-        
+
         logger.LogInformation("Exiting RoomService, CreateRoom");
         return result;
     }
@@ -171,129 +318,133 @@ public class RoomService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerSe
         return result;
     }
 
-    public async Task<UpdatingResponse> DeleteRoomAsync(Guid roomId)
+    public async Task<ModifyResponse<Room>> DeleteRoomAsync(Guid roomId)
     {
-        logger.LogInformation("Entering RoomService, DeleteRoomAsync");
+        var result = new ModifyResponse<Room>();
 
-        Exception? error = null;
-
-        logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: RoomId = {roomId}");
-        var room = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.RoomId == roomId);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
         try
         {
-            if (room != null)
-            {
-                logger.LogInformation("Calling RoomRepository, method Delete");
-                unitOfWork.Rooms.Delete(room);
-                logger.LogInformation("Finished calling RoomRepository, method Delete");
+            logger.LogInformation("Entering RoomService, DeleteRoomAsync");
 
-                await unitOfWork.SaveAsync();
-            }
-            else
-            {
-                throw new SqlNullValueException("Couldn't find room");
-            }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Room entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Room entity: {ex.InnerException}");
-            error = ex;
-        }
+            logger.LogInformation("Calling RoomRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.Rooms.GetSingleByConditionAsync(room => room.RoomId == roomId);
+            logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting RoomService, DeleteRoomAsync");
-        return new UpdatingResponse(){ DateTime = DateTime.Now, Error = error};
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            logger.LogInformation("Calling RoomRepository, method Delete");
+            var response2 = unitOfWork.Rooms.Delete(response1.Entity!);
+            logger.LogInformation("Finished calling RoomRepository, method Delete");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting RoomService, DeleteRoomAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<UpdatingResponse> DeleteAccommodationRoomAsync(Guid accommodationRoomId)
+    public async Task<ModifyResponse<AccommodationRoom>> DeleteAccommodationRoomAsync(Guid accommodationRoomId)
     {
-        logger.LogInformation("Entering RoomService, DeleteAccommodationRoomAsync");
+        var result = new ModifyResponse<AccommodationRoom>();
 
-        Exception? error = null;
-
-        logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: AccommodationRoomId = {accommodationRoomId}");
-        var accommodationRoom = await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodationRoom => accommodationRoom.AccommodationRoomId == accommodationRoomId);
-        logger.LogInformation("Finished calling AccommodationRoomRepository, method GetSingleByConditionAsync");
         try
         {
-            if (accommodationRoom != null)
-            {
-                logger.LogInformation("Calling AccommodationRoomRepository, method Delete");
-                unitOfWork.AccommodationRooms.Delete(accommodationRoom);
-                logger.LogInformation("Finished calling AccommodationRoomRepository, method Delete");
+            logger.LogInformation("Entering RoomService, DeleteAccommodationRoomAsync");
 
-                await unitOfWork.SaveAsync();
-            }
-            else
-            {
-                throw new SqlNullValueException("Couldn't find room accommodation");
-            }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting AccommodationRoom entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting AccommodationRoom entity: {ex.InnerException}");
-            error = ex;
-        }
+            logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodationRoom =>
+                accommodationRoom.AccommodationRoomId == accommodationRoomId);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting RoomService, DeleteAccommodationRoomAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            logger.LogInformation("Calling AccommodationRoomRepository, method Delete");
+            var response2 = unitOfWork.AccommodationRooms.Delete(response1.Entity!);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method Delete");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting RoomService, DeleteAccommodationRoomAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<UpdatingResponse> UpdateAccommodationRoom(AccommodationRoomToUpdateDto accommodationRoom)
+    public async Task<ModifyResponse<AccommodationRoom>> UpdateAccommodationRoom(AccommodationRoomToGetDto accommodationRoom)
     {
-        logger.LogInformation("Entering RoomService, UpdateAccommodationRoom");
-
-        Exception? error = null;
-
-        logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameters: Quantity = {accommodationRoom.Quantity}");
-        var accommodation =
-            await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodation => accommodation.AccommodationRoomId == accommodationRoom.AccommodationRoomId);
-        logger.LogInformation("Finished calling AccommodationRoomRepository, method GetSingleByConditionAsync");
+        var result = new ModifyResponse<AccommodationRoom>();
 
         try
         {
-            if (accommodation != null)
+            logger.LogInformation("Entering RoomService, UpdateAccommodationRoom");
+
+            logger.LogInformation("Calling AccommodationRoomRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.AccommodationRooms.GetSingleByConditionAsync(accommodationR =>
+                accommodationR.AccommodationRoomId == accommodationRoom.AccommodationRoomId);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method GetSingleByConditionAsync");
+
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
             {
-                accommodation.Quantity = accommodationRoom.Quantity;
-
-                logger.LogInformation("Calling AccommodationRoomRepository, method Update");
-                unitOfWork.AccommodationRooms.Update(accommodation);
-                logger.LogInformation("Finished calling AccommodationRoomRepository, method Update");
-
-                await unitOfWork.SaveAsync();
-
-                logger.LogInformation("Entering RoomService, UpdateAccommodationRoom");
+                throw response1.Error;
             }
-            else
+
+            response1.Entity!.Quantity = accommodationRoom.Quantity;
+
+            logger.LogInformation("Calling AccommodationRoomRepository, method Update");
+            var response2 = unitOfWork.AccommodationRooms.Update(response1.Entity!);
+            logger.LogInformation("Finished calling AccommodationRoomRepository, method Update");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
             {
-                throw new SqlNullValueException("Couldn't find accommodation");
+                throw response2.Error;
             }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while updating AccommodationRoom entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while updating AccommodationRoom entity: {ex.InnerException}");
-            error = ex;
-        }
 
-        logger.LogInformation("Exiting RoomService, UpdateAccommodationRoom");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting RoomService, UpdateAccommodationRoom");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 }

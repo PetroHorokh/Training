@@ -1,8 +1,8 @@
 ﻿namespace Rent.DAL.RequestsAndResponses;
 
-public class CreationResponse
+public class GetMultipleResponse<T> where T : class
 {
-    public Guid? CreatedId { get; set; }
+    public IEnumerable<T>? Collection { get; set; }
 
     public Exception? Error { get; set; }
 

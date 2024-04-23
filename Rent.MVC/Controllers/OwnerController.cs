@@ -28,7 +28,12 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
 
             if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<OwnerToGetDto>? owners))
             {
-                owners = (await ownerService.GetAllOwnersAsync()).ToList();
+                var response = await ownerService.GetAllOwnersAsync();
+
+                if (response.Error is not null)
+                {
+                    return StatusCode(500);
+                }
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -84,18 +89,18 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
     [Helpers.Authorize]
     public async Task<IActionResult> Put(Guid key, string values)
     {
-        var model = await ownerService.GetOwnerByIdAsync(key);
-        if (model == null)
+        var response = await ownerService.GetOwnerByIdAsync(key);
+        if (response.Entity is null)
             return StatusCode(409, "Object not found");
 
         var valuesDict = JsonConvert.DeserializeObject<IDictionary>(values);
-        PopulateModel(model, valuesDict!);
+        PopulateModel(response.Entity, valuesDict!);
 
-        if (!TryValidateModel(model))
+        if (!TryValidateModel(response))
             return BadRequest(GetFullErrorMessage(ModelState));
         try
         {
-            _ = await ownerService.UpdateOwnerAsync(model);
+            _ = await ownerService.UpdateOwnerAsync(response.Entity);
 
             return Ok();
         }
@@ -110,14 +115,14 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
     [Helpers.Authorize]
     public async Task<IActionResult> Delete(string key)
     {
-        var owner = await ownerService.GetOwnerByIdAsync(ConvertTo<System.Guid>(key));
+        var response = await ownerService.GetOwnerByIdAsync(ConvertTo<System.Guid>(key));
 
-        if (owner == null)
+        if (response.Entity is null)
             return StatusCode(409, "Object not found");
 
         try
         {
-            _ = await ownerService.DeleteOwnerAsync(owner!.OwnerId);
+            _ = await ownerService.DeleteOwnerAsync(response.Entity.OwnerId);
 
             return Ok();
         }

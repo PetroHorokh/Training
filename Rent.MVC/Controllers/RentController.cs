@@ -8,7 +8,6 @@ using Rent.ADO.NET.Services;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
-using Rent.DAL.Responses;
 
 namespace Rent.MVC.Controllers
 {
@@ -23,7 +22,7 @@ namespace Rent.MVC.Controllers
 
                 if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<RentToGetDto>? rents))
                 {
-                    rents = (await tenantService.GetAllRentsAsync()).ToList();
+                    rents = (await tenantService.GetAllRentsAsync()).Collection!.ToList();
 
                     var cacheExpiryOptions = new MemoryCacheEntryOptions
                     {
@@ -80,8 +79,8 @@ namespace Rent.MVC.Controllers
             try
             {
                 var rooms = await roomService.GetAllRoomsAsync();
-                var lookup = (await ownerService.GetAllAssetsAsync())
-                    .Join(rooms, 
+                var lookup = (await ownerService.GetAllAssetsAsync()).Collection!
+                    .Join(rooms.Collection!, 
                         l => l.RoomId, 
                         room => room.RoomId, 
                         (l, room) => new 
@@ -109,7 +108,7 @@ namespace Rent.MVC.Controllers
         {
             try
             {
-                var lookup = (await tenantService.GetAllTenantsAsync())
+                var lookup = (await tenantService.GetAllTenantsAsync()).Collection!
                     .Select(i => new {
                         Value = i.TenantId,
                         Text = i.Name

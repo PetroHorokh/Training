@@ -1,32 +1,30 @@
 ﻿using Rent.DAL.DTO;
+using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
-using Rent.DAL.Responses;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface IOwnerService
 {
-    Task<IEnumerable<OwnerToGetDto>> GetAllOwnersAsync();
+    Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync();
 
-    Task<IEnumerable<OwnerToGetDto>> GetOwnersPartialAsync(GetRequest request);
+    Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request);
 
-    Task<IEnumerable<AssetToGetDto>> GetAllAssetsAsync();
+    Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync();
 
-    Task<OwnerToGetDto?> GetOwnerByIdAsync(Guid ownerId);
+    Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId);
 
-    Task<AssetToGetDto?> GetAssetByIdAsync(Guid assetId);
+    Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId);
 
-    Task<AddressToGetDto?> GetOwnerAddressAsync(Guid ownerId);
-
-    Task<IEnumerable<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId);
+    Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId);
 
     Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner);
 
-    Task<UpdatingResponse> UpdateOwnerAsync(OwnerToGetDto newOwner);
+    Task<ModifyResponse<Owner>> UpdateOwnerAsync(OwnerToGetDto newOwner);
 
-    Task<UpdatingResponse> DeleteOwnerAsync(Guid ownerId);
+    Task<ModifyResponse<Owner>> DeleteOwnerAsync(Guid ownerId);
 
     Task<CreationResponse> CreateAssetAsync(AssetToCreateDto asset);
 
-    Task<UpdatingResponse> DeleteAssetAsync(Guid assetId);
+    Task<ModifyResponse<Asset>> DeleteAssetAsync(Guid assetId);
 }

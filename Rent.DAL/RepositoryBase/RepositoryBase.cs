@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Rent.DAL.Context;
 using Rent.DAL.RequestsAndResponses;
 
@@ -11,68 +12,99 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
 {
     protected readonly RentContext Context = context;
 
-    public async Task<IEnumerable<T>> GetAllAsync(
-        params Expression<Func<T, object>>[] includes)
+    public async Task<GetMultipleResponse<T>> GetAllAsync()
     {
-        var query = Context
-            .Set<T>()
-            .AsQueryable();
+        var result = new GetMultipleResponse<T>();
 
-        return await includes
-            .Aggregate(query, (current, next) => current.Include(next))
-            .ToListAsync();
-    }
+        try
+        {
+            result.Collection = await Context.Set<T>().AsNoTracking().ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
 
-    public async Task<IEnumerable<T>> GetPartialAsync(
-        int skip, int take,
-        params Expression<Func<T, object>>[] includes)
-    {
-        var query = Context
-            .Set<T>()
-            .Skip(skip)
-            .Take(take);
-
-        return await includes
-            .Aggregate(query, (current, next) => current.Include(next))
-            .ToListAsync();
-    }
-
-    public async Task<IEnumerable<T>> GetByConditionAsync(
-        Expression<Func<T, bool>> expression,
-        params Expression<Func<T, object>>[] includes)
-    {
-        var query = Context
-            .Set<T>()
-            .Where(expression)
-            .AsQueryable();
-
-        return await includes
-            .Aggregate(query, (current, next) => current.Include(next))
-            .ToListAsync();
-    }
-
-    public async Task<T?> GetSingleByConditionAsync(
-        Expression<Func<T, bool>> expression,
-        params Expression<Func<T, object>>[] includes)
-    {
-        var query = Context
-            .Set<T>()
-            .Where(expression)
-            .AsQueryable();
-
-        return await includes
-            .Aggregate(query, (current, next) => current.Include(next))
-            .FirstOrDefaultAsync();
-    }
-
-    public EntityEntry<T> Update(T entity)
-    {
-        var result = Context.Set<T>().Update(entity);
         return result;
     }
-    public EntityEntry<T> Delete(T entity)
+
+    public async Task<GetMultipleResponse<T>> GetPartialAsync(int skip, int take)
     {
-        var result = Context.Set<T>().Remove(entity);
-        return result; 
+        var result = new GetMultipleResponse<T>();
+
+        try
+        {
+            result.Collection = await Context.Set<T>().Skip(skip).Take(take).AsNoTracking().ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
+    }
+
+    public async Task<GetMultipleResponse<T>> GetByConditionAsync(Expression<Func<T, bool>> expression)
+    {
+        var result = new GetMultipleResponse<T>();
+
+        try
+        {
+            result.Collection = await Context.Set<T>().Where(expression).AsNoTracking().ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
+    }
+
+    public async Task<GetSingleResponse<T>> GetSingleByConditionAsync(Expression<Func<T, bool>> expression)
+    {
+        var result = new GetSingleResponse<T>();
+
+        try
+        {
+            result.Entity = await Context.Set<T>().Where(expression).AsNoTracking().FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
+    }
+
+    public ModifyResponse<T> Update(T entity)
+    {
+        var result = new ModifyResponse<T>();
+
+        try
+        { 
+            result.Status = Context.Set<T>().Update(entity);
+            
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
+    }
+    public ModifyResponse<T> Delete(T entity)
+    {
+        var result = new ModifyResponse<T>();
+
+        try
+        {
+            result.Status = Context.Set<T>().Remove(entity);
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
     }
 }

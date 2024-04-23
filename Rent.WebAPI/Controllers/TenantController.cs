@@ -21,13 +21,20 @@ public class TenantController(ITenantService tenantService) : Controller
             throw new ArgumentException("Invalid parameters.");
         }
 
-        var request = new GetRequest
+        var request = new GetPartialRequest
         {
             Skip = skip,
             Take = take
         };
 
-        var tenants = (await tenantService.GetTenantsPartialAsync(request)).ToList();
+        var response = await tenantService.GetTenantsPartialAsync(request);
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        var tenants = response.Collection!.ToList();
 
         if (tenants.Count == 0)
         {
@@ -41,7 +48,14 @@ public class TenantController(ITenantService tenantService) : Controller
     [AllowAnonymous]
     public async Task<ActionResult<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId)
     {
-        var tenant = await tenantService.GetTenantByIdAsync(tenantId);
+        var response = await tenantService.GetTenantByIdAsync(tenantId);
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        var tenant = response.Entity;
 
         if (tenant is null)
         {
@@ -52,7 +66,6 @@ public class TenantController(ITenantService tenantService) : Controller
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> PostTenantAsync([FromBody] TenantToCreateDto tenant)
     {
         if (!TryValidateModel(tenant))
@@ -71,7 +84,6 @@ public class TenantController(ITenantService tenantService) : Controller
     }
 
     [HttpDelete("{tenantId:guid}")]
-    [Authorize]
     public async Task<IActionResult> DeleteTenantAsync(Guid tenantId)
     {
         var result = await tenantService.DeleteTenantAsync(tenantId);
@@ -85,7 +97,6 @@ public class TenantController(ITenantService tenantService) : Controller
     }
 
     [HttpPut]
-    [Authorize]
     public async Task<IActionResult> PutTenantAsync([FromBody] TenantToGetDto tenant)
     {
         if (!TryValidateModel(tenant))

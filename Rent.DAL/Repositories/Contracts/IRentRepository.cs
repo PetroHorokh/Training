@@ -1,6 +1,6 @@
 ﻿using Rent.DAL.DTO;
 using Rent.DAL.RepositoryBase;
-using Rent.DAL.Responses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.DAL.Repositories.Contracts;
 
