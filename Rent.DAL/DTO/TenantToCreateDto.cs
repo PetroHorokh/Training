@@ -15,6 +15,7 @@ public class TenantToCreateDto
 
     [Required]
     [Column(TypeName = "nvarchar(255)")]
+    [Display(Name = "Bank name")]
     public string BankName { get; set; } = null!;
 
     [Required]

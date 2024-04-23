@@ -19,6 +19,7 @@ public class TenantToGetDto
 
     [Required]
     [Column(TypeName = "nvarchar(255)")]
+    [Display(Name = "Bank name")]
     public string BankName { get; set; } = null!;
 
     [Required]

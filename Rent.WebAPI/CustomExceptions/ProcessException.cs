@@ -1,5 +1,6 @@
 ﻿namespace Rent.WebAPI.CustomExceptions;
 
+[Serializable]
 public class ProcessException : Exception
 {
     public ProcessException() { }

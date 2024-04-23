@@ -14,11 +14,11 @@ public class TenantController(ITenantService tenantService) : Controller
 {
     [HttpGet("{skip:int}/{take:int}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetTenantsPartialAsync(int skip, int take)
+    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetTenantsPartialAsync(int skip, int take)
     {
         if (skip < 0 || take < 0)
         {
-            throw new ArgumentException("Invalid parameters");
+            throw new ArgumentException("Invalid parameters.");
         }
 
         var request = new GetRequest
@@ -31,24 +31,24 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (tenants.Count == 0)
         {
-            throw new NoEntitiesException("There are no tenants");
+            return new NoContentResult();
         }
 
-        return Ok(tenants);
+        return new OkObjectResult(tenants);
     }
 
     [HttpGet("{tenantId:guid}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetTenantByIdAsync(Guid tenantId)
+    public async Task<ActionResult<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId)
     {
         var tenant = await tenantService.GetTenantByIdAsync(tenantId);
 
         if (tenant is null)
         {
-            throw new NoEntitiesException("There are no tenants");
+            throw new NoEntitiesException("There are no tenants.");
         }
 
-        return Ok(tenant);
+        return tenant;
     }
 
     [HttpPost]
@@ -57,17 +57,17 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         if (!TryValidateModel(tenant))
         {
-            throw new ValidationException("Validate tenant data");
+            throw new ValidationException("Validate tenant data.");
         }
 
         var result = await tenantService.CreateTenantAsync(tenant);
 
-        if (result.Error is null)
+        if (result.Error is not null)
         {
-            return Created();
+            throw new ProcessException(result.Error.Message, result.Error);
         }
 
-        throw new ProcessException(result.Error.Message);
+        return Created();
     }
 
     [HttpDelete("{tenantId:guid}")]
@@ -76,12 +76,12 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         var result = await tenantService.DeleteTenantAsync(tenantId);
 
-        if (result.Error is null)
+        if (result.Error is not null)
         {
-            return NoContent();
+            throw new ProcessException(result.Error.Message, result.Error);
         }
 
-        throw new ProcessException(result.Error.Message);
+        return NoContent();
     }
 
     [HttpPut]
@@ -90,16 +90,16 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         if (!TryValidateModel(tenant))
         {
-            throw new ValidationException("Validate new tenant data");
+            throw new ValidationException("Validate new tenant data.");
         }
 
         var result = await tenantService.UpdateTenantAsync(tenant);
 
-        if (result.Error is null)
+        if (result.Error is not null)
         {
-            return NoContent();
+            throw new ProcessException(result.Error.Message);
         }
 
-        throw new ProcessException(result.Error.Message);
+        return NoContent();
     }
 }
