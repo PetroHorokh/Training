@@ -6,120 +6,197 @@ using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using System.Data.SqlTypes;
-using Rent.DAL.Responses;
 using Rent.DAL.RequestsAndResponses;
+using Azure.Core;
 
 namespace Rent.BLL.Services;
 
 public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerService> logger) : IOwnerService
 {
-    public async Task<IEnumerable<OwnerToGetDto>> GetAllOwnersAsync()
+    public async Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync()
     {
-        logger.LogInformation("Entering OwnerService, GetAllOwnersAsync");
+        var result = new GetMultipleResponse<OwnerToGetDto>();
 
-        logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
-        var owners = (await unitOfWork.Owners.GetByConditionAsync(_ => true, owner => owner.Address!)).ToList();
-        logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetAllOwnersAsync");
 
-        logger.LogInformation($"Mapping owners to OwnerToGetDto");
-        var result = owners.Select(mapper.Map<OwnerToGetDto>);
+            logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
+            var response = await unitOfWork.Owners.GetAllAsync();
+            logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetAllOwnersAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping owners to OwnerToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<OwnerToGetDto>);
+
+            logger.LogInformation("Exiting OwnerService, GetAllOwnersAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<OwnerToGetDto>> GetOwnersPartialAsync(GetRequest request)
+    public async Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request)
     {
-        logger.LogInformation("Entering OwnerService, GetOwnersPartialAsync");
+        var result = new GetMultipleResponse<OwnerToGetDto>();
 
-        logger.LogInformation("Calling OwnerRepository, method GetPartialAsync");
-        var owners = await unitOfWork.Owners.GetPartialAsync(request.Skip, request.Take);
-        logger.LogInformation("Finished calling OwnerRepository, method GetPartialAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetOwnersPartialAsync");
 
-        logger.LogInformation($"Mapping owners to OwnerToGetDto");
-        var result = owners.Select(mapper.Map<OwnerToGetDto>);
+            logger.LogInformation("Calling OwnerRepository, method GetPartialAsync");
+            var response = await unitOfWork.Owners.GetPartialAsync(request.Skip, request.Take);
+            logger.LogInformation("Finished calling OwnerRepository, method GetPartialAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetOwnersPartialAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping owners to OwnerToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<OwnerToGetDto>);
+
+            logger.LogInformation("Exiting OwnerService, GetOwnersPartialAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<IEnumerable<AssetToGetDto>> GetAllAssetsAsync()
+    public async Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync()
     {
-        logger.LogInformation("Entering OwnerService, GetAllAssetsAsync");
+        var result = new GetMultipleResponse<AssetToGetDto>();
 
-        logger.LogInformation("Calling AssetRepository, method GetAllAsync");
-        var assets = await unitOfWork.Assets.GetAllAsync();
-        logger.LogInformation("Finished calling AssetRepository, method GetAllAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetAllAssetsAsync");
 
-        logger.LogInformation($"Mapping owners to OwnerToGetDto");
-        var result = assets.Select(mapper.Map<AssetToGetDto>);
+            logger.LogInformation("Calling AssetRepository, method GetAllAsync");
+            var response = await unitOfWork.Assets.GetAllAsync();
+            logger.LogInformation("Finished calling AssetRepository, method GetAllAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetAllAssetsAsync");
-        return result.ToList();
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping assets to AssetToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<AssetToGetDto>);
+
+            logger.LogInformation("Exiting OwnerService, GetAllAssetsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<OwnerToGetDto?> GetOwnerByIdAsync(Guid ownerId)
+    public async Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId)
     {
-        logger.LogInformation("Entering OwnerService, GetOwnerByIdAsync");
+        var result = new GetSingleResponse<OwnerToGetDto>();
 
-        logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: ownerId = {ownerId}");
-        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId, owner => owner.Address!);
-        logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetOwnerByIdAsync");
 
-        logger.LogInformation($"Mapping owner to OwnerToGetDto");
-        var result = mapper.Map<OwnerToGetDto>(owner);
+            logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId);
+            logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetOwnerByIdAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping owner to OwnerToGetDto");
+            result.Entity = mapper.Map<OwnerToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting OwnerService, GetOwnerByIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<AssetToGetDto?> GetAssetByIdAsync(Guid assetId)
+    public async Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId)
     {
-        logger.LogInformation("Entering OwnerService, GetAssetByIdAsync");
+        var result = new GetSingleResponse<AssetToGetDto>();
 
-        logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: assetId = {assetId}");
-        var asset = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
-        logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetAssetByIdAsync");
 
-        logger.LogInformation($"Mapping asset to AssetToGetDto");
-        var result = mapper.Map<AssetToGetDto>(asset);
+            logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
+            var response = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
+            logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetAssetByIdAsync");
-        return result;
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping asset to AssetToGetDto");
+            result.Entity = mapper.Map<AssetToGetDto>(response.Entity);
+
+            logger.LogInformation("Exiting OwnerService, GetAssetByIdAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<AddressToGetDto?> GetOwnerAddressAsync(Guid ownerId)
+    public async Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId)
     {
-        logger.LogInformation("Entering OwnerService, GetOwnerAddressAsync");
+        var result = new GetMultipleResponse<AssetToGetDto>();
 
-        logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: OwnerId = {ownerId}");
-        var address = (await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId,
-            owner => owner.Address!))!.Address;
-        logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
+        try
+        {
+            logger.LogInformation("Entering OwnerService, GetAllAssetsAsync");
 
-        logger.LogInformation($"Mapping tenant to TenantToGetDto");
-        var result = mapper.Map<AddressToGetDto>(address);
+            logger.LogInformation("Calling AssetRepository, method GetByConditionAsync");
+            var response = await unitOfWork.Assets.GetByConditionAsync(asset => asset.OwnerId == ownerId);
+            logger.LogInformation("Finished calling AssetRepository, method GetByConditionAsync");
 
-        logger.LogInformation("Exiting OwnerService, GetOwnerAddressAsync");
-        return result;
-    }
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
 
-    public async Task<IEnumerable<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId)
-    {
-        logger.LogInformation("Entering OwnerService, GetOwnerAssetsAsync");
+            logger.LogInformation($"Mapping assets to AssetToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<AssetToGetDto>);
 
-        logger.LogInformation("Calling AssetRepository, method GetByConditionAsync");
-        var assets = await unitOfWork.Assets.GetByConditionAsync(asset => asset.OwnerId == ownerId);
-        logger.LogInformation("Finished calling AssetRepository, method GetByConditionAsync");
-
-        logger.LogInformation($"Mapping owner to OwnerToGetDto");
-        var result = assets.Select(mapper.Map<AssetToGetDto>);
-
-        logger.LogInformation("Exiting OwnerService, GetOwnerAssetsAsync");
-        return result.ToList();
+            logger.LogInformation("Exiting OwnerService, GetAllAssetsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
     public async Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner)
@@ -135,88 +212,92 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         return result;
     }
 
-    public async Task<UpdatingResponse> UpdateOwnerAsync(OwnerToGetDto newOwner)
+    public async Task<ModifyResponse<Owner>> UpdateOwnerAsync(OwnerToGetDto newOwner)
     {
-        logger.LogInformation("Entering OwnerService, UpdateOwnerAsync");
-
-        Exception? error = null;
-
-        logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameters: AddressId = {newOwner.AddressId}, Name = {newOwner.Name}");
-        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == newOwner.OwnerId);
-        logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
+        var result = new ModifyResponse<Owner>();
 
         try
         {
-            if (owner != null)
+            logger.LogInformation("Entering OwnerService, UpdateOwnerAsync");
+
+            logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
+            var response1 =
+                await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == newOwner.OwnerId);
+            logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
+
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
             {
-                owner.Name = newOwner.Name;
-                owner.AddressId = newOwner.AddressId;
-
-                logger.LogInformation("Calling OwnerRepository, method Update");
-                unitOfWork.Owners.Update(owner);
-                logger.LogInformation("Finished calling OwnerRepository, method Update");
-
-                await unitOfWork.SaveAsync();
+                throw response1.Error;
             }
-            else
+
+            response1.Entity!.Name = newOwner.Name;
+            response1.Entity!.AddressId = newOwner.AddressId;
+
+            logger.LogInformation("Calling OwnerRepository, method Update");
+            var response2 = unitOfWork.Owners.Update(response1.Entity!);
+            logger.LogInformation("Finished calling OwnerRepository, method Update");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
             {
-                throw new SqlNullValueException("Couldn't find owner");
+                throw response2.Error;
             }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
-            error = ex;
-        }
 
-        logger.LogInformation("Exiting OwnerService, UpdateOwnerAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting OwnerService, UpdateOwnerAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
-    public async Task<UpdatingResponse> DeleteOwnerAsync(Guid ownerId)
+    public async Task<ModifyResponse<Owner>> DeleteOwnerAsync(Guid ownerId)
     {
-        logger.LogInformation("Entering OwnerService, DeleteOwnerAsync");
+        var result = new ModifyResponse<Owner>();
 
-        Exception? error = null;
-
-        logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: OwnerId = {ownerId}");
-        var owner = await unitOfWork.Owners.GetSingleByConditionAsync(room => room.OwnerId == ownerId);
-        logger.LogInformation("Finished calling RoomRepository, method GetSingleByConditionAsync");
         try
         {
-            if (owner != null)
-            {
-                logger.LogInformation("Calling OwnerRepository, method Delete");
-                unitOfWork.Owners.Delete(owner);
-                logger.LogInformation("Finished calling OwnerRepository, method Delete");
+            logger.LogInformation("Entering OwnerService, DeleteOwnerAsync");
 
-                await unitOfWork.SaveAsync();
-            }
-            else
-            {
-                throw new SqlNullValueException("Couldn't find owner");
-            }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Owner entity: {ex.InnerException}");
-            error = ex;
-        }
+            logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId);
+            logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting OwnerService, DeleteOwnerAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            logger.LogInformation("Calling OwnerRepository, method Delete");
+            var response2 = unitOfWork.Owners.Delete(response1.Entity!);
+            logger.LogInformation("Finished calling OwnerRepository, method Delete");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting OwnerService, DeleteOwnerAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 
     public async Task<CreationResponse> CreateAssetAsync(AssetToCreateDto asset)
@@ -232,43 +313,45 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         return result;
     }
 
-    public async Task<UpdatingResponse> DeleteAssetAsync(Guid assetId)
+    public async Task<ModifyResponse<Asset>> DeleteAssetAsync(Guid assetId)
     {
-        logger.LogInformation("Entering OwnerService, DeleteAssetAsync");
+        var result = new ModifyResponse<Asset>();
 
-        Exception? error = null;
-
-        logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
-        logger.LogInformation($"Parameter: AssetId = {assetId}");
-        var asset = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
-        logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
         try
         {
-            if (asset != null)
-            {
-                logger.LogInformation("Calling AssetRepository, method Delete");
-                unitOfWork.Assets.Delete(asset);
-                logger.LogInformation("Finished calling AssetRepository, method Delete");
+            logger.LogInformation("Entering OwnerService, DeleteAssetAsync");
 
-                await unitOfWork.SaveAsync();
-            }
-            else
-            {
-                throw new SqlNullValueException("Couldn't find asset");
-            }
-        }
-        catch (DbUpdateException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Asset entity: {ex.InnerException}");
-            error = ex;
-        }
-        catch (SqlNullValueException ex)
-        {
-            logger.LogInformation($"An error occured while deleting Asset entity: {ex.InnerException}");
-            error = ex;
-        }
+            logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
+            var response1 = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
+            logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
 
-        logger.LogInformation("Exiting OwnerService, DeleteAssetAsync");
-        return new UpdatingResponse() { DateTime = DateTime.Now, Error = error };
+            result.TimeStamp = response1.TimeStamp;
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            logger.LogInformation("Calling AssetRepository, method Delete");
+            var response2 = unitOfWork.Assets.Delete(response1.Entity!);
+            logger.LogInformation("Finished calling AssetRepository, method Delete");
+
+            result.TimeStamp = response2.TimeStamp;
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            await unitOfWork.SaveAsync();
+
+            result.Status = response2.Status;
+
+            logger.LogInformation("Exiting OwnerService, DeleteAssetAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
     }
 }

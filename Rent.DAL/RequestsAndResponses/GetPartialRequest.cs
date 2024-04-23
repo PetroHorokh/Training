@@ -1,6 +1,6 @@
 ﻿namespace Rent.DAL.RequestsAndResponses;
 
-public class GetRequest
+public class GetPartialRequest
 {
     public int Skip { get; set; }
 

@@ -2,7 +2,7 @@
 using Rent.DAL.Authentication;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
-using Rent.DAL.Responses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.BLL.Services.Contracts;
 
@@ -12,5 +12,5 @@ public interface IUserService
 
     Task<CreationResponse> SignUpAsync(SignUpUser signUpModel);
 
-    Task<User?> GetUserByIdAsync(Guid userId);
+    Task<GetSingleResponse<User>> GetUserByIdAsync(Guid userId);
 }

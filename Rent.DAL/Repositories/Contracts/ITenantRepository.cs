@@ -2,7 +2,6 @@
 using Rent.DAL.Models;
 using Rent.DAL.RepositoryBase;
 using Rent.DAL.RequestsAndResponses;
-using Rent.DAL.Responses;
 
 namespace Rent.DAL.Repositories.Contracts;
 

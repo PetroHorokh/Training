@@ -7,7 +7,6 @@ using Rent.ADO.NET.Services.Contracts;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
-using Rent.DAL.Responses;
 using System.Collections;
 using Microsoft.AspNetCore.Authorization;
 using Rent.MVC.Helpers;
@@ -39,7 +38,7 @@ public class TenantController(
 
             if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<TenantToGetDto>? tenants))
             {
-                tenants = (await tenantService.GetAllTenantsAsync()).ToList();
+                tenants = (await tenantService.GetAllTenantsAsync()).Collection!.ToList();
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -95,7 +94,7 @@ public class TenantController(
     [Helpers.Authorize]
     public async Task<IActionResult> Put(Guid key, string values)
     {
-        var model = await tenantService.GetTenantByIdAsync(key);
+        var model = (await tenantService.GetTenantByIdAsync(key)).Entity;
         if (model is null)
             return StatusCode(409, "Object not found");
 
@@ -122,7 +121,7 @@ public class TenantController(
     [Helpers.Authorize]
     public async Task<IActionResult> Delete(Guid key)
     {
-        var tenant = await tenantService.GetTenantByIdAsync(key);
+        var tenant = (await tenantService.GetTenantByIdAsync(key)).Entity;
 
         if (tenant is null)
             return StatusCode(409, "Object not found");

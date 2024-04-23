@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Data;
 using Microsoft.Extensions.Logging;
-using Rent.DAL.Responses;
 using Rent.DAL.Context;
 using Rent.DAL.RequestsAndResponses;
 

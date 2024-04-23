@@ -21,13 +21,20 @@ public class OwnerController(IOwnerService ownerService) : Controller
             throw new ArgumentException("Invalid parameters.");
         }
 
-        var request = new GetRequest
+        var request = new GetPartialRequest
         {
             Skip = skip,
             Take = take
         };
 
-        var owners = (await ownerService.GetOwnersPartialAsync(request)).ToList();
+        var response = await ownerService.GetOwnersPartialAsync(request);
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        var owners = response.Collection!.ToList();
 
         if (owners.Count == 0)
         {
@@ -41,7 +48,14 @@ public class OwnerController(IOwnerService ownerService) : Controller
     [AllowAnonymous]
     public async Task<ActionResult<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId)
     {
-        var owner = await ownerService.GetOwnerByIdAsync(ownerId);
+        var response = await ownerService.GetOwnerByIdAsync(ownerId);
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        var owner = response.Entity;
 
         if (owner is null)
         {
@@ -52,7 +66,6 @@ public class OwnerController(IOwnerService ownerService) : Controller
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> PostOwnerAsync([FromBody] OwnerToCreateDto owner)
     {
         if (!TryValidateModel(owner))
@@ -71,7 +84,6 @@ public class OwnerController(IOwnerService ownerService) : Controller
     }
 
     [HttpDelete("{ownerId:guid}")]
-    [Authorize]
     public async Task<IActionResult> DeleteOwnerAsync(Guid ownerId)
     {
         var result = await ownerService.DeleteOwnerAsync(ownerId);
@@ -85,7 +97,6 @@ public class OwnerController(IOwnerService ownerService) : Controller
     }
 
     [HttpPut]
-    [Authorize]
     public async Task<IActionResult> PutOwnerAsync([FromBody] OwnerToGetDto owner)
     {
         if (!TryValidateModel(owner))

@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Data;
+﻿using Azure;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -20,7 +21,14 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
 
             if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<AssetToGetDto>? assets))
             {
-                assets = (await ownerService.GetAllAssetsAsync()).ToList();
+                var response = await ownerService.GetAllAssetsAsync();
+
+                if (response.Error is not null)
+                {
+                    throw response.Error;
+                }
+
+                assets = response.Collection!.ToList();
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -76,14 +84,16 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
     [Helpers.Authorize]
     public async Task<IActionResult> Delete(string key)
     {
-        var asset = await ownerService.GetAssetByIdAsync(ConvertTo<Guid>(key));
-
-        if (asset is null)
-            return StatusCode(409, "Object not found");
-
         try
         {
-            _ = await ownerService.DeleteAssetAsync(asset.AssetId);
+            var response = await ownerService.GetAssetByIdAsync(ConvertTo<Guid>(key));
+
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            _ = await ownerService.DeleteAssetAsync(response.Entity!.AssetId);
 
             return Ok();
         }
@@ -98,9 +108,22 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
     {
         try
         {
-            var roomTypes = await roomService.GetAllRoomTypesAsync();
-            var lookup = (await roomService.GetAllRoomsAsync())
-                .Join(roomTypes,
+            var response1 = await roomService.GetAllRoomTypesAsync();
+
+            if (response1.Error is not null)
+            {
+                throw response1.Error;
+            }
+
+            var response2 = await roomService.GetAllRoomsAsync();
+
+            if (response2.Error is not null)
+            {
+                throw response2.Error;
+            }
+
+            var lookup = response2.Collection!
+                .Join(response1.Collection!,
                     l => l.RoomTypeId,
                     roomType => roomType.RoomTypeId,
                     (l, roomType) => new
@@ -129,7 +152,14 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
     {
         try
         {
-            var lookup = (await ownerService.GetAllOwnersAsync()).Select(i => new
+            var response = await ownerService.GetAllOwnersAsync();
+
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            var lookup = response.Collection!.Select(i => new
             {
                 Value = i.OwnerId,
                 Text = i.Name.ToString()

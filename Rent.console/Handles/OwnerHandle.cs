@@ -22,7 +22,6 @@ public class OwnerHandle
             GetAllOwnersAsync,
             GetAllAssetsAsync,
             GetOwnerByIdAsync,
-            GetOwnerAddressAsync,
             GetOwnerAssetsAsync,
             CreateOwnerAsync,
             DeleteOwnerAsync,
@@ -34,12 +33,18 @@ public class OwnerHandle
 
     private static async Task GetAllOwnersAsync()
     {
-        var owners = (await OwnerService.GetAllOwnersAsync()).ToList();
+        var response = await OwnerService.GetAllOwnersAsync();
 
-        if (owners.IsNullOrEmpty()) Console.WriteLine("There are no owners");
+        if (response.Error is not null)
+        {
+            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            return;
+        }
+
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no owners");
         else
         {
-            foreach (var owner in owners)
+            foreach (var owner in response.Collection!)
             {
                 Console.WriteLine(owner);
             }
@@ -48,12 +53,18 @@ public class OwnerHandle
 
     private static async Task GetAllAssetsAsync()
     {
-        var assets = (await OwnerService.GetAllAssetsAsync()).ToList();
+        var response = await OwnerService.GetAllAssetsAsync();
 
-        if (assets.IsNullOrEmpty()) Console.WriteLine("There are no assets");
+        if (response.Error is not null)
+        {
+            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            return;
+        }
+
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no assets");
         else
         {
-            foreach (var asset in assets)
+            foreach (var asset in response.Collection!)
             {
                 Console.WriteLine(asset);
             }
@@ -67,30 +78,17 @@ public class OwnerHandle
 
         if (Guid.TryParse(input, out Guid ownerId))
         {
-            var owner = await OwnerService.GetOwnerByIdAsync(ownerId);
+            var response = await OwnerService.GetOwnerByIdAsync(ownerId);
 
-            Console.WriteLine(owner != null ?
-                owner :
-                "\nThere is no such owner");
-        }
-        else
-        {
-            Console.WriteLine("\nWrong id format");
-        }
-    }
+            if (response.Error is not null)
+            {
+                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                return;
+            }
 
-    private static async Task GetOwnerAddressAsync()
-    {
-        Console.Write("\nPlease enter required owner id: ");
-        string input = Console.ReadLine()!;
-
-        if (Guid.TryParse(input, out Guid ownerId))
-        {
-            var address = await OwnerService.GetOwnerAddressAsync(ownerId);
-
-            Console.WriteLine(address != null ?
-                address :
-                "\nThere is no such owner");
+            Console.WriteLine(response.Entity is not null ?
+                response :
+                $"Error with message was thrown: {response.Error!.Message}");
         }
         else
         {
@@ -105,12 +103,18 @@ public class OwnerHandle
 
         if (Guid.TryParse(input, out Guid ownerId))
         {
-            var assets = (await OwnerService.GetOwnerAssetsAsync(ownerId)).ToList();
+            var response = await OwnerService.GetOwnerAssetsAsync(ownerId);
 
-            if (assets.IsNullOrEmpty()) Console.WriteLine("\nThere are no assets");
+            if (response.Error is not null)
+            {
+                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                return;
+            }
+
+            if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no assets");
             else
             {
-                foreach (var asset in assets)
+                foreach (var asset in response.Collection!)
                 {
                     Console.WriteLine(asset);
                 }

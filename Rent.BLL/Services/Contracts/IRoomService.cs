@@ -1,22 +1,24 @@
 ﻿using Rent.DAL.DTO;
 using Rent.DAL.Models;
-using Rent.DAL.Responses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface IRoomService
 {
-    Task<IEnumerable<RoomToGetDto>> GetAllRoomsAsync();
+    Task<GetMultipleResponse<RoomToGetDto>> GetAllRoomsAsync();
 
-    Task<IEnumerable<RoomTypeToGetDto>> GetAllRoomTypesAsync();
+    Task<GetMultipleResponse<RoomToGetDto>> GetPartialRoomsAsync(GetPartialRequest request);
 
-    Task<RoomToGetDto?> GetRoomByRoomIdAsync(Guid roomId);
+    Task<GetMultipleResponse<RoomTypeToGetDto>> GetAllRoomTypesAsync();
 
-    Task<RoomToGetDto?> GetRoomByNumberAsync(int roomNumber);
+    Task<GetSingleResponse<RoomToGetDto>> GetRoomByRoomIdAsync(Guid roomId);
 
-    Task<IEnumerable<AccommodationRoomToGetDto>> GetAccommodationsOfRoomAsync(Guid roomId);
+    Task<GetSingleResponse<RoomToGetDto>> GetRoomByNumberAsync(int roomNumber);
 
-    Task<AccommodationRoomToGetDto?> GetAccommodationRoomByIdAsync(Guid accommodationRoomId);
+    Task<GetMultipleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomsByRoomIdAsync(Guid roomId);
+
+    Task<GetSingleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomByIdAsync(Guid accommodationRoomId);
 
     Task<CreationResponse> CreateRoomAsync(RoomToCreateDto room);
 
@@ -26,11 +28,11 @@ public interface IRoomService
 
     Task<CreationDictionaryResponse> CreateAccommodationAsync(AccommodationToCreateDto accommodation);
 
-    Task<UpdatingResponse> DeleteRoomAsync(Guid roomId);
+    Task<ModifyResponse<Room>> DeleteRoomAsync(Guid roomId);
 
-    Task<UpdatingResponse> DeleteAccommodationRoomAsync(Guid accommodationRoomId);
+    Task<ModifyResponse<AccommodationRoom>> DeleteAccommodationRoomAsync(Guid accommodationRoomId);
 
-    Task<IEnumerable<AccommodationToGetDto>> GetAllAccommodationsAsync();
+    Task<GetMultipleResponse<AccommodationToGetDto>> GetAllAccommodationsAsync();
     
-    Task<UpdatingResponse> UpdateAccommodationRoom(AccommodationRoomToUpdateDto accommodationRoom);
+    Task<ModifyResponse<AccommodationRoom>> UpdateAccommodationRoom(AccommodationRoomToGetDto accommodationRoom);
 }

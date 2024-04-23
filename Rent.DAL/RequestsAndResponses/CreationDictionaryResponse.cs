@@ -1,4 +1,4 @@
-﻿namespace Rent.DAL.Responses;
+﻿namespace Rent.DAL.RequestsAndResponses;
 
 public class CreationDictionaryResponse
 {

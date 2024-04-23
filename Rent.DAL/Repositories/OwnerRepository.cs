@@ -8,8 +8,8 @@ using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
-using Rent.DAL.Responses;
 using Rent.DAL.Context;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.DAL.Repositories;
 

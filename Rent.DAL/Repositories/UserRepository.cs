@@ -7,9 +7,9 @@ using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
-using Rent.DAL.Responses;
 using System;
 using System.Data;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.DAL.Repositories;
 

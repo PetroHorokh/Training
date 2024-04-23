@@ -25,8 +25,6 @@ public static class TenantHandle
         [ 
             GetAllTenantsAsync,
             GetAllBillsAsync,
-            GetTenantByNameAsync,
-            GetTenantAddressAsync,
             GetTenantRentsAsync,
             GetTenantBillsAsync,
             GetAvailableAssets,
@@ -43,12 +41,12 @@ public static class TenantHandle
 
     private static async Task GetAllTenantsAsync()
     {
-        var tenants = (await TenantService.GetAllTenantsAsync()).ToList();
+        var response = await TenantService.GetAllTenantsAsync();
 
-        if (tenants.IsNullOrEmpty()) Console.WriteLine("There are no tenants");
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no tenants");
         else
         {
-            foreach (var tenant in tenants)
+            foreach (var tenant in response.Collection!)
             {
                 Console.WriteLine(tenant);
             }
@@ -57,46 +55,15 @@ public static class TenantHandle
 
     private static async Task GetAllBillsAsync()
     {
-        var bills = (await TenantService.GetAllBillsAsync()).ToList();
+        var response = await TenantService.GetAllBillsAsync();
 
-        if (bills.IsNullOrEmpty()) Console.WriteLine("There are no bills");
+        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no bills");
         else
         {
-            foreach (var bill in bills)
+            foreach (var bill in response.Collection!)
             {
                 Console.WriteLine(bill);
             }
-        }
-    }
-
-    private static async Task GetTenantByNameAsync()
-    {
-        Console.WriteLine("\nPlease enter required tenant name: ");
-        string tenantName = Console.ReadLine()!;
-
-        var tenant = await TenantService.GetTenantByNameAsync(tenantName);
-
-        Console.WriteLine(tenant != null ?
-                tenant:
-                "\nThere is no such tenant");
-    }
-
-    private static async Task GetTenantAddressAsync()
-    {
-        Console.WriteLine("\nPlease enter required tenant id: ");
-        string input = Console.ReadLine()!;
-
-        if (Guid.TryParse(input, out Guid tenantId))
-        {
-            var address = await TenantService.GetTenantAddressAsync(tenantId);
-
-            Console.WriteLine(address != null ?
-                address :
-                "\nThere is no such tenant");
-        }
-        else
-        {
-            Console.WriteLine("\nWrong id format");
         }
     }
 
@@ -107,12 +74,12 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var rents = (await TenantService.GetTenantRentsAsync(tenantId)).ToList();
+            var rents = await TenantService.GetTenantRentsAsync(tenantId);
 
-            if (rents.IsNullOrEmpty()) Console.WriteLine("There are no rents");
+            if (rents.Collection.IsNullOrEmpty()) Console.WriteLine("There are no rents");
             else
             {
-                foreach (var rent in rents)
+                foreach (var rent in rents.Collection!)
                 {
                     Console.WriteLine(rent);
                 }
@@ -131,12 +98,12 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var bills = (await TenantService.GetTenantBillsAsync(tenantId)).ToList();
+            var response = await TenantService.GetTenantBillsAsync(tenantId);
 
-            if (bills.IsNullOrEmpty()) Console.WriteLine("There are no bills");
+            if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no bills");
             else
             {
-                foreach (var bill in bills)
+                foreach (var bill in response.Collection!)
                 {
                     Console.WriteLine(bill);
                 }
@@ -339,40 +306,40 @@ public static class TenantHandle
         Console.Write("\nPlease enter required tenant id for update: ");
         string input = Console.ReadLine()!;
 
-        if (input.Length != 0)
+        if (Guid.TryParse(input, out var tenantId))
         {
-            var tenant = await TenantService.GetTenantByNameAsync(input);
+            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
 
-            if (tenant != null)
+            if (tenant.Entity is not null)
             {
                 Console.WriteLine("Tenant edit");
 
-                var tenantName = tenant.Name;
+                var tenantName = tenant.Entity.Name;
                 EditProp(ref tenantName, "name");
-                tenant.Name = tenantName;
+                tenant.Entity.Name = tenantName;
 
-                var tenantBankName = tenant.BankName;
+                var tenantBankName = tenant.Entity.BankName;
                 EditProp(ref tenantBankName, "bank");
-                tenant.BankName = tenantBankName;
+                tenant.Entity.BankName = tenantBankName;
 
-                var tenantDirector = tenant.Director;
+                var tenantDirector = tenant.Entity.Director;
                 EditProp(ref tenantDirector, "director");
-                tenant.Director = tenantDirector;
+                tenant.Entity.Director = tenantDirector;
 
-                var tenantDescription = tenant.Description;
+                var tenantDescription = tenant.Entity.Description;
                 EditProp(ref tenantDescription, "description");
-                tenant.Description = tenantDescription;
+                tenant.Entity.Description = tenantDescription;
 
-                var tenantAddressId = tenant.AddressId;
+                var tenantAddressId = tenant.Entity.AddressId;
                 EditGuidProp(ref tenantAddressId, "address id");
-                tenant.AddressId = tenantAddressId;
+                tenant.Entity.AddressId = tenantAddressId;
 
                 var tenantToUpdate = new TenantToGetDto()
                 {
-                    Name = tenant.Name,
-                    BankName = tenant.BankName,
-                    Director = tenant.Director,
-                    Description = tenant.Description,
+                    Name = tenant.Entity.Name,
+                    BankName = tenant.Entity.BankName,
+                    Director = tenant.Entity.Director,
+                    Description = tenant.Entity.Description,
                     AddressId = tenantAddressId
                 };
 
