@@ -9,6 +9,4 @@ namespace Rent.DAL.Repositories.Contracts;
 public interface ITenantRepository : IRepositoryBase<Tenant>
 {
     Task<CreationResponse> CreateWithProcedure(TenantToCreateDto tenant);
-
-    Task<IEnumerable<Tenant>> GetTenantsPartialAsync(GetRequest request);
 }

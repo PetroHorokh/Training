@@ -1,4 +1,5 @@
 ﻿using Rent.DAL.DTO;
+using Rent.DAL.RequestsAndResponses;
 using Rent.DAL.Responses;
 
 namespace Rent.BLL.Services.Contracts;
@@ -6,6 +7,8 @@ namespace Rent.BLL.Services.Contracts;
 public interface IOwnerService
 {
     Task<IEnumerable<OwnerToGetDto>> GetAllOwnersAsync();
+
+    Task<IEnumerable<OwnerToGetDto>> GetOwnersPartialAsync(GetRequest request);
 
     Task<IEnumerable<AssetToGetDto>> GetAllAssetsAsync();
 

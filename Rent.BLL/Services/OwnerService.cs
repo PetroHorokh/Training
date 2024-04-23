@@ -7,6 +7,7 @@ using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using System.Data.SqlTypes;
 using Rent.DAL.Responses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.BLL.Services;
 
@@ -24,6 +25,21 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         var result = owners.Select(mapper.Map<OwnerToGetDto>);
 
         logger.LogInformation("Exiting OwnerService, GetAllOwnersAsync");
+        return result.ToList();
+    }
+
+    public async Task<IEnumerable<OwnerToGetDto>> GetOwnersPartialAsync(GetRequest request)
+    {
+        logger.LogInformation("Entering OwnerService, GetOwnersPartialAsync");
+
+        logger.LogInformation("Calling OwnerRepository, method GetPartialAsync");
+        var owners = await unitOfWork.Owners.GetPartialAsync(request.Skip, request.Take);
+        logger.LogInformation("Finished calling OwnerRepository, method GetPartialAsync");
+
+        logger.LogInformation($"Mapping owners to OwnerToGetDto");
+        var result = owners.Select(mapper.Map<OwnerToGetDto>);
+
+        logger.LogInformation("Exiting OwnerService, GetOwnersPartialAsync");
         return result.ToList();
     }
 
