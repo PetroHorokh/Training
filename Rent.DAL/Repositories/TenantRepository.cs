@@ -58,6 +58,4 @@ public class TenantRepository(RentContext context, IConfiguration configuration,
 
         return response;
     }
-
-    public async Task<IEnumerable<Tenant>> GetTenantsPartialAsync(GetRequest request) => await Context.Tenants.Skip(request.Skip).Take(request.Take).ToListAsync();
 }

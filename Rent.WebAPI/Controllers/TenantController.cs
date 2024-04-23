@@ -45,7 +45,7 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (tenant is null)
         {
-            throw new NoEntitiesException("There are no tenants.");
+            throw new NoEntitiesException("There is no such tenant with given id.");
         }
 
         return tenant;
@@ -86,7 +86,7 @@ public class TenantController(ITenantService tenantService) : Controller
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> PutUpdateAsync([FromBody] TenantToGetDto tenant)
+    public async Task<IActionResult> PutTenantAsync([FromBody] TenantToGetDto tenant)
     {
         if (!TryValidateModel(tenant))
         {

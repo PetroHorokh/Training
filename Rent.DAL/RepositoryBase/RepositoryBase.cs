@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Rent.DAL.Context;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.DAL.RepositoryBase;
 
@@ -16,6 +17,20 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         var query = Context
             .Set<T>()
             .AsQueryable();
+
+        return await includes
+            .Aggregate(query, (current, next) => current.Include(next))
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<T>> GetPartialAsync(
+        int skip, int take,
+        params Expression<Func<T, object>>[] includes)
+    {
+        var query = Context
+            .Set<T>()
+            .Skip(skip)
+            .Take(take);
 
         return await includes
             .Aggregate(query, (current, next) => current.Include(next))

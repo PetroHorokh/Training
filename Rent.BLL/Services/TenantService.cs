@@ -32,9 +32,9 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
     {
         logger.LogInformation("Entering TenantService, GetTenantsPartialAsync");
 
-        logger.LogInformation("Calling TenantRepository, method GetTenantsPartialAsync");
-        var tenants = await unitOfWork.Tenants.GetTenantsPartialAsync(request);
-        logger.LogInformation("Finished calling TenantRepository, method GetTenantsPartialAsync");
+        logger.LogInformation("Calling TenantRepository, method GetPartialAsync");
+        var tenants = await unitOfWork.Tenants.GetPartialAsync(request.Skip, request.Take);
+        logger.LogInformation("Finished calling TenantRepository, method GetPartialAsync");
 
         logger.LogInformation($"Mapping tenants to TenantToGetDto");
         var result = tenants.Select(mapper.Map<TenantToGetDto>);
