@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rent.BLL.Services.Contracts;
@@ -8,6 +9,7 @@ using Rent.WebAPI.CustomExceptions;
 
 namespace Rent.WebAPI.Controllers;
 
+[ApiVersion(1.0)]
 [ApiController]
 [Route("[controller]/[action]")]
 public class OwnerController(IOwnerService ownerService) : Controller
