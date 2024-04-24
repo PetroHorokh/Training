@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Rent.WebAPI.CustomExceptions;
+using Rent.WebAPI.ProblemDetails;
 
-namespace Rent.WebAPI.Middleware;
+namespace Rent.WebAPI.Handlers;
 
 internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
@@ -13,47 +12,47 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        ProblemDetails problemDetails;
+        CustomProblemDetails problemDetails;
 
         switch (exception)
         {
             case ArgumentException:
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status400BadRequest,
-                    Title = exception.Message
+                    Detail = exception.Message
                 };
                 break;
 
             case ProcessException:
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
-                    Title = exception.Message
+                    Detail = exception.Message
                 };
                 break;
 
             case NoEntitiesException:
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status204NoContent,
-                    Title = exception.Message
+                    Detail = exception.Message
                 };
                 break;
 
             case ValidationException:
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status422UnprocessableEntity,
-                    Title = exception.Message
+                    Detail = exception.Message
                 };
                 break;
 
             default:
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
-                    Title = "Internal server error"
+                    Detail = "Internal server error"
                 };
                 break;
         }
