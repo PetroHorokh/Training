@@ -15,8 +15,7 @@ namespace Rent.WebAPI.Controllers;
 public class TenantController(ITenantService tenantService) : Controller
 {
     [HttpGet("{skip:int}/{take:int}")]
-    [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetTenantsPartialAsync(int skip, int take)
+    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetTenantsPartial(int skip, int take)
     {
         if (skip < 0 || take < 0)
         {

@@ -16,7 +16,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
 {
     [HttpGet("{skip:int}/{take:int}")]
     [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetOwnerPartialAsync(int skip, int take)
+    public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetOwnersPartialAsync(int skip, int take)
     {
         if (skip < 0 || take < 0)
         {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Rent.ADO.NET;
 using Rent.BLL;
-using Rent.WebAPI.Middleware;
+using Rent.WebAPI.Handlers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,14 +19,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(Log.Logger);
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1);
-    options.ReportApiVersions = true;
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
-});
-
 builder.Services.AddCors(option => option.AddPolicy("Policy",
     policyBuilder =>
     {
@@ -35,6 +27,17 @@ builder.Services.AddCors(option => option.AddPolicy("Policy",
     }));
 
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(x =>
+{
+    x.DefaultApiVersion = new ApiVersion(1, 0);
+    x.AssumeDefaultVersionWhenUnspecified = true;
+    x.ReportApiVersions = true;
+    x.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
