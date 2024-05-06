@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
@@ -18,6 +19,25 @@ namespace Rent.WebAPI.Controllers;
 [Route("[controller]/[action]")]
 public class TenantController(ITenantService tenantService) : Controller
 {
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetAllTenants()
+    {
+        var response = await tenantService.GetAllTenantsAsync();
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        if (response.Count == 0)
+        {
+            return new NoContentResult();
+        }
+
+        return new OkObjectResult(response.Collection);
+    }
+
     /// <summary>
     /// Gets partial data for tenants
     /// </summary>
@@ -26,8 +46,10 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <returns>Returns list of <see cref="TenantToGetDto"/> tenants</returns>
     /// <exception cref="ArgumentException">Thrown when parameters are insufficient</exception>
     /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+
     [HttpGet("{skip:int}/{take:int}")]
-    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetTenantsPartial(int skip, int take)
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetPartialTenants(int skip, int take)
     {
         if (skip < 0 || take < 0)
         {
@@ -47,14 +69,41 @@ public class TenantController(ITenantService tenantService) : Controller
             throw response.Error;
         }
 
-        var tenants = response.Collection!.ToList();
-
-        if (tenants.Count == 0)
+        if (response.Count == 0)
         {
             return new NoContentResult();
         }
 
-        return new OkObjectResult(tenants);
+        return new OkObjectResult(response.Collection);
+    }
+
+    [HttpGet("{filterString:required}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetFilteredTenants(string filterString)
+    {
+        if (filterString is null || filterString.Length == 0)
+        {
+            throw new ArgumentException("Invalid parameters.");
+        }
+
+        var request = new GetFilteredRequest
+        {
+            Filter = filterString
+        };
+
+        var response = await tenantService.GetFilterTenantsAsync(request);
+
+        if (response.Error is not null)
+        {
+            throw response.Error;
+        }
+
+        if (response.Count == 0)
+        {
+            return new NoContentResult();
+        }
+
+        return new OkObjectResult(response.Collection);
     }
 
     /// <summary>
@@ -68,21 +117,19 @@ public class TenantController(ITenantService tenantService) : Controller
     [AllowAnonymous]
     public async Task<ActionResult<TenantToGetDto>> GetTenantById(Guid tenantId)
     {
-        var response = await tenantService.GetTenantByIdAsync(tenantId);
+        var response = await tenantService.GetTenantByIdAsync(tenantId, "Address");
 
         if (response.Error is not null)
         {
             throw response.Error;
         }
 
-        var tenant = response.Entity;
-
-        if (tenant is null)
+        if (response.Entity is null)
         {
             throw new NoEntitiesException("There is no such tenant with given id.");
         }
 
-        return tenant;
+        return response.Entity;
     }
 
     /// <summary>
@@ -97,7 +144,7 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         var result = await tenantService.CreateTenantAsync(tenant);
 
-        if (result.Error is not null)
+        if (response.Error is not null)
         {
             throw result.Error;
         }
@@ -138,6 +185,33 @@ public class TenantController(ITenantService tenantService) : Controller
         if (result.Error is not null)
         {
             throw new ProcessException(result.Error.Message);
+        }
+        return NoContent();
+    }
+
+    [HttpPatch("{tenantId:guid}")]
+    public async Task<IActionResult> PatchTenant(Guid tenantId, [FromBody] JsonPatchDocument<TenantToGetDto> patch)
+    {
+        var response1 = await tenantService.GetTenantByIdAsync(tenantId);
+
+        if (response1.Error is not null)
+        {
+            throw new ProcessException(response1.Error.Message, response1.Error);
+        }
+
+        var patched = response1.Entity!;
+        patch.ApplyTo(patched, ModelState);
+
+        if (!TryValidateModel(patched))
+        {
+            throw new ValidationException("Validate patch data.");
+        }
+
+        var response2 = await tenantService.UpdateTenantAsync(patched);
+
+        if (response2.Error is not null)
+        {
+            throw new ProcessException(response2.Error.Message, response2.Error);
         }
 
         return NoContent();
