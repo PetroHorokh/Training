@@ -95,21 +95,6 @@ public static class DalServiceCollection
             () => provider.GetService<ITenantRepository>()!,
             LazyThreadSafetyMode.ExecutionAndPublication));
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped(provider => new Lazy<IUserRepository>(
-            () => provider.GetService<IUserRepository>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
-        services.AddScoped<IRepositoryBase<Role>, RepositoryBase<Role>>();
-        services.AddScoped(provider => new Lazy<IRepositoryBase<Role>>(
-            () => provider.GetService<IRepositoryBase<Role>>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
-        services.AddScoped<IRepositoryBase<UserRole>, RepositoryBase<UserRole>>();
-        services.AddScoped(provider => new Lazy<IRepositoryBase<UserRole>>(
-            () => provider.GetService<IRepositoryBase<UserRole>>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
         services.AddScoped<IViewRepository, ViewRepository>();
         services.AddScoped(provider => new Lazy<IViewRepository>(
             () => provider.GetService<IViewRepository>()!,

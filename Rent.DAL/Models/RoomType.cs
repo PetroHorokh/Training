@@ -1,22 +1,16 @@
-﻿using temp;
+﻿using System.Text.Json.Serialization;
 
 namespace Rent.DAL.Models;
 
-public partial class RoomType
+public class RoomType
 {
     public int RoomTypeId { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public Guid CreatedBy { get; set; }
+    [JsonIgnore]
+    public ICollection<Price> Prices { get; set; } = new List<Price>();
 
-    public DateTime CreatedDateTime { get; set; }
-
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
-
-    public virtual ICollection<Price> Prices { get; set; } = new List<Price>();
-
-    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+    [JsonIgnore]
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
 }

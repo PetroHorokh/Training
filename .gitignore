@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 Rent.MVC/logsDAL/
 /Rent.WebAPI/logsWebAPI
+/Rent.Auth.WebAPI/logsAuthWebAPI

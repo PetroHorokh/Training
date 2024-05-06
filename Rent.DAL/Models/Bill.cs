@@ -1,8 +1,8 @@
-﻿using temp;
+﻿using System.Text.Json.Serialization;
 
 namespace Rent.DAL.Models;
 
-public partial class Bill
+public class Bill
 {
     public Guid BillId { get; set; }
 
@@ -16,17 +16,12 @@ public partial class Bill
 
     public DateTime? EndDate { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    [JsonIgnore]
+    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public DateTime CreatedDateTime { get; set; }
+    [JsonIgnore]
+    public Rent Rent { get; set; } = null!;
 
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-    public virtual Rent Rent { get; set; } = null!;
-
-    public virtual Tenant Tenant { get; set; } = null!;
+    [JsonIgnore]
+    public Tenant Tenant { get; set; } = null!;
 }
