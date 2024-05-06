@@ -1,19 +1,16 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
-using System.Data.SqlTypes;
 using Rent.DAL.RequestsAndResponses;
-using Azure.Core;
 
 namespace Rent.BLL.Services;
 
 public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerService> logger) : IOwnerService
 {
-    public async Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync()
+    public async Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<OwnerToGetDto>();
 
@@ -22,7 +19,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetAllOwnersAsync");
 
             logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
-            var response = await unitOfWork.Owners.GetAllAsync();
+            var response = await unitOfWork.Owners.GetAllAsync(includes);
             logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -44,7 +41,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
     }
 
-    public async Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request)
+    public async Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request, params string[] includes)
     {
         var result = new GetMultipleResponse<OwnerToGetDto>();
 
@@ -53,7 +50,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetOwnersPartialAsync");
 
             logger.LogInformation("Calling OwnerRepository, method GetPartialAsync");
-            var response = await unitOfWork.Owners.GetPartialAsync(request.Skip, request.Take);
+            var response = await unitOfWork.Owners.GetPartialAsync(request.Skip, request.Take, includes);
             logger.LogInformation("Finished calling OwnerRepository, method GetPartialAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -75,7 +72,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
     }
 
-    public async Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync()
+    public async Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<AssetToGetDto>();
 
@@ -84,7 +81,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetAllAssetsAsync");
 
             logger.LogInformation("Calling AssetRepository, method GetAllAsync");
-            var response = await unitOfWork.Assets.GetAllAsync();
+            var response = await unitOfWork.Assets.GetAllAsync(includes);
             logger.LogInformation("Finished calling AssetRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -106,7 +103,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
     }
 
-    public async Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId)
+    public async Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId, params string[] includes)
     {
         var result = new GetSingleResponse<OwnerToGetDto>();
 
@@ -115,7 +112,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetOwnerByIdAsync");
 
             logger.LogInformation("Calling OwnerRepository, method GetSingleByConditionAsync");
-            var response = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId);
+            var response = await unitOfWork.Owners.GetSingleByConditionAsync(owner => owner.OwnerId == ownerId, includes);
             logger.LogInformation("Finished calling OwnerRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -137,7 +134,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
     }
 
-    public async Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId)
+    public async Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId, params string[] includes)
     {
         var result = new GetSingleResponse<AssetToGetDto>();
 
@@ -146,7 +143,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetAssetByIdAsync");
 
             logger.LogInformation("Calling AssetRepository, method GetSingleByConditionAsync");
-            var response = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId);
+            var response = await unitOfWork.Assets.GetSingleByConditionAsync(asset => asset.AssetId == assetId, includes);
             logger.LogInformation("Finished calling AssetRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -168,7 +165,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
     }
 
-    public async Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId)
+    public async Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId, params string[] includes)
     {
         var result = new GetMultipleResponse<AssetToGetDto>();
 
@@ -177,7 +174,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             logger.LogInformation("Entering OwnerService, GetAllAssetsAsync");
 
             logger.LogInformation("Calling AssetRepository, method GetByConditionAsync");
-            var response = await unitOfWork.Assets.GetByConditionAsync(asset => asset.OwnerId == ownerId);
+            var response = await unitOfWork.Assets.GetByConditionAsync(asset => asset.OwnerId == ownerId, includes);
             logger.LogInformation("Finished calling AssetRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;

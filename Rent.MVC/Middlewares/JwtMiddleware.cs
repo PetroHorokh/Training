@@ -5,6 +5,7 @@ using Rent.BLL.Services.Contracts;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Rent.Auth.BLL.Services.Contracts;
 
 namespace Rent.MVC.Middlewares;
 
@@ -15,12 +16,12 @@ public class JwtMiddleware(RequestDelegate next, IConfiguration config)
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
         if (token != null)
-            await AttachUserToContext(context, userService, token);
+            AttachUserToContext(context, userService, token);
 
         await next(context);
     }
 
-    private async Task AttachUserToContext(HttpContext context, IUserService userService, string token)
+    private void AttachUserToContext(HttpContext context, IUserService userService, string token)
     {
         try
         {
@@ -37,8 +38,6 @@ public class JwtMiddleware(RequestDelegate next, IConfiguration config)
 
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "UserId").Value);
-
-            context.Items["User"] = await userService.GetUserByIdAsync(userId);
         }
         catch
         {

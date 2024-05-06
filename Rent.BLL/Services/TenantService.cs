@@ -1,7 +1,4 @@
-﻿using System.Data.SqlTypes;
-using AutoMapper;
-using Azure.Core;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
@@ -13,7 +10,7 @@ namespace Rent.BLL.Services;
 
 public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TenantService> logger) : ITenantService
 {
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync()
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<TenantToGetDto>();
 
@@ -22,10 +19,11 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetAllTenantsAsync");
 
             logger.LogInformation("Calling TenantRepository, method GetAllAsync");
-            var response = await unitOfWork.Tenants.GetAllAsync();
+            var response = await unitOfWork.Tenants.GetAllAsync(includes);
             logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
+            result.Count = response.Count;
             if (response.Error is not null)
             {
                 throw response.Error;
@@ -44,7 +42,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request)
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request, params string[] includes)
     {
         var result = new GetMultipleResponse<TenantToGetDto>();
 
@@ -53,7 +51,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetTenantsPartialAsync");
 
             logger.LogInformation("Calling TenantRepository, method GetPartialAsync");
-            var response = await unitOfWork.Tenants.GetPartialAsync(request.Skip, request.Take);
+            var response = await unitOfWork.Tenants.GetPartialAsync(request.Skip, request.Take, includes);
             logger.LogInformation("Finished calling TenantRepository, method GetPartialAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -75,7 +73,45 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync()
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetFilterTenantsAsync(GetFilteredRequest filter, params string[] includes)
+    {
+        var result = new GetMultipleResponse<TenantToGetDto>();
+
+        try
+        {
+            logger.LogInformation("Entering TenantService, GetFilterTenantsAsync");
+
+            logger.LogInformation("Calling TenantRepository, method GetByConditionAsync");
+            var response = await unitOfWork.Tenants.GetByConditionAsync(tenant => tenant.Address.City.ToLower().Contains(filter.Filter) 
+                || tenant.Address.Street.ToLower().Contains(filter.Filter) 
+                || tenant.Address.Building.ToLower().Contains(filter.Filter)
+                || tenant.Name.ToLower().Contains(filter.Filter)
+                || tenant.Director.ToLower().Contains(filter.Filter)
+                || tenant.BankName.ToLower().Contains(filter.Filter)
+                || tenant.Description.ToLower().Contains(filter.Filter),includes);
+            logger.LogInformation("Finished calling TenantRepository, method GetByConditionAsync");
+
+            result.TimeStamp = response.TimeStamp;
+            if (response.Error is not null)
+            {
+                throw response.Error;
+            }
+
+            logger.LogInformation($"Mapping tenants to TenantToGetDto");
+            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
+            result.Count = response.Count;
+
+            logger.LogInformation("Exiting TenantService, GetFilterTenantsAsync");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+            return result;
+        }
+    }
+
+    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<BillToGetDto>();
 
@@ -84,7 +120,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetAllBillsAsync");
 
             logger.LogInformation("Calling BillRepository, method GetAllAsync");
-            var response = await unitOfWork.Bills.GetAllAsync();
+            var response = await unitOfWork.Bills.GetAllAsync(includes);
             logger.LogInformation("Finished calling BillRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -106,7 +142,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync()
+    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<RentToGetDto>();
 
@@ -115,7 +151,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetAllRentsAsync");
 
             logger.LogInformation("Calling RentRepository, method GetAllAsync");
-            var response = await unitOfWork.Rents.GetAllAsync();
+            var response = await unitOfWork.Rents.GetAllAsync(includes);
             logger.LogInformation("Finished calling RentRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -137,7 +173,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId)
+    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, params string[] includes)
     {
         var result = new GetSingleResponse<TenantToGetDto>();
 
@@ -146,7 +182,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetTenantByIdAsync");
 
             logger.LogInformation("Calling TenantRepository, method GetSingleByConditionAsync");
-            var response = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId);
+            var response = await unitOfWork.Tenants.GetSingleByConditionAsync(tenant => tenant.TenantId == tenantId, includes);
             logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -168,7 +204,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, params string[] includes)
     {
         var result = new GetMultipleResponse<RentToGetDto>();
 
@@ -177,7 +213,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetTenantRentsAsync");
 
             logger.LogInformation("Calling RentRepository, method GetByConditionAsync");
-            var response = await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId);
+            var response = await unitOfWork.Rents.GetByConditionAsync(rent => rent.TenantId == tenantId, includes);
             logger.LogInformation("Finished calling RentRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -199,7 +235,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, params string[] includes)
     {
         var result = new GetMultipleResponse<BillToGetDto>();
 
@@ -208,7 +244,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetTenantBillsAsync");
 
             logger.LogInformation("Calling BillRepository, method GetByConditionAsync");
-            var response = await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId);
+            var response = await unitOfWork.Bills.GetByConditionAsync(bill => bill.TenantId == tenantId, includes);
             logger.LogInformation("Finished calling BillRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
@@ -230,7 +266,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         }
     }
 
-    public async Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId)
+    public async Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId, params string[] includes)
     {
         var result = new GetMultipleResponse<PaymentToGetDto>();
 
@@ -239,7 +275,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Entering TenantService, GetTenantPaymentsAsync");
 
             logger.LogInformation("Calling PaymentRepository, method GetByConditionAsync");
-            var response = await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId);
+            var response = await unitOfWork.Payments.GetByConditionAsync(payment => payment.TenantId == tenantId, includes);
             logger.LogInformation("Finished calling PaymentRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;

@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Rent.Auth.BLL.Services.Contracts;
+using Rent.Auth.DAL.AuthModels;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.Authentication;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 
@@ -40,7 +41,7 @@ namespace Rent.MVC.Controllers
 
                 if (result.Error is null)
                 {
-                    return StatusCode(201, result.CreatedId);
+                    return StatusCode(201, result);
                 }
                 else
                 {

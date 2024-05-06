@@ -6,17 +6,17 @@ namespace Rent.BLL.Services.Contracts;
 
 public interface IOwnerService
 {
-    Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync();
+    Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync(params string[] includes);
 
-    Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request);
+    Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request, params string[] includes);
 
-    Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync();
+    Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync(params string[] includes);
 
-    Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId);
+    Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId, params string[] includes);
 
-    Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId);
+    Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId, params string[] includes);
 
-    Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId);
+    Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId, params string[] includes);
 
     Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner);
 

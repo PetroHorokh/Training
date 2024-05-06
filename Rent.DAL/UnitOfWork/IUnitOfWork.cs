@@ -19,9 +19,6 @@ public interface IUnitOfWork : IDisposable
     IRoomRepository Rooms { get; }
     IRoomTypeRepository RoomTypes { get; }
     ITenantRepository Tenants { get; }
-    IUserRepository Users { get; }
-    IRepositoryBase<Role> Roles { get; }
-    IRepositoryBase<UserRole> UserRoles { get; }
     IViewRepository Views { get; }
 
     Task SaveAsync();

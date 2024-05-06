@@ -9,11 +9,23 @@ using Rent.WebAPI.CustomExceptions;
 
 namespace Rent.WebAPI.Controllers;
 
+/// <summary>
+/// Controller <c>TenantController</c> for handling tenant logic
+/// </summary>
+/// <param name="tenantService">Service to work with tenants</param>
 [ApiVersion(1.0)]
 [ApiController]
 [Route("[controller]/[action]")]
 public class TenantController(ITenantService tenantService) : Controller
 {
+    /// <summary>
+    /// Gets partial data for tenants
+    /// </summary>
+    /// <param name="skip">Parameter to skip specified amount of tenants</param>
+    /// <param name="take">Parameter to take specified amount of tenants</param>
+    /// <returns>Returns list of <see cref="TenantToGetDto"/> tenants</returns>
+    /// <exception cref="ArgumentException">Thrown when parameters are insufficient</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
     [HttpGet("{skip:int}/{take:int}")]
     public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetTenantsPartial(int skip, int take)
     {
@@ -45,9 +57,16 @@ public class TenantController(ITenantService tenantService) : Controller
         return new OkObjectResult(tenants);
     }
 
+    /// <summary>
+    /// Gets tenant by their id
+    /// </summary>
+    /// <param name="tenantId">Parameter to find tenant by specified id</param>
+    /// <returns>Returns <see cref="TenantToGetDto"/> tenant</returns>
+    /// <exception cref="NoEntitiesException">Thrown when there is no such tenant with provided id</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
     [HttpGet("{tenantId:guid}")]
     [AllowAnonymous]
-    public async Task<ActionResult<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId)
+    public async Task<ActionResult<TenantToGetDto>> GetTenantById(Guid tenantId)
     {
         var response = await tenantService.GetTenantByIdAsync(tenantId);
 
@@ -66,26 +85,34 @@ public class TenantController(ITenantService tenantService) : Controller
         return tenant;
     }
 
+    /// <summary>
+    /// Posts new tenant
+    /// </summary>
+    /// <param name="tenant">Parameter to create new tenant</param>
+    /// <returns>Returns created status if successful</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
     [HttpPost]
-    public async Task<IActionResult> PostTenantAsync([FromBody] TenantToCreateDto tenant)
+    [Authorize]
+    public async Task<IActionResult> PostTenant([FromBody] TenantToCreateDto tenant)
     {
-        if (!TryValidateModel(tenant))
-        {
-            throw new ValidationException("Validate tenant data.");
-        }
-
         var result = await tenantService.CreateTenantAsync(tenant);
 
         if (result.Error is not null)
         {
-            throw new ProcessException(result.Error.Message, result.Error);
+            throw result.Error;
         }
 
         return Created();
     }
 
+    /// <summary>
+    /// Deletes existing tenant
+    /// </summary>
+    /// <param name="tenantId">Parameter to find tenant by specified id</param>
+    /// <returns>Returns no content if successful</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
     [HttpDelete("{tenantId:guid}")]
-    public async Task<IActionResult> DeleteTenantAsync(Guid tenantId)
+    public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
         var result = await tenantService.DeleteTenantAsync(tenantId);
 
@@ -97,14 +124,15 @@ public class TenantController(ITenantService tenantService) : Controller
         return NoContent();
     }
 
+    /// <summary>
+    /// Puts data to existing tenant
+    /// </summary>
+    /// <param name="tenant">Parameter to update existing tenant</param>
+    /// <returns>Returns no content if successful</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
     [HttpPut]
-    public async Task<IActionResult> PutTenantAsync([FromBody] TenantToGetDto tenant)
+    public async Task<IActionResult> PutTenant([FromBody] TenantToGetDto tenant)
     {
-        if (!TryValidateModel(tenant))
-        {
-            throw new ValidationException("Validate new tenant data.");
-        }
-
         var result = await tenantService.UpdateTenantAsync(tenant);
 
         if (result.Error is not null)

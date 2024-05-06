@@ -1,6 +1,6 @@
 ﻿namespace Rent.DAL.Models;
 
-public partial class Impost
+public class Impost
 {
     public Guid ImpostId { get; set; }
 
@@ -14,11 +14,4 @@ public partial class Impost
 
     public DateTime? EndDate { get; set; }
 
-    public Guid CreatedBy { get; set; }
-
-    public DateTime CreatedDateTime { get; set; }
-
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
 }

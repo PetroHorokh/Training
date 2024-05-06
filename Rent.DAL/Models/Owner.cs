@@ -1,8 +1,9 @@
-﻿using temp;
+﻿using System.Text.Json.Serialization;
+using temp;
 
 namespace Rent.DAL.Models;
 
-public partial class Owner
+public class Owner
 {
     public Guid OwnerId { get; set; }
 
@@ -12,17 +13,9 @@ public partial class Owner
 
     public Guid AddressId { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    [JsonIgnore]
+    public Address Address { get; set; } = null!;
 
-    public DateTime CreatedDateTime { get; set; }
-
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
-
-    public virtual Address Address { get; set; } = null!;
-
-    public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
-
-    public virtual User User { get; set; } = null!;
+    [JsonIgnore]
+    public ICollection<Asset> Assets { get; set; } = new List<Asset>();
 }
