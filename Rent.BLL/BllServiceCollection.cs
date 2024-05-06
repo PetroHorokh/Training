@@ -33,7 +33,6 @@ public static class BllServiceCollection
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IOwnerService, OwnerService>();
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IViewService, ViewService>();
 
         services.AddAutoMapper(typeof(MappingProfile));

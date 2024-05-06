@@ -6,21 +6,23 @@ namespace Rent.BLL.Services.Contracts;
 
 public interface ITenantService
 {
-    Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync();
+    Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(params string[] includes);
 
-    Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request);
+    Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request, params string[] includes);
 
-    Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync();
+    Task<GetMultipleResponse<TenantToGetDto>> GetFilterTenantsAsync(GetFilteredRequest filter, params string[] includes);
 
-    Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync();
+    Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(params string[] includes);
 
-    Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId);
+    Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(params string[] includes);
 
-    Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId);
+    Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, params string[] includes);
 
-    Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId);
+    Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, params string[] includes);
 
-    Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId);
+    Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, params string[] includes);
+
+    Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId, params string[] includes);
 
     Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant);
 

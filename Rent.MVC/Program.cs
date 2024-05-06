@@ -5,20 +5,21 @@ using Rent.BLL;
 using Rent.MVC.Filters;
 using Rent.MVC.Middlewares;
 using Serilog;
-using System.IO.Compression;
 using System.Text;
-using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore5;
 using WebMarkupMin.Core;
-using WebMarkupMin.NUglify;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 IConfiguration config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("./appsettings.json")
+    .AddJsonFile("appsettings.json")
     .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(config)
+    .CreateLogger();
 
 builder.Services.AddAuthentication(option =>
 {
@@ -68,10 +69,6 @@ builder.Services.AddWebMarkupMin(
             settings.RemoveHttpProtocolFromAttributes = true;
             settings.RemoveHttpsProtocolFromAttributes = true;
         });
-
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(config)
-    .CreateLogger();
 
 builder.Services.AddCors(option => option.AddPolicy("Policy",
     policyBuilder =>

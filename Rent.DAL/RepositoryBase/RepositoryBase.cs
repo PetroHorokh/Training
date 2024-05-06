@@ -1,7 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Rent.DAL.Context;
 using Rent.DAL.RequestsAndResponses;
 
@@ -12,13 +10,25 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
 {
     protected readonly RentContext Context = context;
 
-    public async Task<GetMultipleResponse<T>> GetAllAsync()
+    public async Task<GetMultipleResponse<T>> GetAllAsync(
+        params string[] includes)
     {
         var result = new GetMultipleResponse<T>();
 
         try
         {
-            result.Collection = await Context.Set<T>().AsNoTracking().ToListAsync();
+            if (includes.Length == 0)
+            {
+                result.Collection = await Context.Set<T>()
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                result.Collection = await includes.Aggregate(Context.Set<T>().AsNoTracking(),
+                    (current, includeProperty) => current.Include(includeProperty)).ToListAsync();
+            }
+            result.Count = result.Collection.Count();
         }
         catch (Exception ex)
         {
@@ -28,13 +38,28 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         return result;
     }
 
-    public async Task<GetMultipleResponse<T>> GetPartialAsync(int skip, int take)
+    public async Task<GetMultipleResponse<T>> GetPartialAsync(
+        int skip, int take, params string[] includes)
     {
         var result = new GetMultipleResponse<T>();
 
         try
         {
-            result.Collection = await Context.Set<T>().Skip(skip).Take(take).AsNoTracking().ToListAsync();
+            if (includes.Length == 0)
+            {
+                result.Collection = await Context.Set<T>()
+                    .Skip(skip)
+                    .Take(take)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                result.Collection = await includes.Aggregate(Context.Set<T>().Skip(skip).Take(take).AsNoTracking(),
+                    (current, includeProperty) => current.Include(includeProperty)).ToListAsync();
+            }
+
+            result.Count = result.Collection.Count();
         }
         catch (Exception ex)
         {
@@ -44,13 +69,26 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         return result;
     }
 
-    public async Task<GetMultipleResponse<T>> GetByConditionAsync(Expression<Func<T, bool>> expression)
+    public async Task<GetMultipleResponse<T>> GetByConditionAsync(
+        Expression<Func<T, bool>> expression, params string[] includes)
     {
         var result = new GetMultipleResponse<T>();
 
         try
         {
-            result.Collection = await Context.Set<T>().Where(expression).AsNoTracking().ToListAsync();
+            if (includes.Length == 0)
+            {
+                result.Collection = await Context.Set<T>()
+                    .Where(expression)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                result.Collection = await includes.Aggregate(Context.Set<T>().Where(expression).AsNoTracking(),
+                    (current, includeProperty) => current.Include(includeProperty)).ToListAsync();
+            }
+            result.Count = result.Collection.Count();
         }
         catch (Exception ex)
         {
@@ -60,13 +98,25 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         return result;
     }
 
-    public async Task<GetSingleResponse<T>> GetSingleByConditionAsync(Expression<Func<T, bool>> expression)
+    public async Task<GetSingleResponse<T>> GetSingleByConditionAsync(
+        Expression<Func<T, bool>> expression, params string[] includes)
     {
         var result = new GetSingleResponse<T>();
 
         try
         {
-            result.Entity = await Context.Set<T>().Where(expression).AsNoTracking().FirstOrDefaultAsync();
+            if (includes.Length == 0)
+            {
+                result.Entity = await Context.Set<T>()
+                    .Where(expression)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                result.Entity = await includes.Aggregate(Context.Set<T>().Where(expression).AsNoTracking(),
+                    (current, includeProperty) => current.Include(includeProperty)).FirstOrDefaultAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -76,7 +126,8 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         return result;
     }
 
-    public ModifyResponse<T> Update(T entity)
+    public ModifyResponse<T> Update(
+        T entity)
     {
         var result = new ModifyResponse<T>();
 
@@ -92,7 +143,8 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
 
         return result;
     }
-    public ModifyResponse<T> Delete(T entity)
+    public ModifyResponse<T> Delete(
+        T entity)
     {
         var result = new ModifyResponse<T>();
 

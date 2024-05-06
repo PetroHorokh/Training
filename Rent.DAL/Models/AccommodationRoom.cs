@@ -1,6 +1,8 @@
-﻿namespace Rent.DAL.Models;
+﻿using System.Text.Json.Serialization;
 
-public partial class AccommodationRoom
+namespace Rent.DAL.Models;
+
+public class AccommodationRoom
 {
     public Guid AccommodationRoomId { get; set; }
 
@@ -10,15 +12,9 @@ public partial class AccommodationRoom
 
     public int Quantity { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    [JsonIgnore]
+    public Accommodation Accommodation { get; set; } = null!;
 
-    public DateTime CreatedDateTime { get; set; }
-
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
-
-    public virtual Accommodation Accommodation { get; set; } = null!;
-
-    public virtual Room Room { get; set; } = null!;
+    [JsonIgnore]
+    public Room Room { get; set; } = null!;
 }

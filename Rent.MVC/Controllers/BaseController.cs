@@ -4,7 +4,7 @@ using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using System.Collections;
 using System.Globalization;
-using Rent.DAL.Authentication;
+using Rent.Auth.DAL.AuthModels;
 using static System.String;
 
 namespace Rent.MVC.Controllers;

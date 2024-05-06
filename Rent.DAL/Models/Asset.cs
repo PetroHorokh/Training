@@ -1,8 +1,8 @@
-﻿using temp;
+﻿using System.Text.Json.Serialization;
 
 namespace Rent.DAL.Models;
 
-public partial class Asset
+public class Asset
 {
     public Guid AssetId { get; set; }
 
@@ -10,17 +10,12 @@ public partial class Asset
 
     public Guid RoomId { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    [JsonIgnore]
+    public Owner Owner { get; set; } = null!;
 
-    public DateTime CreatedDateTime { get; set; }
+    [JsonIgnore]
+    public ICollection<Rent> Rents { get; set; } = new List<global::Rent.DAL.Models.Rent>();
 
-    public Guid ModifiedBy { get; set; }
-
-    public DateTime ModifiedDateTime { get; set; }
-
-    public virtual Owner Owner { get; set; } = null!;
-
-    public virtual ICollection<global::Rent.DAL.Models.Rent> Rents { get; set; } = new List<global::Rent.DAL.Models.Rent>();
-
-    public virtual Room Room { get; set; } = null!;
+    [JsonIgnore]
+    public Room Room { get; set; } = null!;
 }
