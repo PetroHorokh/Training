@@ -6,8 +6,16 @@ using Serilog;
 
 namespace Rent.Auth.DAL;
 
+/// <summary>
+/// Class for injection Auth.Dal dependencies into service collection
+/// </summary>
 public static class AuthDalServiceCollection
 {
+    /// <summary>
+    /// Auth.Dal dependencies inject into service collection
+    /// </summary>
+    /// <param name="services">Service collection for injection additional dependencies</param>
+    /// <returns>Enriched with Auth.Dal dependencies service collection</returns>
     public static IServiceCollection AuthDalServiceInject(this IServiceCollection services)
     {
         IConfiguration config = new ConfigurationBuilder()

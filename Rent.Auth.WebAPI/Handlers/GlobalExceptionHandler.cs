@@ -4,8 +4,18 @@ using Rent.Auth.WebAPI.ProblemDetails;
 
 namespace Rent.Auth.WebAPI.Handlers;
 
+/// <summary>
+/// Handler for working with exception thrown in controllers.
+/// </summary>
 internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
+    /// <summary>
+    /// Interface implementation for working with thrown exceptions. Determines type of exception and customise details accordingly. Add details into httpContext. 
+    /// </summary>
+    /// <param name="httpContext"></param>
+    /// <param name="exception"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Returns boolean indicating if exception details were handled and attached to a httpContext</returns>
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,

@@ -5,6 +5,7 @@ using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using Rent.DAL.RequestsAndResponses;
+using Rent.WebAPI.CustomExceptions;
 
 namespace Rent.BLL.Services;
 
@@ -25,20 +26,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving all owners from database.");
+                throw new ProcessException("Exception occured while retrieving all owners from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping owners to OwnerToGetDto");
             result.Collection = response.Collection!.Select(mapper.Map<OwnerToGetDto>);
 
             logger.LogInformation("Exiting OwnerService, GetAllOwnersAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request, params string[] includes)
@@ -56,20 +62,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving partial owners from database.");
+                throw new ProcessException("Exception occured while retrieving partial owners from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping owners to OwnerToGetDto");
             result.Collection = response.Collection!.Select(mapper.Map<OwnerToGetDto>);
 
             logger.LogInformation("Exiting OwnerService, GetOwnersPartialAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync(params string[] includes)
@@ -87,20 +98,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving all assets from database.");
+                throw new ProcessException("Exception occured while retrieving all assets from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping assets to AssetToGetDto");
             result.Collection = response.Collection!.Select(mapper.Map<AssetToGetDto>);
 
             logger.LogInformation("Exiting OwnerService, GetAllAssetsAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId, params string[] includes)
@@ -118,20 +134,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving owner by id from database.");
+                throw new ProcessException("Exception occured while retrieving owner by id from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping owner to OwnerToGetDto");
             result.Entity = mapper.Map<OwnerToGetDto>(response.Entity);
 
             logger.LogInformation("Exiting OwnerService, GetOwnerByIdAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId, params string[] includes)
@@ -149,20 +170,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving asset by id from database.");
+                throw new ProcessException("Exception occured while retrieving asset by id from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping asset to AssetToGetDto");
             result.Entity = mapper.Map<AssetToGetDto>(response.Entity);
 
             logger.LogInformation("Exiting OwnerService, GetAssetByIdAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId, params string[] includes)
@@ -180,20 +206,25 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response.TimeStamp;
             if (response.Error is not null)
             {
-                throw response.Error;
+                logger.LogError("Exception occured while retrieving owner's assets id from database.");
+                throw new ProcessException("Exception occured while retrieving owner's assets id from database.", response.Error);
             }
 
             logger.LogInformation($"Mapping assets to AssetToGetDto");
             result.Collection = response.Collection!.Select(mapper.Map<AssetToGetDto>);
 
             logger.LogInformation("Exiting OwnerService, GetAllAssetsAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner)
@@ -203,6 +234,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         logger.LogInformation("Calling OwnerRepository, method CreateWithProcedure");
         logger.LogInformation($"Parameters: @Name = {owner.Name}, @AddressId = {owner.AddressId}");
         var result = await unitOfWork.Owners.CreateWithProcedure(owner);
+
         logger.LogInformation("Finished calling OwnerRepository, method CreateWithProcedure");
 
         logger.LogInformation("Exiting OwnerService, CreateOwnerAsync");
@@ -225,7 +257,8 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response1.TimeStamp;
             if (response1.Error is not null)
             {
-                throw response1.Error;
+                logger.LogError("Exception occured while retrieving owner by id from database.");
+                throw new ProcessException("Exception occured while retrieving owner by id from database.", response1.Error);
             }
 
             response1.Entity!.Name = newOwner.Name;
@@ -238,7 +271,8 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response2.TimeStamp;
             if (response2.Error is not null)
             {
-                throw response2.Error;
+                logger.LogError("Exception occured while updating retrieved owner.");
+                throw new ProcessException("Exception occured while updating retrieved owner.", response2.Error);
             }
 
             await unitOfWork.SaveAsync();
@@ -246,13 +280,17 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.Status = response2.Status;
 
             logger.LogInformation("Exiting OwnerService, UpdateOwnerAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<ModifyResponse<Owner>> DeleteOwnerAsync(Guid ownerId)
@@ -270,7 +308,8 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response1.TimeStamp;
             if (response1.Error is not null)
             {
-                throw response1.Error;
+                logger.LogError("Exception occured while retrieving owner by id from database.");
+                throw new ProcessException("Exception occured while retrieving owner by id from database.", response1.Error);
             }
 
             logger.LogInformation("Calling OwnerRepository, method Delete");
@@ -280,7 +319,8 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response2.TimeStamp;
             if (response2.Error is not null)
             {
-                throw response2.Error;
+                logger.LogError("Exception occured while deleting retrieved owner.");
+                throw new ProcessException("Exception occured while deleting retrieved owner.", response2.Error);
             }
 
             await unitOfWork.SaveAsync();
@@ -288,13 +328,17 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.Status = response2.Status;
 
             logger.LogInformation("Exiting OwnerService, DeleteOwnerAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 
     public async Task<CreationResponse> CreateAssetAsync(AssetToCreateDto asset)
@@ -325,7 +369,8 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response1.TimeStamp;
             if (response1.Error is not null)
             {
-                throw response1.Error;
+                logger.LogError("Exception occured while retrieving asset by id from database.");
+                throw new ProcessException("Exception occured while retrieving asset by id from database.", response1.Error);
             }
 
             logger.LogInformation("Calling AssetRepository, method Delete");
@@ -335,7 +380,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.TimeStamp = response2.TimeStamp;
             if (response2.Error is not null)
             {
-                throw response2.Error;
+                throw new ProcessException("Exception occured while deleting retrieved asset.", response2.Error);
             }
 
             await unitOfWork.SaveAsync();
@@ -343,12 +388,16 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
             result.Status = response2.Status;
 
             logger.LogInformation("Exiting OwnerService, DeleteAssetAsync");
-            return result;
         }
-        catch (Exception ex)
+        catch (ProcessException ex)
         {
             result.Error = ex;
-            return result;
         }
+        catch (AutoMapperMappingException ex)
+        {
+            result.Error = new Exception("Exception occured while mapping entities.", ex);
+        }
+
+        return result;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Microsoft.AspNetCore.Diagnostics;
 using Rent.WebAPI.CustomExceptions;
 using Rent.WebAPI.ProblemDetails;
@@ -54,6 +55,14 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
                 problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status422UnprocessableEntity,
+                    Detail = exception.Message
+                };
+                break;
+
+            case AutoMapperMappingException:
+                problemDetails = new CustomProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
                     Detail = exception.Message
                 };
                 break;
