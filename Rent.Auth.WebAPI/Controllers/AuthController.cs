@@ -5,10 +5,19 @@ using Rent.Auth.DAL.AuthModels;
 
 namespace Rent.Auth.WebAPI.Controllers;
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="userService"></param>
 [ApiController]
 [Route("[controller]/[action]")]
 public class AuthController(IUserService userService) : Controller
 {
+    /// <summary>
+    /// Sign up user
+    /// </summary>
+    /// <param name="user">Parameter to sign up new user by <see cref="SignUpUser"/> model</param>
+    /// <returns>Return status of creation of new user</returns>
     [HttpPost]
     public async Task<IActionResult> SignUp([FromBody] SignUpUser user)
     {
@@ -22,6 +31,11 @@ public class AuthController(IUserService userService) : Controller
         return Ok(result);
     }
 
+    /// <summary>
+    /// Renew access token based on old one and refresh token
+    /// </summary>
+    /// <param name="token">Parameter to pass old access token and refresh token</param>
+    /// <returns>Return <see cref="string"/> new access token</returns>
     [HttpGet]
     public async Task<IActionResult> RenewAccessToken([FromHeader] AuthToken token)
     {
@@ -35,6 +49,11 @@ public class AuthController(IUserService userService) : Controller
         return Ok(result);
     }
 
+    /// <summary>
+    /// Sign in user
+    /// </summary>
+    /// <param name="signInUser">Parameter to login user by <see cref="SignInUser"/> model</param>
+    /// <returns>Return <see cref="AuthToken"/> model with access and refresh tokens</returns>
     [HttpGet]
     public async Task<IActionResult> Login([FromQuery] SignInUser signInUser)
     {
@@ -48,6 +67,10 @@ public class AuthController(IUserService userService) : Controller
         return Ok(result);
     }
 
+    /// <summary>
+    /// Sign out currently logged-in user
+    /// </summary>
+    /// <returns>No content if successful</returns>
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Logout()
@@ -56,6 +79,11 @@ public class AuthController(IUserService userService) : Controller
         return NoContent();
     }
 
+    /// <summary>
+    /// Change email of user to a new one
+    /// </summary>
+    /// <param name="emailChange">Parameter of type <see cref="EmailChange"/> to change email with current email, new email and current password</param>
+    /// <returns>Return status of changing user email</returns>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> ChangeEmail([FromBody] EmailChange emailChange)
@@ -70,6 +98,11 @@ public class AuthController(IUserService userService) : Controller
         return Ok(result);
     }
 
+    /// <summary>
+    /// Change password of user to a new one
+    /// </summary>
+    /// <param name="passwordChange">Parameter of type <see cref="PasswordChange"/> to change password with current password, new password and current email</param>
+    /// <returns>Return status of changing user password</returns>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] PasswordChange passwordChange)

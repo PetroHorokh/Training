@@ -19,7 +19,11 @@ namespace Rent.WebAPI.Controllers;
 [Route("[controller]/[action]")]
 public class OwnerController(IOwnerService ownerService) : Controller
 {
-
+    /// <summary>
+    /// Gets all data for owners
+    /// </summary>
+    /// <returns>Returns list of <see cref="OwnerToGetDto"/> owners</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetAllOwners()
@@ -47,7 +51,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <param name="take">Parameter to take specified amount of owners</param>
     /// <returns>Returns list of <see cref="OwnerToGetDto"/> tenants</returns>
     /// <exception cref="ArgumentException">Thrown when parameters are insufficient</exception>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
 
     [HttpGet("{skip:int}/{take:int}")]
     [AllowAnonymous]
@@ -85,7 +89,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <param name="ownerId">Parameter to find owner by specified id</param>
     /// <returns>Returns <see cref="OwnerToGetDto"/> owner</returns>
     /// <exception cref="NoEntitiesException">Thrown when there is no such owner with provided id</exception>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet("{ownerId:guid}")]
     [AllowAnonymous]
     public async Task<ActionResult<OwnerToGetDto>> GetOwnerById(Guid ownerId)
@@ -112,7 +116,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// </summary>
     /// <param name="owner">Parameter to create new owner</param>
     /// <returns>Returns created status if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPost]
     public async Task<IActionResult> PostOwner([FromBody] OwnerToCreateDto owner)
     {
@@ -121,11 +125,11 @@ public class OwnerController(IOwnerService ownerService) : Controller
             throw new ValidationException("Validate owner data.");
         }
 
-        var result = await ownerService.CreateOwnerAsync(owner);
+        var response = await ownerService.CreateOwnerAsync(owner);
 
-        if (result.Error is not null)
+        if (response.Error is not null)
         {
-            throw new ProcessException(result.Error.Message, result.Error);
+            throw response.Error;
         }
 
         return Created();
@@ -136,15 +140,15 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// </summary>
     /// <param name="ownerId">Parameter to find owner by specified id</param>
     /// <returns>Returns no content if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpDelete("{ownerId:guid}")]
     public async Task<IActionResult> DeleteOwner(Guid ownerId)
     {
-        var result = await ownerService.DeleteOwnerAsync(ownerId);
+        var response = await ownerService.DeleteOwnerAsync(ownerId);
 
-        if (result.Error is not null)
+        if (response.Error is not null)
         {
-            throw new ProcessException(result.Error.Message, result.Error);
+            throw response.Error;
         }
 
         return NoContent();
@@ -155,7 +159,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// </summary>
     /// <param name="owner">Parameter to update existing owner</param>
     /// <returns>Returns no content if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPut]
     public async Task<IActionResult> PutOwner([FromBody] OwnerToGetDto owner)
     {
@@ -164,16 +168,24 @@ public class OwnerController(IOwnerService ownerService) : Controller
             throw new ValidationException("Validate new owner data.");
         }
 
-        var result = await ownerService.UpdateOwnerAsync(owner);
+        var response = await ownerService.UpdateOwnerAsync(owner);
 
-        if (result.Error is not null)
+        if (response.Error is not null)
         {
-            throw new ProcessException(result.Error.Message, result.Error);
+            throw response.Error;
         }
 
         return NoContent();
     }
 
+    /// <summary>
+    /// Patch data to existing owner
+    /// </summary>
+    /// <param name="ownerId">Parameter to find owner by specified id</param>
+    /// <param name="patch">Parameter to patch new data to existing owner</param>
+    /// <returns>Returns no content if successful</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
+    /// <exception cref="ValidationException">Thrown when patched owner has invalid data</exception>
     [HttpPatch("{ownerId:guid}")]
     public async Task<IActionResult> PatchOwner(Guid ownerId, [FromBody] JsonPatchDocument<OwnerToGetDto> patch)
     {
@@ -181,7 +193,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         if (response1.Error is not null)
         {
-            throw new ProcessException(response1.Error.Message, response1.Error);
+            throw response1.Error;
         }
 
         var patched = response1.Entity!;
@@ -196,7 +208,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         if (response2.Error is not null)
         {
-            throw new ProcessException(response2.Error.Message, response2.Error);
+            throw response2.Error;
         }
 
         return NoContent();

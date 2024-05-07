@@ -19,6 +19,11 @@ namespace Rent.WebAPI.Controllers;
 [Route("[controller]/[action]")]
 public class TenantController(ITenantService tenantService) : Controller
 {
+    /// <summary>
+    /// Gets all data for tenants
+    /// </summary>
+    /// <returns>Returns list of <see cref="TenantToGetDto"/> tenants</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetAllTenants()
@@ -45,7 +50,7 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <param name="take">Parameter to take specified amount of tenants</param>
     /// <returns>Returns list of <see cref="TenantToGetDto"/> tenants</returns>
     /// <exception cref="ArgumentException">Thrown when parameters are insufficient</exception>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
 
     [HttpGet("{skip:int}/{take:int}")]
     [AllowAnonymous]
@@ -77,6 +82,13 @@ public class TenantController(ITenantService tenantService) : Controller
         return new OkObjectResult(response.Collection);
     }
 
+    /// <summary>
+    /// Gets filtered data for tenants
+    /// </summary>
+    /// <param name="filterString">Parameter to filter data by</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">Thrown when parameter is insufficient</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet("{filterString:required}")]
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetFilteredTenants(string filterString)
@@ -112,7 +124,7 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <param name="tenantId">Parameter to find tenant by specified id</param>
     /// <returns>Returns <see cref="TenantToGetDto"/> tenant</returns>
     /// <exception cref="NoEntitiesException">Thrown when there is no such tenant with provided id</exception>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet("{tenantId:guid}")]
     [AllowAnonymous]
     public async Task<ActionResult<TenantToGetDto>> GetTenantById(Guid tenantId)
@@ -137,14 +149,14 @@ public class TenantController(ITenantService tenantService) : Controller
     /// </summary>
     /// <param name="tenant">Parameter to create new tenant</param>
     /// <returns>Returns created status if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> PostTenant([FromBody] TenantToCreateDto tenant)
     {
         var result = await tenantService.CreateTenantAsync(tenant);
 
-        if (response.Error is not null)
+        if (result.Error is not null)
         {
             throw result.Error;
         }
@@ -157,7 +169,7 @@ public class TenantController(ITenantService tenantService) : Controller
     /// </summary>
     /// <param name="tenantId">Parameter to find tenant by specified id</param>
     /// <returns>Returns no content if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpDelete("{tenantId:guid}")]
     public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
@@ -165,7 +177,7 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (result.Error is not null)
         {
-            throw new ProcessException(result.Error.Message, result.Error);
+            throw result.Error;
         }
 
         return NoContent();
@@ -176,7 +188,7 @@ public class TenantController(ITenantService tenantService) : Controller
     /// </summary>
     /// <param name="tenant">Parameter to update existing tenant</param>
     /// <returns>Returns no content if successful</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured while working with services</exception>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPut]
     public async Task<IActionResult> PutTenant([FromBody] TenantToGetDto tenant)
     {
@@ -184,11 +196,19 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (result.Error is not null)
         {
-            throw new ProcessException(result.Error.Message);
+            throw result.Error;
         }
         return NoContent();
     }
 
+    /// <summary>
+    /// Patch data to existing tenant
+    /// </summary>
+    /// <param name="tenantId">Parameter to find tenant by specified id</param>
+    /// <param name="patch">Parameter to patch new data to existing tenant</param>
+    /// <returns>Returns no content if successful</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
+    /// <exception cref="ValidationException">Thrown when patched tenant has invalid data</exception>
     [HttpPatch("{tenantId:guid}")]
     public async Task<IActionResult> PatchTenant(Guid tenantId, [FromBody] JsonPatchDocument<TenantToGetDto> patch)
     {
@@ -196,7 +216,7 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (response1.Error is not null)
         {
-            throw new ProcessException(response1.Error.Message, response1.Error);
+            throw response1.Error;
         }
 
         var patched = response1.Entity!;
@@ -211,7 +231,7 @@ public class TenantController(ITenantService tenantService) : Controller
 
         if (response2.Error is not null)
         {
-            throw new ProcessException(response2.Error.Message, response2.Error);
+            throw response2.Error;
         }
 
         return NoContent();

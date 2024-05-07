@@ -7,6 +7,11 @@ namespace Rent.Auth.DAL.Configurations;
 
 public static class SeedData
 {
+    /// <summary>
+    /// Data seed for context
+    /// </summary>
+    /// <param name="builder">Model builder provided by context</param>
+    /// <returns>Seeded model builder</returns>
     public static ModelBuilder Seed(this ModelBuilder builder)
     {
         builder.SeedRoles();
@@ -16,6 +21,11 @@ public static class SeedData
         return builder;
     }
 
+    /// <summary>
+    /// Seed for roles
+    /// </summary>
+    /// <param name="builder">Model builder provided by context</param>
+    /// <returns>Seeded model builder</returns>
     private static ModelBuilder SeedRoles( this ModelBuilder builder)
     {
         builder.Entity<Role>().HasData(
@@ -26,6 +36,11 @@ public static class SeedData
         return builder;
     }
 
+    /// <summary>
+    /// Seed for users
+    /// </summary>
+    /// <param name="builder">Model builder provided by context</param>
+    /// <returns>Seeded model builder</returns>
     private static ModelBuilder SeedAdmin( this ModelBuilder builder)
     {
         var hasher = new PasswordHasher<User>();
@@ -38,7 +53,7 @@ public static class SeedData
                 EmailConfirmed = true,
                 NormalizedUserName = "ADMIN",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
-                PasswordHash = hasher.HashPassword(null, "AdminPassword"),
+                PasswordHash = hasher.HashPassword(null!, "AdminPassword"),
                 SecurityStamp = Guid.NewGuid().ToString(),
             }
         );
@@ -46,6 +61,11 @@ public static class SeedData
         return builder;
     }
 
+    /// <summary>
+    /// Seed for connection between users and roles
+    /// </summary>
+    /// <param name="builder">Model builder provided by context</param>
+    /// <returns>Seeded model builder</returns>
     private static ModelBuilder SeedUserRoles( this ModelBuilder builder)
     {
         builder.Entity<IdentityUserRole<Guid>>().HasData(
