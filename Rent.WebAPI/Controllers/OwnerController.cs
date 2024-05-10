@@ -26,6 +26,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet]
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Default30")]
     public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetAllOwners()
     {
         var response = await ownerService.GetAllOwnersAsync();
