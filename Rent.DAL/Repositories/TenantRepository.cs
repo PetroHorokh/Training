@@ -31,7 +31,7 @@ public class TenantRepository(RentContext context, IConfiguration configuration,
 
         DynamicParameters parameters = new();
         parameters.Add("Name", tenant.Name);
-        parameters.Add("UserID",tenant.UserId);
+        parameters.Add("UserId",tenant.UserId);
         parameters.Add("AddressId", tenant.AddressId);
         parameters.Add("Description", tenant.Description);
         parameters.Add("BankName", tenant.BankName);

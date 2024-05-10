@@ -1,13 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Rent.Auth.DAL.Models;
 
 public class User : IdentityUser<Guid>
 {
+    [MaxLength(100)]
     public string? RefreshToken { get; set; }
 
     public DateTime? RefreshTokenExpiration { get; set; }
+
+    public IEnumerable<Image> Images { get; set; } = new List<Image>();
 
     [JsonIgnore]
     public ICollection<Owner> Owners { get; set; } = new List<Owner>();

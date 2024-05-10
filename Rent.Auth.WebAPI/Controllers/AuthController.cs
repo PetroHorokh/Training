@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.DAL.AuthModels;
+using System.Security.Claims;
+using Rent.Auth.DAL.Models;
+using Rent.Auth.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.WebAPI.Controllers;
 
@@ -108,6 +111,33 @@ public class AuthController(IUserService userService) : Controller
     public async Task<IActionResult> ChangePassword([FromBody] PasswordChange passwordChange)
     {
         var result = await userService.ChangePasswordAsync(passwordChange);
+
+        if (result.Error is not null)
+        {
+            throw result.Error;
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Upload image as an avatar
+    /// </summary>
+    /// <param name="file">Parameter to include image</param>
+    /// <returns>Return status of adding new image as an avatar</returns>
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {
+        var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var request = new PostImageRequest()
+        {
+            Image = file,
+            UserId = userId
+        };
+
+        var result = await userService.PostImage(request);
 
         if (result.Error is not null)
         {
