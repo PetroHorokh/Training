@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -11,12 +12,14 @@ using Rent.Auth.DAL.AuthModels;
 using Rent.Auth.DAL.CustomExceptions;
 using Rent.Auth.DAL.Models;
 using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.Auth.DAL.UnitOfWork;
 
 namespace Rent.Auth.BLL.Services;
 
 public class UserService(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
+    IUnitOfWork unitOfWork,
     IConfiguration config) : IUserService
 {
     public async Task<GetSingleResponse<AuthToken>> LoginAsync(SignInUser signInModel)
@@ -252,6 +255,42 @@ public class UserService(
         }
 
         return result;
+    }
+
+    public async Task<GetSingleResponse<ModifyResponse<Image>>> PostImage(PostImageRequest request)
+    {
+        {
+            var result = new GetSingleResponse<ModifyResponse<Image>>();
+
+            try
+            {
+                using var memoryStream = new MemoryStream();
+                await request.Image.CopyToAsync(memoryStream);
+
+                var image = new Image()
+                {
+                    Data = memoryStream.ToArray(),
+                    ContentType = request.Image.ContentType,
+                    UserId = request.UserId,
+                    Name = request.Image.FileName
+                };
+
+                var response = unitOfWork.Images.Add(image);
+
+                if (response.Error is not null)
+                {
+                    throw new ProcessException("An exception occured while adding image to database", response.Error);
+                }
+
+                result.Entity = response;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex;
+            }
+
+            return result;
+        }
     }
 
     private GetSingleResponse<ClaimsPrincipal> GetPrincipalFromAccessToken(string token)

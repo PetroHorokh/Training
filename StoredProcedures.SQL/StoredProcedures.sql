@@ -37,7 +37,7 @@ BEGIN
     BEGIN TRY
 		IF NOT EXISTS(SELECT 1
 			FROM [dbo].[User]
-			WHERE [UserId] = @UserId
+			WHERE [Id] = @UserId
 		)
 		BEGIN
 			RAISERROR('There is no such user' ,11 ,7);
@@ -84,7 +84,7 @@ BEGIN
     BEGIN TRY
 		IF NOT EXISTS(SELECT 1
 			FROM [dbo].[User]
-			WHERE [UserId] = @UserId
+			WHERE [Id] = @UserId
 		)
 		BEGIN
 			RAISERROR('There is no such user' ,11 ,7);
@@ -539,128 +539,4 @@ BEGIN
         RAISERROR( @Message , 11, 2);
     END CATCH;
     END;
-GO
-
-CREATE OR ALTER PROCEDURE [dbo].[sp_Role_Insert]
-@Name [nvarchar](255),
-@NormilizedName [nvarchar](255)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRY
-		IF EXISTS(SELECT 1
-			FROM [dbo].[Role] [Role]
-			WHERE [Role].[Name] = @Name
-		)
-		BEGIN
-			RAISERROR('There is aleady such role' , 11, 2) WITH NOWAIT;
-		END;
-
-		DECLARE @RoleId [int];
-
-			WITH Ids(Id) AS
-			(
-				SELECT Id = 1
-				UNION ALL
-				SELECT Id + 1
-				FROM Ids
-				WHERE Id IN(SELECT [RoleId] FROM [dbo].[Role])
-			)
-			SELECT TOP 1 @RoleId = Id
-			FROM Ids
-			ORDER BY [id] DESC;
-
-		BEGIN TRANSACTION;
-			INSERT INTO [dbo].[Role] ([RoleId], [Name], [NormalizedName])
-			SELECT @RoleId, @Name, @NormilizedName;
-		COMMIT TRANSACTION;
-		SELECT @RoleId AS [RoleId];
-    END TRY
-    BEGIN CATCH
-        IF @@TRANCOUNT > 0
-		BEGIN
-			ROLLBACK TRANSACTION;
-		END;
-		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
-        RAISERROR( @Message , 11, 2);
-    END CATCH;
-END;
-GO
-
-CREATE OR ALTER PROCEDURE [dbo].[sp_UserRole_Insert]
-@UserId [uniqueidentifier],
-@RoleId [int]
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRY
-		IF EXISTS(SELECT 1
-			FROM [dbo].[UserRole] [UserRole]
-			WHERE [UserRole].[UserId] = @UserId AND [UserRole].[RoleId] = @RoleId
-		)
-		BEGIN
-			RAISERROR('This user already has given role' , 11, 2) WITH NOWAIT;
-		END;
-
-		DECLARE @UserRoleId [uniqueidentifier] = NEWID();
-		BEGIN TRANSACTION;
-			INSERT INTO [dbo].[UserRole] ([UserRoleId], [UserId], [RoleId])
-			SELECT @UserRoleId, @UserId, @RoleId;
-		COMMIT TRANSACTION;
-		SELECT @UserRoleId AS [UserRoleId];
-    END TRY
-    BEGIN CATCH
-		IF @@TRANCOUNT > 0
-		BEGIN
-			ROLLBACK TRANSACTION;
-		END;
-		DECLARE @Message [nvarchar](100) = ERROR_MESSAGE();
-        RAISERROR( @Message , 11, 2);
-    END CATCH;
-END;
-GO
-
-CREATE OR ALTER PROCEDURE [dbo].[sp_User_Insert]
-@Name [nvarchar](255),
-@NormalizedName [nvarchar](255),
-@Password [nvarchar](255),
-@Email [nvarchar](255),
-@NormalizedEmail [nvarchar](255),
-@PhoneNumber [nvarchar](255)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRY
-		IF EXISTS(SELECT 1 
-			FROM [dbo].[User] [User]
-			WHERE [User].[Email] = @Email)
-		BEGIN
-			RAISERROR('There is alreayd user with this email', 11, 13);
-		END;
-
-		IF EXISTS(SELECT 1
-			FROM [dbo].[User] [User]
-			WHERE [User].[Name] = @Name)
-		BEGIN
-			RAISERROR('There is already user with such login', 11, 13);
-		END;
-
-		DECLARE @UserId [uniqueidentifier] = NEWID();
-		BEGIN TRANSACTION;
-			INSERT INTO [dbo].[User] ([UserId], [Name], [NormalizedName], [Password], [Email], [NormalizedEmail], [EmailConfirmed], [PhoneNumber], [PhoneNumberConfirmed])
-			SELECT @UserId, @Name, @NormalizedName, @Password, @Email, @NormalizedEmail, 0, @PhoneNumber, 0;
-		COMMIT TRANSACTION;
-		EXEC [dbo].[sp_UserRole_Insert] @UserId = @UserId, @RoleId = 2;
-
-		SELECT @UserId AS [UserId];
-    END TRY
-    BEGIN CATCH
-		IF @@TRANCOUNT > 0
-		BEGIN
-			ROLLBACK TRANSACTION;
-		END;
-        DECLARE @Message [nvarchar](100) = ERROR_MESSAGE()
-        RAISERROR( @Message , 11, 13);
-    END CATCH;
-END;
 GO

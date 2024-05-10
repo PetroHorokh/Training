@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rent.Auth.DAL.Context;
 
@@ -11,9 +12,11 @@ using Rent.Auth.DAL.Context;
 namespace Rent.Auth.DAL.Migrations
 {
     [DbContext(typeof(AuthRentContext))]
-    partial class AuthRentContextModelSnapshot : ModelSnapshot
+    [Migration("20240508151605_AvatarMigration")]
+    partial class AvatarMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

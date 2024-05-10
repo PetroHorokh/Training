@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rent.Auth.DAL.Models;
 using System.Collections.Generic;
@@ -26,11 +27,19 @@ public static class SeedData
     /// </summary>
     /// <param name="builder">Model builder provided by context</param>
     /// <returns>Seeded model builder</returns>
-    private static ModelBuilder SeedRoles( this ModelBuilder builder)
+    private static ModelBuilder SeedRoles(this ModelBuilder builder)
     {
         builder.Entity<Role>().HasData(
-            new Role() { Id = new Guid("431f29e9-13ff-4f5f-b178-511610d5103f"), Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
-            new Role() { Id = new Guid("5adbec33-97c5-4041-be6a-e0f3d3ca6f44"), Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
+            new Role()
+            {
+                Id = new Guid("431f29e9-13ff-4f5f-b178-511610d5103f"), Name = "Admin", ConcurrencyStamp = "1",
+                NormalizedName = "Admin"
+            },
+            new Role()
+            {
+                Id = new Guid("5adbec33-97c5-4041-be6a-e0f3d3ca6f44"), Name = "User", ConcurrencyStamp = "2",
+                NormalizedName = "User"
+            }
         );
 
         return builder;
@@ -41,7 +50,7 @@ public static class SeedData
     /// </summary>
     /// <param name="builder">Model builder provided by context</param>
     /// <returns>Seeded model builder</returns>
-    private static ModelBuilder SeedAdmin( this ModelBuilder builder)
+    private static ModelBuilder SeedAdmin(this ModelBuilder builder)
     {
         var hasher = new PasswordHasher<User>();
         builder.Entity<User>().HasData(
@@ -66,7 +75,7 @@ public static class SeedData
     /// </summary>
     /// <param name="builder">Model builder provided by context</param>
     /// <returns>Seeded model builder</returns>
-    private static ModelBuilder SeedUserRoles( this ModelBuilder builder)
+    private static ModelBuilder SeedUserRoles(this ModelBuilder builder)
     {
         builder.Entity<IdentityUserRole<Guid>>().HasData(
             new IdentityUserRole<Guid>
