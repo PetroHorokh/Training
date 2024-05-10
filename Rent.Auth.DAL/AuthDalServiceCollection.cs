@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rent.Auth.DAL.Context;
+using Rent.Auth.DAL.Repositories;
+using Rent.Auth.DAL.Repositories.Contract;
+using Rent.Auth.DAL.UnitOfWork;
 using Serilog;
 
 namespace Rent.Auth.DAL;
@@ -32,6 +35,13 @@ public static class AuthDalServiceCollection
 
         services.AddDbContext<AuthRentContext>(option
             => option.UseSqlServer(config["ConnectionStrings:RentDatabase"]));
+
+        services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped(provider => new Lazy<IImageRepository>(
+            () => provider.GetService<IImageRepository>()!,
+            LazyThreadSafetyMode.ExecutionAndPublication));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
         return services;
     }

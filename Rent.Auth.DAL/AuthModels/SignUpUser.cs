@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Rent.Auth.DAL.AuthModels;
 
@@ -45,4 +46,6 @@ public class SignUpUser
     [Required]
     [Phone]
     public string PhoneNumber { get; set; } = null!;
+
+    public IFormFile? Avatar { get; set; }
 }

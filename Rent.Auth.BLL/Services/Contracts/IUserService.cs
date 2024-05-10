@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Rent.Auth.DAL.AuthModels;
+using Rent.Auth.DAL.Models;
 using Rent.Auth.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.BLL.Services.Contracts;
@@ -17,4 +19,6 @@ public interface IUserService
     Task<GetSingleResponse<IdentityResult>> ChangePasswordAsync(PasswordChange changePassword);
 
     Task<GetSingleResponse<IdentityResult>> ChangeEmailAsync(EmailChange emailChange);
+
+    Task<GetSingleResponse<ModifyResponse<Image>>> PostImage(PostImageRequest request);
 }
