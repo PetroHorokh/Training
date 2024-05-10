@@ -26,6 +26,7 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet]
     [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Default30")]
     public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetAllTenants()
     {
         var response = await tenantService.GetAllTenantsAsync();
@@ -40,7 +41,7 @@ public class TenantController(ITenantService tenantService) : Controller
             return new NoContentResult();
         }
 
-        return new OkObjectResult(response.Collection);
+        return response.Collection!.ToList();
     }
 
     /// <summary>
@@ -79,7 +80,7 @@ public class TenantController(ITenantService tenantService) : Controller
             return new NoContentResult();
         }
 
-        return new OkObjectResult(response.Collection);
+        return response.Collection!.ToList();
     }
 
     /// <summary>

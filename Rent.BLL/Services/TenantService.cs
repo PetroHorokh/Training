@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
@@ -9,31 +10,77 @@ using Rent.WebAPI.CustomExceptions;
 
 namespace Rent.BLL.Services;
 
-public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TenantService> logger) : ITenantService
+/// <summary>
+/// Service for working with tenants
+/// </summary>
+/// <param name="unitOfWork">Parameter to use UnitOfWork pattern implemented in Dal layer</param>
+/// <param name="mapper">Parameter to use mapper with provided profiles</param>
+/// <param name="logger">Parameter to use logging</param>
+/// <param name="memoryCache">Parameter to use in-memory caching</param>
+public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TenantService> logger, IMemoryCache memoryCache) : ITenantService
 {
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(params string[] includes)
+    /// <summary>
+    /// Property for setting root cache key for signalizing in-memory cache is used by current service
+    /// </summary>
+    private const string RootCacheKey = "Tenants";
+    /// <summary>
+    /// Property for setting SlidingExpiration after which caching of specific entity is being prolonged
+    /// </summary>
+    private const int SlidingExpiration = 2;
+    /// <summary>
+    /// Property for setting AbsoluteExpiration which is upper limit for caching specific entity
+    /// </summary>
+    private const int AbsoluteExpiration = 10;
+
+    /// <summary>
+    /// Get all tenants from UnitOfWork Tenants with method GetAllAsync
+    /// </summary>
+    /// <param name="includes">Parameter to use include with EF to add necessary related tables</param>
+    /// <exception cref="ProcessException">Exception thrown when error occured while making a request to database</exception>
+    /// <exception cref="AutoMapperMappingException">Exception thrown when error occured while mapping entities</exception>
+    /// <returns>Returns <see cref="GetMultipleResponse{TenantToGetDto}"/> entity with either IEnumerable of <see cref="TenantToGetDto"/> entities or thrown exception</returns>
+    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(
+        params string[] includes)
     {
         var result = new GetMultipleResponse<TenantToGetDto>();
+        var cacheKey = RootCacheKey + "All";
 
         try
         {
             logger.LogInformation("Entering TenantService, GetAllTenantsAsync");
 
-            logger.LogInformation("Calling TenantRepository, method GetAllAsync");
-            var response = await unitOfWork.Tenants.GetAllAsync(includes);
-            logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
-
-            result.TimeStamp = response.TimeStamp;
-            result.Count = response.Count;
-            if (response.Error is not null)
+            logger.LogInformation("Checking memory cache for tenants");
+            if (!memoryCache.TryGetValue(cacheKey, out List<TenantToGetDto>? tenants))
             {
-                logger.LogError("Exception occured while retrieving all tenants from database.");
-                throw new ProcessException("Exception occured while retrieving all tenants from database.",
-                    response.Error);
-            }
+                logger.LogInformation("Calling TenantRepository, method GetAllAsync");
+                var response = await unitOfWork.Tenants.GetAllAsync(includes);
+                logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
-            logger.LogInformation($"Mapping tenants to TenantToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
+                result.TimeStamp = response.TimeStamp;
+                if (response.Error is not null)
+                {
+                    logger.LogError("Exception occured while retrieving all tenants from database.");
+                    throw new ProcessException("Exception occured while retrieving all tenants from database.",
+                        response.Error);
+                }
+
+                logger.LogInformation($"Mapping tenants to TenantToGetDto");
+                tenants = response.Collection!.Select(mapper.Map<TenantToGetDto>).ToList();
+
+                logger.LogInformation($"Adding tenants into memory cache with SlidingExpiration - {SlidingExpiration}; AbsoluteExpiration - {AbsoluteExpiration}");
+                memoryCache.Set(cacheKey, tenants,
+                    new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromSeconds(SlidingExpiration))
+                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(AbsoluteExpiration)));
+
+                result.Count = tenants.Count;
+                result.Collection = tenants;
+            }
+            else
+            {
+                result.Collection = tenants;
+                result.Count = tenants!.Count;
+            }
 
             logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
         }
@@ -133,7 +180,8 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(params string[] includes)
+    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(
+        params string[] includes)
     {
         var result = new GetMultipleResponse<BillToGetDto>();
 
@@ -170,7 +218,8 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(params string[] includes)
+    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(
+        params string[] includes)
     {
         var result = new GetMultipleResponse<RentToGetDto>();
 
@@ -207,7 +256,8 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, params string[] includes)
+    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, 
+        params string[] includes)
     {
         var result = new GetSingleResponse<TenantToGetDto>();
 
@@ -245,7 +295,8 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, params string[] includes)
+    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, 
+        params string[] includes)
     {
         var result = new GetMultipleResponse<RentToGetDto>();
 
@@ -281,7 +332,8 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, params string[] includes)
+    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, 
+        params string[] includes)
     {
         var result = new GetMultipleResponse<BillToGetDto>();
 

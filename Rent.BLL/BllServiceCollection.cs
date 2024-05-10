@@ -37,6 +37,8 @@ public static class BllServiceCollection
 
         services.AddAutoMapper(typeof(MappingProfile));
 
+        services.AddMemoryCache();
+
         return services;
     }
 }

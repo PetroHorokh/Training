@@ -6,32 +6,73 @@ using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using Rent.DAL.RequestsAndResponses;
 using Rent.WebAPI.CustomExceptions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Rent.BLL.Services;
 
-public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerService> logger) : IOwnerService
+/// <summary>
+/// Service for working with owners
+/// </summary>
+/// <param name="unitOfWork">Parameter to use UnitOfWork pattern implemented in Dal layer</param>
+/// <param name="mapper">Parameter to use mapper with provided profiles</param>
+/// <param name="logger">Parameter to use logging</param>
+/// <param name="memoryCache">Parameter to use in-memory caching</param>
+public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerService> logger, IMemoryCache memoryCache) : IOwnerService
 {
+    /// <summary>
+    /// Property for setting root cache key for signalizing in-memory cache is used by current service
+    /// </summary>
+    private const string RootCacheKey = "Owners";
+    /// <summary>
+    /// Property for setting SlidingExpiration after which caching of specific entity is being prolonged
+    /// </summary>
+    private const int SlidingExpiration = 2;
+    /// <summary>
+    /// Property for setting AbsoluteExpiration which is upper limit for caching specific entity
+    /// </summary>
+    private const int AbsoluteExpiration = 10;
+
+    /// <summary>
+    /// Get all owners from UnitOfWork Owners with method GetAllAsync
+    /// </summary>
+    /// <param name="includes">Parameter to use include with EF to add necessary related tables</param>
+    /// <exception cref="ProcessException">Exception thrown when error occured while making a request to database</exception>
+    /// <exception cref="AutoMapperMappingException">Exception thrown when error occured while mapping entities</exception>
+    /// <returns>Returns <see cref="GetMultipleResponse{OwnerToGetDto}"/> entity with either IEnumerable of <see cref="OwnerToGetDto"/> entities or thrown exception</returns>
     public async Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync(params string[] includes)
     {
         var result = new GetMultipleResponse<OwnerToGetDto>();
+        var cacheKey = RootCacheKey + "All";
 
         try
         {
             logger.LogInformation("Entering OwnerService, GetAllOwnersAsync");
 
-            logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
-            var response = await unitOfWork.Owners.GetAllAsync(includes);
-            logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
-
-            result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            logger.LogInformation("Checking memory cache for owners");
+            if (!memoryCache.TryGetValue(cacheKey, out List<OwnerToGetDto>? owners))
             {
-                logger.LogError("Exception occured while retrieving all owners from database.");
-                throw new ProcessException("Exception occured while retrieving all owners from database.", response.Error);
-            }
+                logger.LogInformation("Calling OwnerRepository, method GetAllAsync");
+                var response = await unitOfWork.Owners.GetAllAsync(includes);
+                logger.LogInformation("Finished calling OwnerRepository, method GetAllAsync");
 
-            logger.LogInformation($"Mapping owners to OwnerToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<OwnerToGetDto>);
+                result.TimeStamp = response.TimeStamp;
+                if (response.Error is not null)
+                {
+                    logger.LogError("Exception occured while retrieving all owners from database.");
+                    throw new ProcessException("Exception occured while retrieving all owners from database.", response.Error);
+                }
+
+                logger.LogInformation($"Mapping owners to OwnerToGetDto");
+                owners = response.Collection!.Select(mapper.Map<OwnerToGetDto>).ToList();
+
+                result.Count = owners.Count;
+                result.Collection = owners;
+            }
+            else
+            {
+                result.Collection = owners;
+                result.Count = owners!.Count;
+            }
 
             logger.LogInformation("Exiting OwnerService, GetAllOwnersAsync");
         }
@@ -41,7 +82,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
         }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new Exception("Exception occured while mapping entities.", ex);
+            result.Error = ex;
         }
 
         return result;
