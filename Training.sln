@@ -38,9 +38,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevExtreme NuGet.config", "
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Auth.DAL", "Rent.Auth.DAL\Rent.Auth.DAL.csproj", "{F5BD3A54-FC04-4345-BA0F-EF62B8C8E02E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.Auth.DAL", "Rent.Auth.DAL\Rent.Auth.DAL.csproj", "{F5BD3A54-FC04-4345-BA0F-EF62B8C8E02E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Auth.BLL", "Rent.Auth.BLL\Rent.Auth.BLL.csproj", "{A3D34DF0-E838-46E1-9FC2-2CE76BB17289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.Auth.BLL", "Rent.Auth.BLL\Rent.Auth.BLL.csproj", "{A3D34DF0-E838-46E1-9FC2-2CE76BB17289}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.WebAPI.Tests", "Rent.WebAPI.Tests\Rent.WebAPI.Tests.csproj", "{5015AE8E-8948-4D2E-A871-8BBBC63F08AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.BLL.Tests", "Rent.BLL.Tests\Rent.BLL.Tests.csproj", "{A76BA24C-9E2D-40A4-B89E-9C0626787295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Auth.WebAPI.Tests", "Rent.Auth.WebAPI.Tests\Rent.Auth.WebAPI.Tests.csproj", "{28DCD8FB-F14A-439A-8466-50AC1D53A82E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +122,18 @@ Global
 		{A3D34DF0-E838-46E1-9FC2-2CE76BB17289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3D34DF0-E838-46E1-9FC2-2CE76BB17289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3D34DF0-E838-46E1-9FC2-2CE76BB17289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5015AE8E-8948-4D2E-A871-8BBBC63F08AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5015AE8E-8948-4D2E-A871-8BBBC63F08AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5015AE8E-8948-4D2E-A871-8BBBC63F08AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5015AE8E-8948-4D2E-A871-8BBBC63F08AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76BA24C-9E2D-40A4-B89E-9C0626787295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76BA24C-9E2D-40A4-B89E-9C0626787295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76BA24C-9E2D-40A4-B89E-9C0626787295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76BA24C-9E2D-40A4-B89E-9C0626787295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
