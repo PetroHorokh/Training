@@ -10,16 +10,17 @@ using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.Context;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class OwnerRepository(RentContext context, IConfiguration configuration, ILogger<OwnerRepository> logger) :RepositoryBase<Owner>(context), IOwnerRepository
 {
-    public async Task<CreationResponse> CreateWithProcedure(OwnerToCreateDto owner)
+    public async Task<Response<Guid>> CreateWithProcedure(OwnerToCreateDto owner)
     {
         logger.LogInformation("Entering OwnerRepository, method CreateWithProcedure");
 
-        CreationResponse response = new();
+        var response = new Response<Guid>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -36,13 +37,13 @@ public class OwnerRepository(RentContext context, IConfiguration configuration, 
             logger.LogInformation($"Parameters: @Name = {owner.Name}, @UserId = {owner.UserId}, @AddressId = {owner.AddressId}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.OwnerId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting Owner entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

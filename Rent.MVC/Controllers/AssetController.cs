@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using System.Collections;
+using Microsoft.IdentityModel.Tokens;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using Rent.Response.Library;
 
 namespace Rent.MVC.Controllers;
 
@@ -23,12 +26,13 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
             {
                 var response = await ownerService.GetAllAssetsAsync();
 
-                if (response.Error is not null)
+                if (!response.Exceptions.IsNullOrEmpty())
                 {
-                    throw response.Error;
+                    return StatusCode(409, response.Exceptions);
+
                 }
 
-                assets = response.Collection!.ToList();
+                assets = response.Body!.ToList();
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -64,14 +68,13 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
         {
             var result = await ownerService.CreateAssetAsync(model);
 
-            if (result.Error is null)
+            if (!result.Exceptions.IsNullOrEmpty())
             {
-                return Ok();
+                return StatusCode(409,result.Exceptions);
+                
             }
-            else
-            {
-                return StatusCode(409, result.Error.Message);
-            }
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -88,12 +91,13 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
         {
             var response = await ownerService.GetAssetByIdAsync(ConvertTo<Guid>(key));
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                throw response.Error;
+                return StatusCode(409, response.Exceptions);
+
             }
 
-            _ = await ownerService.DeleteAssetAsync(response.Entity!.AssetId);
+            _ = await ownerService.DeleteAssetAsync(response.Body!.AssetId);
 
             return Ok();
         }
@@ -110,20 +114,22 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
         {
             var response1 = await roomService.GetAllRoomTypesAsync();
 
-            if (response1.Error is not null)
+            if (!response1.Exceptions.IsNullOrEmpty())
             {
-                throw response1.Error;
+                return StatusCode(409, response1.Exceptions);
+
             }
 
             var response2 = await roomService.GetAllRoomsAsync();
 
-            if (response2.Error is not null)
+            if (!response2.Exceptions.IsNullOrEmpty())
             {
-                throw response2.Error;
+                return StatusCode(409, response2.Exceptions);
+
             }
 
-            var lookup = response2.Collection!
-                .Join(response1.Collection!,
+            var lookup = response2.Body!
+                .Join(response1.Body!,
                     l => l.RoomTypeId,
                     roomType => roomType.RoomTypeId,
                     (l, roomType) => new
@@ -154,12 +160,13 @@ public class AssetController(IOwnerService ownerService, IRoomService roomServic
         {
             var response = await ownerService.GetAllOwnersAsync();
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                throw response.Error;
+                return StatusCode(409, response.Exceptions);
+
             }
 
-            var lookup = response.Collection!.Select(i => new
+            var lookup = response.Body!.Select(i => new
             {
                 Value = i.OwnerId,
                 Text = i.Name.ToString()

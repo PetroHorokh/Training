@@ -3,10 +3,11 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.RequestsAndResponses;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
 
 namespace Rent.WebAPI.Controllers;
 
@@ -31,17 +32,17 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         var response = await tenantService.GetAllTenantsAsync();
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Count == 0)
+        if (!response.Body!.Any())
         {
             return new NoContentResult();
         }
 
-        return response.Collection!.ToList();
+        return response.Body!.ToList();
     }
 
     /// <summary>
@@ -70,17 +71,17 @@ public class TenantController(ITenantService tenantService) : Controller
 
         var response = await tenantService.GetTenantsPartialAsync(request);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Count == 0)
+        if (!response.Body!.Any())
         {
             return new NoContentResult();
         }
 
-        return response.Collection!.ToList();
+        return response.Body!.ToList();
     }
 
     /// <summary>
@@ -106,17 +107,17 @@ public class TenantController(ITenantService tenantService) : Controller
 
         var response = await tenantService.GetFilterTenantsAsync(request);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Count == 0)
+        if (!response.Body!.Any())
         {
             return new NoContentResult();
         }
 
-        return new OkObjectResult(response.Collection);
+        return new OkObjectResult(response.Body);
     }
 
     /// <summary>
@@ -132,17 +133,17 @@ public class TenantController(ITenantService tenantService) : Controller
     {
         var response = await tenantService.GetTenantByIdAsync(tenantId, "Address");
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Entity is null)
+        if (response.Body is null)
         {
             throw new NoEntitiesException("There is no such tenant with given id.");
         }
 
-        return response.Entity;
+        return response.Body;
     }
 
     /// <summary>
@@ -155,11 +156,11 @@ public class TenantController(ITenantService tenantService) : Controller
     [Authorize]
     public async Task<IActionResult> PostTenant([FromBody] TenantToCreateDto tenant)
     {
-        var result = await tenantService.CreateTenantAsync(tenant);
+        var response = await tenantService.CreateTenantAsync(tenant);
 
-        if (result.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
         return Created();
@@ -172,13 +173,14 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <returns>Returns no content if successful</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpDelete("{tenantId:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
-        var result = await tenantService.DeleteTenantAsync(tenantId);
+        var response = await tenantService.DeleteTenantAsync(tenantId);
 
-        if (result.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
         return NoContent();
@@ -191,14 +193,16 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <returns>Returns no content if successful</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> PutTenant([FromBody] TenantToGetDto tenant)
     {
-        var result = await tenantService.UpdateTenantAsync(tenant);
+        var response = await tenantService.UpdateTenantAsync(tenant);
 
-        if (result.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, response.Exceptions);
         }
+
         return NoContent();
     }
 
@@ -211,16 +215,17 @@ public class TenantController(ITenantService tenantService) : Controller
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     /// <exception cref="ValidationException">Thrown when patched tenant has invalid data</exception>
     [HttpPatch("{tenantId:guid}")]
+    [Authorize]
     public async Task<IActionResult> PatchTenant(Guid tenantId, [FromBody] JsonPatchDocument<TenantToGetDto> patch)
     {
         var response1 = await tenantService.GetTenantByIdAsync(tenantId);
 
-        if (response1.Error is not null)
+        if (!response1.Exceptions.IsNullOrEmpty())
         {
-            throw response1.Error;
+            return StatusCode(500, response1.Exceptions);
         }
 
-        var patched = response1.Entity!;
+        var patched = response1.Body!;
         patch.ApplyTo(patched, ModelState);
 
         if (!TryValidateModel(patched))
@@ -230,9 +235,9 @@ public class TenantController(ITenantService tenantService) : Controller
 
         var response2 = await tenantService.UpdateTenantAsync(patched);
 
-        if (response2.Error is not null)
+        if (!response2.Exceptions.IsNullOrEmpty())
         {
-            throw response2.Error;
+            return StatusCode(500, response2.Exceptions);
         }
 
         return NoContent();

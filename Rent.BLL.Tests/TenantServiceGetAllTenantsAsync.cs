@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
-using NSubstitute.ExceptionExtensions;
-using NSubstitute.Extensions;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
 
 namespace Rent.BLL.Tests;
 
@@ -26,59 +24,48 @@ public class TenantServiceGetAllTenantsAsync : SetUp
         var result = await TenantService.GetAllTenantsAsync();
 
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.That(result.Count == 2);
-        Assert.That(result.Count, Is.EqualTo(result.Collection!.Count()));
+        Assert.IsEmpty(result.Exceptions);
+        Assert.That(result.Body!.Count() == 2);
     }
 
     [Test]
     public async Task
         GetAllTenantsAsync_ShouldReturnIEnumerableOfTenantToGedDto_WhenIEnumerableOfTenantToGedDtoNotPresentInMemoryCache()
     {
-        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Tenant>
+        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Tenant>>()
         {
-            Collection = new List<Tenant> { new(), new() },
-            Count = 2,
-            Error = null,
-            TimeStamp = DateTime.Now
+            Body = new List<Tenant> { new(), new() },
         }));
 
         var result = await TenantService.GetAllTenantsAsync();
 
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.That(result.Count == 2);
-        Assert.That(result.Count, Is.EqualTo(result.Collection!.Count()));
+        Assert.IsEmpty(result.Exceptions);
+        Assert.That(result.Body!.Count() == 2);
     }
 
     [Test]
     public async Task GetAllTenantsAsync_ShouldReturnProcessException_WhenErrorOccuredRetrievingTenantFromDatabase()
     {
-        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Tenant>
+        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Tenant>>
         {
-            Collection = null,
-            Count = null,
-            Error = new Exception(),
-            TimeStamp = DateTime.Now
+            Exceptions = [new()],
         }));
 
         var result = await TenantService.GetAllTenantsAsync();
 
         Assert.NotNull(result);
-        Assert.That(result.Error, Is.TypeOf<ProcessException>());
-        Assert.NotNull(result.Error);
-        Assert.Null(result.Collection);
+        Assert.That(result.Exceptions.ElementAt(0), Is.TypeOf<Exception>());
+        Assert.IsNotEmpty(result.Exceptions);
+        Assert.IsEmpty(result.Body!);
     }
 
     [Test]
     public async Task GetAllTenantsAsync_ShouldReturnAutoMapperMappingException_WhenErrorOccuredWhileMappingEntities()
     {
-        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Tenant>
+        UnitOfWork.Tenants.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Tenant>>()
         {
-            Collection = new List<Tenant> { new(), new() },
-            Count = 2,
-            Error = null,
-            TimeStamp = DateTime.Now
+            Body = new List<Tenant> { new(), new() },
         }));
         Mapper.When(x => x.Map<TenantToGetDto>(Arg.Any<Tenant>())).Do(x => throw new AutoMapperMappingException());
 
@@ -87,8 +74,8 @@ public class TenantServiceGetAllTenantsAsync : SetUp
         var result = await TenantService.GetAllTenantsAsync();
 
         Assert.NotNull(result);
-        Assert.That(result.Error, Is.TypeOf<AutoMapperMappingException>());
-        Assert.NotNull(result.Error);
-        Assert.Null(result.Collection);
+        Assert.That(result.Exceptions.ElementAt(0), Is.TypeOf<AutoMapperMappingException>());
+        Assert.IsNotEmpty(result.Exceptions);
+        Assert.Null(result.Body);
     }
 }

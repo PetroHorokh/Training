@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Diagnostics;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
 using Rent.WebAPI.ProblemDetails;
 
 namespace Rent.WebAPI.Handlers;
@@ -23,60 +23,35 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        CustomProblemDetails problemDetails;
-
-        switch (exception)
+        var problemDetails = exception switch
         {
-            case ArgumentException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = exception.Message
-                };
-                break;
+            ArgumentException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest, Detail = exception.Message
+            },
+            ProcessException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
+            },
+            NoEntitiesException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status204NoContent, Detail = exception.Message
+            },
+            ValidationException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status422UnprocessableEntity, Detail = exception.Message
+            },
+            AutoMapperMappingException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
+            },
+            _ => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
+            }
+        };
 
-            case ProcessException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = exception.Message
-                };
-                break;
-
-            case NoEntitiesException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status204NoContent,
-                    Detail = exception.Message
-                };
-                break;
-
-            case ValidationException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status422UnprocessableEntity,
-                    Detail = exception.Message
-                };
-                break;
-
-            case AutoMapperMappingException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = exception.Message
-                };
-                break;
-
-            default:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = exception.Message
-                };
-                break;
-        }
-
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = problemDetails.Status!.Value;
 
         await httpContext.Response
             .WriteAsJsonAsync(problemDetails, cancellationToken);

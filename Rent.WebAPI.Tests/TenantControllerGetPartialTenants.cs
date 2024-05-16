@@ -3,6 +3,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Rent.DAL.DTO;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.WebAPI.Tests;
 
@@ -11,8 +12,10 @@ public class TenantControllerGetPartialTenants : SetUp
     [Test]
     public async Task GetPartialTenants_ShouldReturnTenants_WhenPassedCorrectArgumentsAndTenantsArePresent()
     {
-        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>
-            { Collection = new List<TenantToGetDto> { new TenantToGetDto(), new TenantToGetDto() }, Count = 2, Error = null, TimeStamp = DateTime.Now }));
+        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>()
+        {
+            Body = [new(), new()]
+        }));
 
         var response = await Controller.GetPartialTenants(0, 2);
 
@@ -25,8 +28,10 @@ public class TenantControllerGetPartialTenants : SetUp
     [Test]
     public async Task GetPartialTenants_ShouldReturnNoContentResult_WhenNoTenantsPresent()
     {
-        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>
-            { Collection = null, Count = 0, Error = null, TimeStamp = DateTime.Now }));
+        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>
+        {
+            Body = new List<TenantToGetDto>()
+        }));
 
         var response = await Controller.GetPartialTenants(1, 1);
 
@@ -39,7 +44,7 @@ public class TenantControllerGetPartialTenants : SetUp
     [Test]
     public void GetPartialTenants_ShouldThrowException_WhenInsufficientArgumentsProvided()
     {
-        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>()));
+        Service.GetTenantsPartialAsync(Arg.Any<GetPartialRequest>()).Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>()));
 
         Assert.ThrowsAsync<ArgumentException>(async () => await Controller.GetPartialTenants(-1, -1));
     }

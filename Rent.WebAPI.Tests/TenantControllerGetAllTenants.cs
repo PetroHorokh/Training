@@ -2,7 +2,7 @@
 using NSubstitute;
 using Rent.DAL.DTO;
 using Rent.DAL.RequestsAndResponses;
-using Rent.WebAPI.CustomExceptions;
+using Rent.Response.Library;
 
 namespace Rent.WebAPI.Tests;
 
@@ -11,22 +11,26 @@ public class TenantControllerGetAllTenants : SetUp
     [Test]
     public async Task GetAllTenants_ShouldReturnIEnumerableOfTenantToGedDto_WhenThereAreTenantsPresent()
     {
-        Service.GetAllTenantsAsync().Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>
-            { Collection = new List<TenantToGetDto> { new TenantToGetDto(), new TenantToGetDto() }, Count = 2, Error = null, TimeStamp = DateTime.Now }));
+        Service.GetAllTenantsAsync().Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>()
+        {
+            Body = new List<TenantToGetDto> { new(), new() }
+        }));
 
         var response = await Controller.GetAllTenants();
 
         var result = response.Value;
 
         Assert.NotNull(result);
-        Assert.That(result!.Count() == 2);
+        Assert.That(result!.Count(), Is.EqualTo(2));
     }
 
     [Test]
     public async Task GetAllTenants_ShouldReturnNoContentResult_WhenNoTenantsPresent()
     {
-        Service.GetAllTenantsAsync().Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>
-            { Collection = null, Count = 0, Error = null, TimeStamp = DateTime.Now }));
+        Service.GetAllTenantsAsync().Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>
+        {
+            Body = new List<TenantToGetDto>()
+        }));
 
         var response = await Controller.GetAllTenants();
 
@@ -37,11 +41,15 @@ public class TenantControllerGetAllTenants : SetUp
     }
 
     [Test]
-    public void GetAllTenants_ShouldThrowException_WhenExceptionThrownIsService()
+    public async Task GetAllTenants_ShouldThrowException_WhenExceptionThrownIsService()
     {
-        Service.GetAllTenantsAsync().Returns(Task.FromResult(new GetMultipleResponse<TenantToGetDto>
-            { Collection = null, Count = 0, Error = new Exception(), TimeStamp = DateTime.Now }));
+        Service.GetAllTenantsAsync().Returns(Task.FromResult(new Response<IEnumerable<TenantToGetDto>>()
+        {
+            Exceptions = [new()]
+        }));
 
-        Assert.ThrowsAsync<Exception>(async () => await Controller.GetAllTenants());
+        var response = await Controller.GetAllTenants();
+
+        Assert.NotNull(response.Result);
     }
 }

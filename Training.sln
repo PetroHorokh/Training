@@ -46,7 +46,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.WebAPI.Tests", "Rent.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.BLL.Tests", "Rent.BLL.Tests\Rent.BLL.Tests.csproj", "{A76BA24C-9E2D-40A4-B89E-9C0626787295}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Auth.WebAPI.Tests", "Rent.Auth.WebAPI.Tests\Rent.Auth.WebAPI.Tests.csproj", "{28DCD8FB-F14A-439A-8466-50AC1D53A82E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.Auth.WebAPI.Tests", "Rent.Auth.WebAPI.Tests\Rent.Auth.WebAPI.Tests.csproj", "{28DCD8FB-F14A-439A-8466-50AC1D53A82E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent.Auth.BLL.Tests", "Rent.Auth.BLL.Tests\Rent.Auth.BLL.Tests.csproj", "{4B02CE19-7BE9-4424-B7F7-5515B6991400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.AWS.S3", "Rent.AWS\Rent.AWS.S3.csproj", "{44A94208-CA95-43B4-9BEB-F07F43D6E45D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.ExceptionLibrary", "ExceptionLibrary\Rent.ExceptionLibrary.csproj", "{B5FB1E49-C2DF-4700-9425-55F896924D32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Response.Library", "Rent.Response.Library\Rent.Response.Library.csproj", "{16F65C44-5539-41D8-B662-27C24981DF02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +142,22 @@ Global
 		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28DCD8FB-F14A-439A-8466-50AC1D53A82E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B02CE19-7BE9-4424-B7F7-5515B6991400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B02CE19-7BE9-4424-B7F7-5515B6991400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B02CE19-7BE9-4424-B7F7-5515B6991400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B02CE19-7BE9-4424-B7F7-5515B6991400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A94208-CA95-43B4-9BEB-F07F43D6E45D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A94208-CA95-43B4-9BEB-F07F43D6E45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A94208-CA95-43B4-9BEB-F07F43D6E45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A94208-CA95-43B4-9BEB-F07F43D6E45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5FB1E49-C2DF-4700-9425-55F896924D32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5FB1E49-C2DF-4700-9425-55F896924D32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5FB1E49-C2DF-4700-9425-55F896924D32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5FB1E49-C2DF-4700-9425-55F896924D32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16F65C44-5539-41D8-B662-27C24981DF02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16F65C44-5539-41D8-B662-27C24981DF02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16F65C44-5539-41D8-B662-27C24981DF02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16F65C44-5539-41D8-B662-27C24981DF02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

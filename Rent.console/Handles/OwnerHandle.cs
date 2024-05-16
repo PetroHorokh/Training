@@ -10,6 +10,7 @@ namespace Rent.console.Handles;
 public class OwnerHandle
 {
     public delegate Task OwnerHandleDelegate();
+
     public static List<OwnerHandleDelegate> OwnerMenu { get; set; }
 
     private static readonly IOwnerService OwnerService;
@@ -35,16 +36,16 @@ public class OwnerHandle
     {
         var response = await OwnerService.GetAllOwnersAsync();
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            Console.WriteLine($"Error occured");
             return;
         }
 
-        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no owners");
+        if (response.Body.IsNullOrEmpty()) Console.WriteLine("There are no owners");
         else
         {
-            foreach (var owner in response.Collection!)
+            foreach (var owner in response.Body!)
             {
                 Console.WriteLine(owner);
             }
@@ -55,16 +56,16 @@ public class OwnerHandle
     {
         var response = await OwnerService.GetAllAssetsAsync();
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+            Console.WriteLine($"Error occured");
             return;
         }
 
-        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no assets");
+        if (response.Body.IsNullOrEmpty()) Console.WriteLine("There are no assets");
         else
         {
-            foreach (var asset in response.Collection!)
+            foreach (var asset in response.Body!)
             {
                 Console.WriteLine(asset);
             }
@@ -80,15 +81,13 @@ public class OwnerHandle
         {
             var response = await OwnerService.GetOwnerByIdAsync(ownerId);
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                Console.WriteLine($"Error occured");
                 return;
             }
 
-            Console.WriteLine(response.Entity is not null ?
-                response :
-                $"Error with message was thrown: {response.Error!.Message}");
+            Console.WriteLine(response.Body is not null ? response : "Error occured");
         }
         else
         {
@@ -105,16 +104,16 @@ public class OwnerHandle
         {
             var response = await OwnerService.GetOwnerAssetsAsync(ownerId);
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                Console.WriteLine($"Error with message was thrown: {response.Error.Message}");
+                Console.WriteLine($"Error occured");
                 return;
             }
 
-            if (response.Collection.IsNullOrEmpty()) Console.WriteLine("\nThere are no assets");
+            if (response.Body.IsNullOrEmpty()) Console.WriteLine("\nThere are no assets");
             else
             {
-                foreach (var asset in response.Collection!)
+                foreach (var asset in response.Body!)
                 {
                     Console.WriteLine(asset);
                 }
@@ -153,7 +152,9 @@ public class OwnerHandle
 
         var result = await OwnerService.CreateOwnerAsync(owner);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new owner with id {result.CreatedId}");
+        Console.WriteLine(!result.Exceptions.IsNullOrEmpty()
+            ? "\nError occured"
+            : $"\nSuccessfully created a new owner with id {result.Body}");
     }
 
     private static async Task DeleteOwnerAsync()
@@ -165,7 +166,8 @@ public class OwnerHandle
         {
             var result = await OwnerService.DeleteOwnerAsync(ownerId);
 
-            Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : "\nSuccessfully deleted an owner");
+            Console.WriteLine(
+                !result.Exceptions.IsNullOrEmpty() ? "\nError occured" : "\nSuccessfully deleted an owner");
         }
         else
         {
@@ -200,7 +202,9 @@ public class OwnerHandle
 
         var result = await OwnerService.CreateAssetAsync(asset);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new asset with id {result.CreatedId}");
+        Console.WriteLine(!result.Exceptions.IsNullOrEmpty()
+            ? "\nError occured"
+            : $"\nSuccessfully created a new asset with id {result.Body}");
     }
 
     private static async Task DeleteAssetAsync()
@@ -212,7 +216,8 @@ public class OwnerHandle
         {
             var result = await OwnerService.DeleteAssetAsync(assetId);
 
-            Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : "\nSuccessfully deleted an asset");
+            Console.WriteLine(
+                !result.Exceptions.IsNullOrEmpty() ? "\nError occured" : "\nSuccessfully deleted an asset");
         }
         else
         {

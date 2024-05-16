@@ -43,10 +43,10 @@ public static class TenantHandle
     {
         var response = await TenantService.GetAllTenantsAsync();
 
-        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no tenants");
+        if (response.Body.IsNullOrEmpty()) Console.WriteLine("There are no tenants");
         else
         {
-            foreach (var tenant in response.Collection!)
+            foreach (var tenant in response.Body!)
             {
                 Console.WriteLine(tenant);
             }
@@ -57,10 +57,10 @@ public static class TenantHandle
     {
         var response = await TenantService.GetAllBillsAsync();
 
-        if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no bills");
+        if (response.Body.IsNullOrEmpty()) Console.WriteLine("There are no bills");
         else
         {
-            foreach (var bill in response.Collection!)
+            foreach (var bill in response.Body!)
             {
                 Console.WriteLine(bill);
             }
@@ -76,10 +76,10 @@ public static class TenantHandle
         {
             var rents = await TenantService.GetTenantRentsAsync(tenantId);
 
-            if (rents.Collection.IsNullOrEmpty()) Console.WriteLine("There are no rents");
+            if (rents.Body.IsNullOrEmpty()) Console.WriteLine("There are no rents");
             else
             {
-                foreach (var rent in rents.Collection!)
+                foreach (var rent in rents.Body!)
                 {
                     Console.WriteLine(rent);
                 }
@@ -100,10 +100,10 @@ public static class TenantHandle
         {
             var response = await TenantService.GetTenantBillsAsync(tenantId);
 
-            if (response.Collection.IsNullOrEmpty()) Console.WriteLine("There are no bills");
+            if (response.Body.IsNullOrEmpty()) Console.WriteLine("There are no bills");
             else
             {
-                foreach (var bill in response.Collection!)
+                foreach (var bill in response.Body!)
                 {
                     Console.WriteLine(bill);
                 }
@@ -212,7 +212,7 @@ public static class TenantHandle
 
         var result = await TenantService.CreateTenantAsync(tenant);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new tenant with id {result.CreatedId}");
+        Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : $"\nSuccessfully created a new tenant with id {result.Body}");
     }
 
     private static async Task CreateRentAsync()
@@ -260,7 +260,7 @@ public static class TenantHandle
 
         var result = await TenantService.CreateRentAsync(rent);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new rent with id {result.CreatedId}");
+        Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : $"\nSuccessfully created a new rent with id {result.Body}");
     }
 
     private static async Task CreatePaymentAsync()
@@ -298,7 +298,7 @@ public static class TenantHandle
 
         var result = await TenantService.CreatePaymentAsync(payment);
 
-        Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : $"\nSuccessfully created a new payment with id {result.CreatedId}");
+        Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : $"\nSuccessfully created a new payment with id {result.Body}");
     }
 
     private static async Task UpdateTenantAsync()
@@ -310,44 +310,42 @@ public static class TenantHandle
         {
             var tenant = await TenantService.GetTenantByIdAsync(tenantId);
 
-            if (tenant.Entity is not null)
+            if (tenant.Body is not null)
             {
                 Console.WriteLine("Tenant edit");
 
-                var tenantName = tenant.Entity.Name;
+                var tenantName = tenant.Body.Name;
                 EditProp(ref tenantName, "name");
-                tenant.Entity.Name = tenantName;
+                tenant.Body.Name = tenantName;
 
-                var tenantBankName = tenant.Entity.BankName;
+                var tenantBankName = tenant.Body.BankName;
                 EditProp(ref tenantBankName, "bank");
-                tenant.Entity.BankName = tenantBankName;
+                tenant.Body.BankName = tenantBankName;
 
-                var tenantDirector = tenant.Entity.Director;
+                var tenantDirector = tenant.Body.Director;
                 EditProp(ref tenantDirector, "director");
-                tenant.Entity.Director = tenantDirector;
+                tenant.Body.Director = tenantDirector;
 
-                var tenantDescription = tenant.Entity.Description;
+                var tenantDescription = tenant.Body.Description;
                 EditProp(ref tenantDescription, "description");
-                tenant.Entity.Description = tenantDescription;
+                tenant.Body.Description = tenantDescription;
 
-                var tenantAddressId = tenant.Entity.AddressId;
+                var tenantAddressId = tenant.Body.AddressId;
                 EditGuidProp(ref tenantAddressId, "address id");
-                tenant.Entity.AddressId = tenantAddressId;
+                tenant.Body.AddressId = tenantAddressId;
 
                 var tenantToUpdate = new TenantToGetDto()
                 {
-                    Name = tenant.Entity.Name,
-                    BankName = tenant.Entity.BankName,
-                    Director = tenant.Entity.Director,
-                    Description = tenant.Entity.Description,
+                    Name = tenant.Body.Name,
+                    BankName = tenant.Body.BankName,
+                    Director = tenant.Body.Director,
+                    Description = tenant.Body.Description,
                     AddressId = tenantAddressId
                 };
 
                 var result = await TenantService.UpdateTenantAsync(tenantToUpdate);
 
-                Console.WriteLine(result.Error == null
-                    ? $"Changes were saved"
-                    : $"Changes were not saved due to an error with message: {result.Error.InnerException}");
+                Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : "Changes were saved");
             }
             else
             {
@@ -369,9 +367,7 @@ public static class TenantHandle
         {
             var result = await TenantService.CancelRentAsync(rentId);
 
-            Console.WriteLine(result.Error == null
-                ? $"Cancellation was a success"
-                : $"Cancellation was not able to be saved due to an error with message: {result.Error.InnerException}");
+            Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : "Cancellation was a success");
         }
         else
         {
@@ -388,7 +384,7 @@ public static class TenantHandle
         {
             var result = await TenantService.DeleteTenantAsync(tenantId);
 
-            Console.WriteLine(result.Error != null ? '\n' + result.Error.Message : "\nSuccessfully deleted a tenant");
+            Console.WriteLine(!result.Exceptions.IsNullOrEmpty() ? "\nError occured" : "\nSuccessfully deleted a tenant");
         }
         else
         {

@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
 using Rent.DAL.UnitOfWork;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
+using System;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Rent.BLL.Services;
 
@@ -17,16 +21,22 @@ namespace Rent.BLL.Services;
 /// <param name="mapper">Parameter to use mapper with provided profiles</param>
 /// <param name="logger">Parameter to use logging</param>
 /// <param name="memoryCache">Parameter to use in-memory caching</param>
-public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TenantService> logger, IMemoryCache memoryCache) : ITenantService
+public class TenantService(
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    ILogger<TenantService> logger,
+    IMemoryCache memoryCache) : ITenantService
 {
     /// <summary>
     /// Property for setting root cache key for signalizing in-memory cache is used by current service
     /// </summary>
     private const string RootCacheKey = "Tenants";
+
     /// <summary>
     /// Property for setting SlidingExpiration after which caching of specific entity is being prolonged
     /// </summary>
     private const int SlidingExpiration = 2;
+
     /// <summary>
     /// Property for setting AbsoluteExpiration which is upper limit for caching specific entity
     /// </summary>
@@ -39,10 +49,10 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
     /// <exception cref="ProcessException">Exception thrown when error occured while making a request to database</exception>
     /// <exception cref="AutoMapperMappingException">Exception thrown when error occured while mapping entities</exception>
     /// <returns>Returns <see cref="GetMultipleResponse{TenantToGetDto}"/> entity with either IEnumerable of <see cref="TenantToGetDto"/> entities or thrown exception</returns>
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(
+    public async Task<Response<IEnumerable<TenantToGetDto>>> GetAllTenantsAsync(
         params string[] includes)
     {
-        var result = new GetMultipleResponse<TenantToGetDto>();
+        var result = new Response<IEnumerable<TenantToGetDto>>();
         var cacheKey = RootCacheKey + "All";
 
         try
@@ -56,50 +66,53 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
                 var response = await unitOfWork.Tenants.GetAllAsync(includes);
                 logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
-                result.TimeStamp = response.TimeStamp;
-                if (response.Error is not null)
+
+                if (!response.Exceptions.IsNullOrEmpty())
                 {
                     logger.LogError("Exception occured while retrieving all tenants from database.");
-                    throw new ProcessException("Exception occured while retrieving all tenants from database.",
-                        response.Error);
+                    result.Exceptions = response.Exceptions;
                 }
 
-                logger.LogInformation($"Mapping tenants to TenantToGetDto");
-                tenants = response.Collection!.Select(mapper.Map<TenantToGetDto>).ToList();
+                if (response.Body.IsNullOrEmpty())
+                    tenants = new List<TenantToGetDto>();
+                else
+                {
+                    logger.LogInformation($"Mapping tenants to TenantToGetDto");
+                    tenants = response.Body!.Select(mapper.Map<TenantToGetDto>).ToList();
+                }
 
-                logger.LogInformation($"Adding tenants into memory cache with SlidingExpiration - {SlidingExpiration}; AbsoluteExpiration - {AbsoluteExpiration}");
+                logger.LogInformation(
+                    $"Adding tenants into memory cache with SlidingExpiration - {SlidingExpiration}; AbsoluteExpiration - {AbsoluteExpiration}");
                 memoryCache.Set(cacheKey, tenants,
                     new MemoryCacheEntryOptions()
                         .SetSlidingExpiration(TimeSpan.FromSeconds(SlidingExpiration))
                         .SetAbsoluteExpiration(TimeSpan.FromSeconds(AbsoluteExpiration)));
 
-                result.Count = tenants.Count;
-                result.Collection = tenants;
+                result.Body = tenants;
             }
             else
             {
-                result.Collection = tenants;
-                result.Count = tenants!.Count;
+                result.Body = tenants;
             }
 
             logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all tenants from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request,
+    public async Task<Response<IEnumerable<TenantToGetDto>>> GetTenantsPartialAsync(GetPartialRequest request,
         params string[] includes)
     {
-        var result = new GetMultipleResponse<TenantToGetDto>();
+        var result = new Response<IEnumerable<TenantToGetDto>>();
 
         try
         {
@@ -110,34 +123,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling TenantRepository, method GetPartialAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving partial tenants from database.");
-                throw new ProcessException("Exception occured while retrieving partial tenants from database.",
-                    response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping tenants to TenantToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<TenantToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetTenantsPartialAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving partial tenants from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<TenantToGetDto>> GetFilterTenantsAsync(GetFilteredRequest filter,
+    public async Task<Response<IEnumerable<TenantToGetDto>>> GetFilterTenantsAsync(GetFilteredRequest filter,
         params string[] includes)
     {
-        var result = new GetMultipleResponse<TenantToGetDto>();
+        var result = new Response<IEnumerable<TenantToGetDto>>();
 
         try
         {
@@ -155,35 +167,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling TenantRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving filtered tenants from database.");
-                throw new ProcessException("Exception occured while retrieving filtered tenants from database.",
-                    response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping tenants to TenantToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<TenantToGetDto>);
-            result.Count = response.Count;
+            result.Body = response.Body!.Select(mapper.Map<TenantToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetFilterTenantsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving filtered tenants from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(
+    public async Task<Response<IEnumerable<BillToGetDto>>> GetAllBillsAsync(
         params string[] includes)
     {
-        var result = new GetMultipleResponse<BillToGetDto>();
+        var result = new Response<IEnumerable<BillToGetDto>>();
 
         try
         {
@@ -194,34 +204,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling BillRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving all bills from database.");
-                throw new ProcessException("Exception occured while retrieving all bills from database.",
-                    response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping bills to BillToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<BillToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<BillToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetAllBillsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all bills from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(
+    public async Task<Response<IEnumerable<RentToGetDto>>> GetAllRentsAsync(
         params string[] includes)
     {
-        var result = new GetMultipleResponse<RentToGetDto>();
+        var result = new Response<IEnumerable<RentToGetDto>>();
 
         try
         {
@@ -232,34 +241,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling RentRepository, method GetAllAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving all rents from database.");
-                throw new ProcessException("Exception occured while retrieving all rents from database.",
-                    response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping rents to RentToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<RentToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<RentToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetAllRentsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all rents from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, 
+    public async Task<Response<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId,
         params string[] includes)
     {
-        var result = new GetSingleResponse<TenantToGetDto>();
+        var result = new Response<TenantToGetDto>();
 
         try
         {
@@ -271,34 +279,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving tenant by id from database.");
-                throw new ProcessException("Exception occured while retrieving tenant by id from database.",
-                    response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping tenant to TenantToGetDto");
-            result.Entity = mapper.Map<TenantToGetDto>(response.Entity);
+            result.Body = mapper.Map<TenantToGetDto>(response.Body);
 
             logger.LogInformation("Exiting TenantService, GetTenantByIdAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving tenant by id from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, 
+    public async Task<Response<IEnumerable<RentToGetDto>>> GetTenantRentsAsync(Guid tenantId,
         params string[] includes)
     {
-        var result = new GetMultipleResponse<RentToGetDto>();
+        var result = new Response<IEnumerable<RentToGetDto>>();
 
         try
         {
@@ -309,33 +316,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling RentRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving all tenant's rents from database.");
-                throw new ProcessException("Exception occured while retrieving all tenant's rents from database.", response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping rents to RentToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<RentToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<RentToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetTenantRentsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all tenant's rents from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, 
+    public async Task<Response<IEnumerable<BillToGetDto>>> GetTenantBillsAsync(Guid tenantId,
         params string[] includes)
     {
-        var result = new GetMultipleResponse<BillToGetDto>();
+        var result = new Response<IEnumerable<BillToGetDto>>();
 
         try
         {
@@ -346,33 +353,33 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling BillRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving all tenant's bills from database.");
-                throw new ProcessException("Exception occured while retrieving all tenant's bills from database.", response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping bills to BillToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<BillToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<BillToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetTenantBillsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new AutoMapperMappingException("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all tenant's bills from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId,
+    public async Task<Response<IEnumerable<PaymentToGetDto>>> GetTenantPaymentsAsync(Guid tenantId,
         params string[] includes)
     {
-        var result = new GetMultipleResponse<PaymentToGetDto>();
+        var result = new Response<IEnumerable<PaymentToGetDto>>();
 
         try
         {
@@ -384,30 +391,30 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling PaymentRepository, method GetByConditionAsync");
 
             result.TimeStamp = response.TimeStamp;
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving all tenant's payments from database.");
-                throw new ProcessException("Exception occured while retrieving all tenant's payments from database.", response.Error);
+                result.Exceptions = response.Exceptions;
             }
 
             logger.LogInformation($"Mapping payments to PaymentToGetDto");
-            result.Collection = response.Collection!.Select(mapper.Map<PaymentToGetDto>);
+            result.Body = response.Body!.Select(mapper.Map<PaymentToGetDto>);
 
             logger.LogInformation("Exiting TenantService, GetTenantPaymentsAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new Exception("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while retrieving all tenant's payments from database.", ex));
         }
 
         return result;
     }
 
-    public async Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant)
+    public async Task<Response<Guid>> CreateTenantAsync(TenantToCreateDto tenant)
     {
         logger.LogInformation("Entering TenantService, CreateTenantAsync");
 
@@ -421,7 +428,7 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<CreationResponse> CreateRentAsync(RentToCreateDto rent)
+    public async Task<Response<Guid>> CreateRentAsync(RentToCreateDto rent)
     {
         logger.LogInformation("Entering TenantService, CreateRentAsync");
 
@@ -435,9 +442,9 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         return result;
     }
 
-    public async Task<ModifyResponse<Tenant>> DeleteTenantAsync(Guid tenantId)
+    public async Task<Response<EntityEntry<Tenant>>> DeleteTenantAsync(Guid tenantId)
     {
-        var result = new ModifyResponse<Tenant>();
+        var result = new Response<EntityEntry<Tenant>>();
 
         try
         {
@@ -448,44 +455,44 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response1.TimeStamp;
-            if (response1.Error is not null)
+            if (!response1.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving tenant by id from database.");
-                throw new ProcessException("Exception occured while retrieving tenant by id from database.", response1.Error);
+                result.Exceptions = response1.Exceptions;
             }
 
             logger.LogInformation("Calling TenantRepository, method Delete");
-            var response2 = unitOfWork.Tenants.Delete(response1.Entity!);
+            var response2 = unitOfWork.Tenants.Delete(response1.Body!);
             logger.LogInformation("Finished calling TenantRepository, method Delete");
 
             result.TimeStamp = response2.TimeStamp;
-            if (response2.Error is not null)
+            if (!response2.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while deleting retrieved tenant.");
-                throw new ProcessException("Exception occured while deleting retrieved tenant.", response2.Error);
+                result.Exceptions = response2.Exceptions;
             }
 
             await unitOfWork.SaveAsync();
 
-            result.Status = response2.Status;
+            result.Body = response2.Body;
 
             logger.LogInformation("Exiting TenantService, DeleteTenantAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new Exception("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while deleting tenant.", ex));
         }
 
         return result;
     }
 
-    public async Task<ModifyResponse<Tenant>> UpdateTenantAsync(TenantToGetDto newTenant)
+    public async Task<Response<EntityEntry<Tenant>>> UpdateTenantAsync(TenantToGetDto newTenant)
     {
-        var result = new ModifyResponse<Tenant>();
+        var result = new Response<EntityEntry<Tenant>>();
 
         try
         {
@@ -497,50 +504,50 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling TenantRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response1.TimeStamp;
-            if (response1.Error is not null)
+            if (!response1.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving tenant by id from database.");
-                throw new ProcessException("Exception occured while retrieving tenant by id from database.", response1.Error);
+                result.Exceptions = response1.Exceptions;
             }
 
-            response1.Entity!.Name = newTenant.Name;
-            response1.Entity!.Director = newTenant.Director;
-            response1.Entity!.Description = newTenant.Description;
-            response1.Entity!.BankName = newTenant.BankName;
-            response1.Entity!.AddressId = newTenant.AddressId;
+            response1.Body!.Name = newTenant.Name;
+            response1.Body!.Director = newTenant.Director;
+            response1.Body!.Description = newTenant.Description;
+            response1.Body!.BankName = newTenant.BankName;
+            response1.Body!.AddressId = newTenant.AddressId;
 
             logger.LogInformation("Calling TenantRepository, method Update");
-            var response2 = unitOfWork.Tenants.Update(response1.Entity!);
+            var response2 = unitOfWork.Tenants.Update(response1.Body!);
             logger.LogInformation("Finished calling TenantRepository, method Update");
 
             result.TimeStamp = response2.TimeStamp;
-            if (response2.Error is not null)
+            if (!response2.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while updating retrieved tenant.");
-                throw new ProcessException("Exception occured while updating retrieved tenant.", response2.Error);
+                result.Exceptions = response2.Exceptions;
             }
 
             await unitOfWork.SaveAsync();
 
-            result.Status = response2.Status;
+            result.Body = response2.Body;
 
             logger.LogInformation("Exiting TenantService, UpdateTenantAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new Exception("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while updating tenant.", ex));
         }
 
         return result;
     }
 
-    public async Task<ModifyResponse<DAL.Models.Rent>> CancelRentAsync(Guid rentId)
+    public async Task<Response<EntityEntry<DAL.Models.Rent>>> CancelRentAsync(Guid rentId)
     {
-        var result = new ModifyResponse<DAL.Models.Rent>();
+        var result = new Response<EntityEntry<DAL.Models.Rent>>();
 
         try
         {
@@ -551,44 +558,45 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
             logger.LogInformation("Finished calling RentRepository, method GetSingleByConditionAsync");
 
             result.TimeStamp = response1.TimeStamp;
-            if (response1.Error is not null)
+
+            if (!response1.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while retrieving rent by id from database.");
-                throw new ProcessException("Exception occured while retrieving rent by id from database.", response1.Error);
+                result.Exceptions = response1.Exceptions;
             }
 
-            response1.Entity!.EndDate = DateTime.Now;
+            response1.Body!.EndDate = DateTime.Now;
 
             logger.LogInformation("Calling RentRepository, method Update");
-            var response2 = unitOfWork.Rents.Update(response1.Entity!);
+            var response2 = unitOfWork.Rents.Update(response1.Body!);
             logger.LogInformation("Finished calling RentRepository, method Update");
 
             result.TimeStamp = response2.TimeStamp;
-            if (response2.Error is not null)
+            if (!response2.Exceptions.IsNullOrEmpty())
             {
                 logger.LogError("Exception occured while cancelling retrieved rent.");
-                throw new ProcessException("Exception occured while cancelling retrieved rent.", response2.Error);
+                result.Exceptions = response2.Exceptions;
             }
 
             await unitOfWork.SaveAsync();
 
-            result.Status = response2.Status;
+            result.Body = response2.Body;
 
             logger.LogInformation("Exiting TenantService, CancelRentAsync");
         }
-        catch (ProcessException ex)
-        {
-            result.Error = ex;
-        }
         catch (AutoMapperMappingException ex)
         {
-            result.Error = new Exception("Exception occured while mapping entities.", ex);
+            result.Exceptions.Add(new AutoMapperMappingException("Exception occured while mapping entities.", ex));
+        }
+        catch (Exception ex)
+        {
+            result.Exceptions.Add(new ProcessException("Exception occured while canceling rent.", ex));
         }
 
         return result;
     }
 
-    public async Task<CreationResponse> CreatePaymentAsync(PaymentToCreateDto payment)
+    public async Task<Response<Guid>> CreatePaymentAsync(PaymentToCreateDto payment)
     {
         logger.LogInformation("Entering TenantService, CreatePaymentAsync");
 
