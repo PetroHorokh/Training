@@ -11,7 +11,7 @@ public class AuthControllerChangePassword : SetUp
     [Test]
     public async Task ChangePassword_ShouldReturnOkResultWithIdentityResultGetSingleResponse_WhenSuccessful()
     {
-        Service.ChangePasswordAsync(Arg.Any<PasswordChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>()));
+        UserService.ChangePasswordAsync(Arg.Any<PasswordChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>()));
 
         var response = await Controller.ChangePassword(new PasswordChange()) as OkObjectResult;
 
@@ -23,7 +23,7 @@ public class AuthControllerChangePassword : SetUp
     [Test]
     public void ChangePassword_ShouldThrowException_WhenExceptionThrownInService()
     {
-        Service.ChangePasswordAsync(Arg.Any<PasswordChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>
+        UserService.ChangePasswordAsync(Arg.Any<PasswordChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>
         {
             Entity = null,
             Error = new Exception(),

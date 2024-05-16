@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Rent.Auth.DAL.AuthModels;
-using Rent.Auth.DAL.CustomExceptions;
 using Rent.Auth.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.WebAPI.Tests;
@@ -12,7 +10,7 @@ public class AuthControllerLogin : SetUp
     [Test]
     public async Task Login_ShouldReturnOkResultWithAuthTokenGetSingleResponse_WhenCorrectlyAuthorized()
     {
-        Service.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>()));
+        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>()));
 
         var response = await Controller.Login(new SignInUser()) as OkObjectResult;
 
@@ -24,7 +22,7 @@ public class AuthControllerLogin : SetUp
     [Test]
     public void Login_ShouldThrowException_WhenExceptionThrownInService()
     {
-        Service.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>
+        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>
         {
             Entity = null,
             Error = new Exception(),

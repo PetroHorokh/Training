@@ -8,7 +8,7 @@ public class AuthControllerLogout : SetUp
     [Test]
     public async Task Logout_ShouldReturnNoContentResult_WhenSuccessful()
     {
-        Service.Logout().Returns(Task.CompletedTask);
+        UserService.Logout().Returns(Task.CompletedTask);
 
         var response = await Controller.Logout() as NoContentResult;
 

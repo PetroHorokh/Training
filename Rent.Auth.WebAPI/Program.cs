@@ -8,6 +8,9 @@ using Rent.Auth.DAL.Models;
 using Rent.Auth.WebAPI.Handlers;
 using Serilog;
 using System.Reflection;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+//using Rent.AWS.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +49,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AuthBllServiceInject();
+//builder.Services.AwsS3ServiceInject();
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AuthRentContext>();
@@ -66,6 +70,30 @@ builder.Services.Configure<IdentityOptions>(options =>
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
+
+builder.Services.AddAuthentication(option =>
+    {
+        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(option =>
+    {
+        option.SaveToken = true;
+        option.RequireHttpsMetadata = false;
+        option.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+            ValidAudience = config["JWT:ValidAudience"],
+            ValidIssuer = config["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Secret"]!))
+        };
+    });
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -107,6 +135,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseExceptionHandler();
 
 app.UseSerilogRequestLogging();
 

@@ -21,52 +21,31 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        CustomProblemDetails problemDetails;
-
-        switch (exception)
+        CustomProblemDetails problemDetails = exception switch
         {
-            case ProcessException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = exception.Message
-                };
-                break;
+            ProcessException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
+            },
+            NoEntitiesException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status204NoContent, Detail = exception.Message
+            },
+            CredentialValidationException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
+            },
+            IdentityException => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
+            },
+            _ => new CustomProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError, Detail = "Internal server error"
+            }
+        };
 
-            case NoEntitiesException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status204NoContent,
-                    Detail = exception.Message
-                };
-                break;
-
-            case CredentialValidationException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status401Unauthorized,
-                    Detail = exception.Message
-                };
-                break;
-
-            case IdentityException:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status401Unauthorized,
-                    Detail = exception.Message
-                };
-                break;
-
-            default:
-                problemDetails = new CustomProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = "Internal server error"
-                };
-                break;
-        }
-
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        httpContext.Response.StatusCode = problemDetails.Status!.Value;
 
         await httpContext.Response
             .WriteAsJsonAsync(problemDetails, cancellationToken);

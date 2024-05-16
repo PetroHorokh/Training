@@ -16,6 +16,13 @@ using Rent.Auth.DAL.UnitOfWork;
 
 namespace Rent.Auth.BLL.Services;
 
+/// <summary>
+/// Service for working with users
+/// </summary>
+/// <param name="userManager">Parameter to use provided identity user manager</param>
+/// <param name="signInManager">Parameter to use provided identity sign in manager</param>
+/// <param name="unitOfWork">Parameter to use provided from DAL Unit of Work patter</param>
+/// <param name="config">Parameter to access metadata for using AWS endpoints and secrete for generating access tokens for users</param>
 public class UserService(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
@@ -208,7 +215,8 @@ public class UserService(
                 throw new NoEntitiesException("No user with given email was found.");
             }
 
-            var response = await userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
+            var response =
+                await userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
 
             if (!response.Errors.IsNullOrEmpty())
             {
@@ -257,40 +265,48 @@ public class UserService(
         return result;
     }
 
+    /// <summary>
+    /// Method for uploading images into database with all relevant data
+    /// </summary>
+    /// <param name="request">Parameter to accept file to upload with its possible S3 url</param>
+    /// <returns>Returns <see cref="GetSingleResponse{IdentityResult}"/> entity with status of file</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured while inserting <see cref="Image"/> entity into database</exception>
     public async Task<GetSingleResponse<ModifyResponse<Image>>> PostImage(PostImageRequest request)
     {
+        var result = new GetSingleResponse<ModifyResponse<Image>>();
+
+        try
         {
-            var result = new GetSingleResponse<ModifyResponse<Image>>();
+            using var memoryStream = new MemoryStream();
+            await request.Image.CopyToAsync(memoryStream);
 
-            try
+            var image = new Image()
             {
-                using var memoryStream = new MemoryStream();
-                await request.Image.CopyToAsync(memoryStream);
+                Data = request.Url is not null ? null : memoryStream.ToArray(),
+                ContentType = request.Image.ContentType,
+                UserId = request.UserId,
+                Name = request.Image.FileName,
+                Url = request.Url,
+                IsActive = true
+            };
 
-                var image = new Image()
-                {
-                    Data = memoryStream.ToArray(),
-                    ContentType = request.Image.ContentType,
-                    UserId = request.UserId,
-                    Name = request.Image.FileName
-                };
+            var response = unitOfWork.Images.Add(image);
 
-                var response = unitOfWork.Images.Add(image);
-
-                if (response.Error is not null)
-                {
-                    throw new ProcessException("An exception occured while adding image to database", response.Error);
-                }
-
-                result.Entity = response;
-            }
-            catch (Exception ex)
+            if (response.Error is not null)
             {
-                result.Error = ex;
+                throw new ProcessException("An exception occured while adding image to database", response.Error);
             }
 
-            return result;
+            await unitOfWork.SaveAsync();
+
+            result.Entity = response;
         }
+        catch (Exception ex)
+        {
+            result.Error = ex;
+        }
+
+        return result;
     }
 
     private GetSingleResponse<ClaimsPrincipal> GetPrincipalFromAccessToken(string token)
@@ -308,8 +324,9 @@ public class UserService(
                 ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();
-            
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+
+            var principal =
+                tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -357,7 +374,7 @@ public class UserService(
         return result;
     }
 
-    private GetSingleResponse<string> GenerateRefreshToken()
+    private static GetSingleResponse<string> GenerateRefreshToken()
     {
         var result = new GetSingleResponse<string>();
 
