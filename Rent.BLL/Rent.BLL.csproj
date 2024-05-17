@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExceptionLibrary\Rent.ExceptionLibrary.csproj" />
+    <ProjectReference Include="..\ExceptionLibrary\Rent.Exception.Library.csproj" />
     <ProjectReference Include="..\Rent.DAL\Rent.DAL.csproj" />
   </ItemGroup>
 

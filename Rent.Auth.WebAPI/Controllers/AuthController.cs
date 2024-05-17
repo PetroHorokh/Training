@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.DAL.AuthModels;
 using System.Security.Claims;
-using Rent.Auth.DAL.Models;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
+
 
 namespace Rent.Auth.WebAPI.Controllers;
 
@@ -12,6 +13,7 @@ namespace Rent.Auth.WebAPI.Controllers;
 /// 
 /// </summary>
 /// <param name="userService"></param>
+///// <param name="s3Service"></param>
 [ApiController]
 [Route("[controller]/[action]")]
 public class AuthController(IUserService userService) : Controller
@@ -21,6 +23,7 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="user">Parameter to sign up new user by <see cref="SignUpUser"/> model</param>
     /// <returns>Return status of creation of new user</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpPost]
     public async Task<IActionResult> SignUp([FromBody] SignUpUser user)
     {
@@ -31,7 +34,7 @@ public class AuthController(IUserService userService) : Controller
             throw result.Error;
         }
 
-        return Ok(result);
+        return NoContent();
     }
 
     /// <summary>
@@ -39,8 +42,9 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="token">Parameter to pass old access token and refresh token</param>
     /// <returns>Return <see cref="string"/> new access token</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpGet]
-    public async Task<IActionResult> RenewAccessToken([FromHeader] AuthToken token)
+    public async Task<IActionResult> RenewAccessToken([FromQuery] AuthToken token)
     {
         var result = await userService.RenewAccessToken(token);
 
@@ -57,6 +61,7 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="signInUser">Parameter to login user by <see cref="SignInUser"/> model</param>
     /// <returns>Return <see cref="AuthToken"/> model with access and refresh tokens</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpGet]
     public async Task<IActionResult> Login([FromQuery] SignInUser signInUser)
     {
@@ -87,6 +92,7 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="emailChange">Parameter of type <see cref="EmailChange"/> to change email with current email, new email and current password</param>
     /// <returns>Return status of changing user email</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> ChangeEmail([FromBody] EmailChange emailChange)
@@ -106,6 +112,7 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="passwordChange">Parameter of type <see cref="PasswordChange"/> to change password with current password, new password and current email</param>
     /// <returns>Return status of changing user password</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] PasswordChange passwordChange)
@@ -121,29 +128,39 @@ public class AuthController(IUserService userService) : Controller
     }
 
     /// <summary>
-    /// Upload image as an avatar
+    /// Upload image to AWS S3 bucket as an avatar
     /// </summary>
     /// <param name="file">Parameter to include image</param>
     /// <returns>Return status of adding new image as an avatar</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
+    ///// <exception cref="AmazonS3Exception">Added to response when an error occured is S3 service</exception>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> UploadImage(IFormFile file)
     {
         var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
+        //var result1 = await s3Service.SendFileToS3Bucket(file);
+
         var request = new PostImageRequest()
         {
             Image = file,
-            UserId = userId
+            UserId = userId,
+            //Url = result1.Entity
         };
 
-        var result = await userService.PostImage(request);
+        var result2 = await userService.PostImage(request);
 
-        if (result.Error is not null)
+        if (result2.Error is not null)
         {
-            throw result.Error;
+            throw result2.Error;
         }
 
-        return Ok(result);
+        //if (result1.Error is not null)
+        //{
+        //    result2.Error = result1.Error;
+        //}
+
+        return NoContent();
     }
 }

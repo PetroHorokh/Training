@@ -18,7 +18,7 @@ public sealed partial class AuthRentContext : IdentityDbContext<User, Role, Guid
 
     public new required DbSet<User> Users { get; set; } = null!;
 
-    public new required DbSet<Image> Images { get; set; } = null!;
+    public required DbSet<Image> Images { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

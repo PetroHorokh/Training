@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Rent.Auth.BLL.Services;
-using Rent.Auth.BLL.Services.Contracts;
-using Rent.Auth.DAL;
+using Rent.AWS.S3.Services;
+using Rent.AWS.S3.Services.Contracts;
 using Serilog;
 
-namespace Rent.Auth.BLL;
+namespace Rent.AWS.S3;
 
-public static class AuthBllServiceCollection
+public static class AwsS3ServiceCollection
 {
-    public static IServiceCollection AuthBllServiceInject(this IServiceCollection services)
+    public static IServiceCollection AwsS3ServiceInject(this IServiceCollection services)
     {
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -23,9 +22,7 @@ public static class AuthBllServiceCollection
         services.AddSingleton<IConfiguration>(provider => config);
         services.AddLogging(builder => builder.AddSerilog(dispose: true));
 
-        services.AuthDalServiceInject();
-
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IS3Service, S3Service>();
 
         return services;
     }

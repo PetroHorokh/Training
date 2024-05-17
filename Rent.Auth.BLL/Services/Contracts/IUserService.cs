@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Rent.Auth.DAL.AuthModels;
 using Rent.Auth.DAL.Models;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.Auth.BLL.Services.Contracts;
 

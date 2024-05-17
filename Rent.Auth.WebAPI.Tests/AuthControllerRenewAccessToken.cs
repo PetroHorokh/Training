@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Rent.Auth.DAL.AuthModels;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.WebAPI.Tests;
 
@@ -10,7 +10,7 @@ public class AuthControllerRenewAccessToken : SetUp
     [Test]
     public async Task RenewAccessToken_ShouldReturnOkResultWithStringGetSingleResponse_WhenRenewed()
     {
-        Service.RenewAccessToken(Arg.Any<AuthToken>()).Returns(Task.FromResult(new GetSingleResponse<string>()));
+        UserService.RenewAccessToken(Arg.Any<AuthToken>()).Returns(Task.FromResult(new GetSingleResponse<string>()));
 
         var response = await Controller.RenewAccessToken(new AuthToken()) as OkObjectResult;
 
@@ -22,7 +22,7 @@ public class AuthControllerRenewAccessToken : SetUp
     [Test]
     public void Login_ShouldThrowException_WhenExceptionThrownInService()
     {
-        Service.RenewAccessToken(Arg.Any<AuthToken>()).Returns(Task.FromResult(new GetSingleResponse<string>
+        UserService.RenewAccessToken(Arg.Any<AuthToken>()).Returns(Task.FromResult(new GetSingleResponse<string>
         {
             Entity = null,
             Error = new Exception(),

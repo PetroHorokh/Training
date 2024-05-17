@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Rent.Auth.DAL.Context;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.Auth.DAL.RepositoryBase;
 

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Rent.Auth.DAL.AuthModels;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.WebAPI.Tests;
 
@@ -11,7 +11,7 @@ public class AuthControllerChangeEmail : SetUp
     [Test]
     public async Task ChangeEmail_ShouldReturnOkResultWithIdentityResultGetSingleResponse_WhenSuccessful()
     {
-        Service.ChangeEmailAsync(Arg.Any<EmailChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>()));
+        UserService.ChangeEmailAsync(Arg.Any<EmailChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>()));
 
         var response = await Controller.ChangeEmail(new EmailChange()) as OkObjectResult;
 
@@ -23,7 +23,7 @@ public class AuthControllerChangeEmail : SetUp
     [Test]
     public void ChangeEmail_ShouldThrowException_WhenExceptionThrownInService()
     {
-        Service.ChangeEmailAsync(Arg.Any<EmailChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>
+        UserService.ChangeEmailAsync(Arg.Any<EmailChange>()).Returns(Task.FromResult(new GetSingleResponse<IdentityResult>
         {
             Entity = null,
             Error = new Exception(),
