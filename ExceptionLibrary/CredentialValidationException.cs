@@ -1,4 +1,4 @@
-﻿namespace Rent.Auth.DAL.CustomExceptions;
+﻿namespace Rent.ExceptionLibrary;
 
 /// <summary>
 /// Exception when credential verifying data were wrong.

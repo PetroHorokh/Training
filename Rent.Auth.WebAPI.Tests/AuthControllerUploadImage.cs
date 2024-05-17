@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Rent.Auth.DAL.Models;
-using Rent.Auth.DAL.RequestsAndResponses;
 
 namespace Rent.Auth.WebAPI.Tests;
 

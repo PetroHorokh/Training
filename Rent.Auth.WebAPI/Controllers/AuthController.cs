@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.DAL.AuthModels;
 using System.Security.Claims;
-using Rent.Auth.DAL.CustomExceptions;
-using Rent.Auth.DAL.RequestsAndResponses;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
 
 
 namespace Rent.Auth.WebAPI.Controllers;

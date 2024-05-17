@@ -1,38 +1,40 @@
-﻿using Rent.DAL.DTO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface IRoomService
 {
-    Task<GetMultipleResponse<RoomToGetDto>> GetAllRoomsAsync();
+    Task<Response<IEnumerable<RoomToGetDto>>> GetAllRoomsAsync();
 
-    Task<GetMultipleResponse<RoomToGetDto>> GetPartialRoomsAsync(GetPartialRequest request);
+    Task<Response<IEnumerable<RoomToGetDto>>> GetPartialRoomsAsync(GetPartialRequest request);
 
-    Task<GetMultipleResponse<RoomTypeToGetDto>> GetAllRoomTypesAsync();
+    Task<Response<IEnumerable<RoomTypeToGetDto>>> GetAllRoomTypesAsync();
 
-    Task<GetSingleResponse<RoomToGetDto>> GetRoomByRoomIdAsync(Guid roomId);
+    Task<Response<RoomToGetDto>> GetRoomByRoomIdAsync(Guid roomId);
 
-    Task<GetSingleResponse<RoomToGetDto>> GetRoomByNumberAsync(int roomNumber);
+    Task<Response<RoomToGetDto>> GetRoomByNumberAsync(int roomNumber);
 
-    Task<GetMultipleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomsByRoomIdAsync(Guid roomId);
+    Task<Response<IEnumerable<AccommodationRoomToGetDto>>> GetAccommodationRoomsByRoomIdAsync(Guid roomId);
 
-    Task<GetSingleResponse<AccommodationRoomToGetDto>> GetAccommodationRoomByIdAsync(Guid accommodationRoomId);
+    Task<Response<AccommodationRoomToGetDto>> GetAccommodationRoomByIdAsync(Guid accommodationRoomId);
 
-    Task<CreationResponse> CreateRoomAsync(RoomToCreateDto room);
+    Task<Response<Guid>> CreateRoomAsync(RoomToCreateDto room);
 
-    Task<CreationDictionaryResponse> CreateRoomTypeAsync(RoomTypeToCreateDto roomType);
+    Task<Response<int>> CreateRoomTypeAsync(RoomTypeToCreateDto roomType);
 
-    Task<CreationResponse> CreateAccommodationRoomAsync(AccommodationRoomToCreateDto accommodationRoom);
+    Task<Response<Guid>> CreateAccommodationRoomAsync(AccommodationRoomToCreateDto accommodationRoom);
 
-    Task<CreationDictionaryResponse> CreateAccommodationAsync(AccommodationToCreateDto accommodation);
+    Task<Response<int>> CreateAccommodationAsync(AccommodationToCreateDto accommodation);
 
-    Task<ModifyResponse<Room>> DeleteRoomAsync(Guid roomId);
+    Task<Response<EntityEntry<Room>>> DeleteRoomAsync(Guid roomId);
 
-    Task<ModifyResponse<AccommodationRoom>> DeleteAccommodationRoomAsync(Guid accommodationRoomId);
+    Task<Response<EntityEntry<AccommodationRoom>>> DeleteAccommodationRoomAsync(Guid accommodationRoomId);
 
-    Task<GetMultipleResponse<AccommodationToGetDto>> GetAllAccommodationsAsync();
+    Task<Response<IEnumerable<AccommodationToGetDto>>> GetAllAccommodationsAsync();
     
-    Task<ModifyResponse<AccommodationRoom>> UpdateAccommodationRoom(AccommodationRoomToGetDto accommodationRoom);
+    Task<Response<EntityEntry<AccommodationRoom>>> UpdateAccommodationRoom(AccommodationRoomToGetDto accommodationRoom);
 }

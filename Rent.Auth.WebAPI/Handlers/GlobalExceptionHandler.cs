@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Rent.Auth.DAL.CustomExceptions;
 using Rent.Auth.WebAPI.ProblemDetails;
+using Rent.ExceptionLibrary;
 
 namespace Rent.Auth.WebAPI.Handlers;
 

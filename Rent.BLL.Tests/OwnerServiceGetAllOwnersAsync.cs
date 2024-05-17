@@ -4,7 +4,8 @@ using NSubstitute;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
 
 namespace Rent.BLL.Tests;
 
@@ -23,59 +24,48 @@ public class OwnerServiceGetAllOwnersAsync : SetUp
         var result = await OwnerService.GetAllOwnersAsync();
 
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.That(result.Count == 2);
-        Assert.That(result.Count, Is.EqualTo(result.Collection!.Count()));
+        Assert.IsEmpty(result.Exceptions);
+        Assert.That(result.Body!.Count() == 2);
     }
 
     [Test]
     public async Task
         GetAllOwnersAsync_ShouldReturnIEnumerableOfOwnerToGedDto_WhenIEnumerableOfOwnerToGedDtoNotPresentInMemoryCache()
     {
-        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Owner>
+        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Owner>>()
         {
-            Collection = new List<Owner> { new(), new() },
-            Count = 2,
-            Error = null,
-            TimeStamp = DateTime.Now
+            Body = new List<Owner> { new(), new() },
         }));
 
         var result = await OwnerService.GetAllOwnersAsync();
 
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.That(result.Count == 2);
-        Assert.That(result.Count, Is.EqualTo(result.Collection!.Count()));
+        Assert.IsEmpty(result.Exceptions);
+        Assert.That(result.Body!.Count() == 2);
     }
 
     [Test]
     public async Task GetAllOwnersAsync_ShouldReturnProcessException_WhenErrorOccuredRetrievingOwnerFromDatabase()
     {
-        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Owner>
+        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Owner>>()
         {
-            Collection = null,
-            Count = null,
-            Error = new Exception(),
-            TimeStamp = DateTime.Now
+            Exceptions = [new Exception()],
         }));
 
         var result = await OwnerService.GetAllOwnersAsync();
 
         Assert.NotNull(result);
-        Assert.That(result.Error, Is.TypeOf<ProcessException>());
-        Assert.NotNull(result.Error);
-        Assert.Null(result.Collection);
+        Assert.That(result.Exceptions.ElementAt(0), Is.TypeOf<Exception>());
+        Assert.IsNotEmpty(result.Exceptions);
+        Assert.IsEmpty(result.Body!);
     }
 
     [Test]
     public async Task GetAllOwnersAsync_ShouldReturnAutoMapperMappingException_WhenErrorOccuredWhileMappingEntities()
     {
-        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new GetMultipleResponse<Owner>
+        UnitOfWork.Owners.GetAllAsync().Returns(Task.FromResult(new Response<IEnumerable<Owner>>()
         {
-            Collection = new List<Owner> { new(), new() },
-            Count = 2,
-            Error = null,
-            TimeStamp = DateTime.Now
+            Body = new List<Owner> { new(), new() },
         }));
         Mapper.When(x => x.Map<OwnerToGetDto>(Arg.Any<Owner>())).Do(x => throw new AutoMapperMappingException());
 
@@ -84,8 +74,8 @@ public class OwnerServiceGetAllOwnersAsync : SetUp
         var result = await OwnerService.GetAllOwnersAsync();
 
         Assert.NotNull(result);
-        Assert.That(result.Error, Is.TypeOf<AutoMapperMappingException>());
-        Assert.NotNull(result.Error);
-        Assert.Null(result.Collection);
+        Assert.That(result.Exceptions.ElementAt(0), Is.TypeOf<AutoMapperMappingException>());
+        Assert.IsNotEmpty(result.Exceptions);
+        Assert.Null(result.Body);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Rent.Auth.DAL.CustomExceptions;
+namespace Rent.ExceptionLibrary;
 
 /// <summary>
 /// Exception thrown when IdentityResult has errors attached.

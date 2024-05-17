@@ -3,6 +3,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Rent.ADO.NET.Services;
 using Rent.BLL.Services;
@@ -22,7 +23,7 @@ namespace Rent.MVC.Controllers
 
                 if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<RentToGetDto>? rents))
                 {
-                    rents = (await tenantService.GetAllRentsAsync()).Collection!.ToList();
+                    rents = (await tenantService.GetAllRentsAsync()).Body!.ToList();
 
                     var cacheExpiryOptions = new MemoryCacheEntryOptions
                     {
@@ -58,14 +59,12 @@ namespace Rent.MVC.Controllers
             {
                 var result = await tenantService.CreateRentAsync(model);
 
-                if (result.Error is null)
+                if (!result.Exceptions.IsNullOrEmpty())
                 {
-                    return Ok();
+                    return StatusCode(409);
                 }
-                else
-                {
-                    return StatusCode(409, result.Error.Message);
-                }
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -79,8 +78,8 @@ namespace Rent.MVC.Controllers
             try
             {
                 var rooms = await roomService.GetAllRoomsAsync();
-                var lookup = (await ownerService.GetAllAssetsAsync()).Collection!
-                    .Join(rooms.Collection!, 
+                var lookup = (await ownerService.GetAllAssetsAsync()).Body!
+                    .Join(rooms.Body!, 
                         l => l.RoomId, 
                         room => room.RoomId, 
                         (l, room) => new 
@@ -108,7 +107,7 @@ namespace Rent.MVC.Controllers
         {
             try
             {
-                var lookup = (await tenantService.GetAllTenantsAsync()).Collection!
+                var lookup = (await tenantService.GetAllTenantsAsync()).Body!
                     .Select(i => new {
                         Value = i.TenantId,
                         Text = i.Name

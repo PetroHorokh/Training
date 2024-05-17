@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Rent.MVC.Helpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Rent.MVC.Controllers;
 
@@ -38,7 +39,7 @@ public class TenantController(
 
             if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<TenantToGetDto>? tenants))
             {
-                tenants = (await tenantService.GetAllTenantsAsync()).Collection!.ToList();
+                tenants = (await tenantService.GetAllTenantsAsync()).Body!.ToList();
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -74,14 +75,13 @@ public class TenantController(
         {
             var result = await tenantService.CreateTenantAsync(model);
 
-            if (result.Error is null)
+            if (!result.Exceptions.IsNullOrEmpty())
             {
-                return Ok();
+                return StatusCode(409);
+                
             }
-            else
-            {
-                return StatusCode(409, result.Error.Message);
-            }
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -94,7 +94,7 @@ public class TenantController(
     [Helpers.Authorize]
     public async Task<IActionResult> Put(Guid key, string values)
     {
-        var model = (await tenantService.GetTenantByIdAsync(key)).Entity;
+        var model = (await tenantService.GetTenantByIdAsync(key)).Body;
         if (model is null)
             return StatusCode(409, "Object not found");
 
@@ -121,7 +121,7 @@ public class TenantController(
     [Helpers.Authorize]
     public async Task<IActionResult> Delete(Guid key)
     {
-        var tenant = (await tenantService.GetTenantByIdAsync(key)).Entity;
+        var tenant = (await tenantService.GetTenantByIdAsync(key)).Body;
 
         if (tenant is null)
             return StatusCode(409, "Object not found");

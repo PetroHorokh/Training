@@ -1,23 +1,24 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.RepositoryBase;
 
 public interface IRepositoryBase<T> where T : class
 {
-    Task<GetMultipleResponse<T>> GetAllAsync(
+    Task<Response<IEnumerable<T>>> GetAllAsync(
         params string[] includes);
 
-    Task<GetMultipleResponse<T>> GetPartialAsync(
+    Task<Response<IEnumerable<T>>> GetPartialAsync(
         int skip, int take, params string[] includes);
 
-    Task<GetMultipleResponse<T>> GetByConditionAsync(
+    Task<Response<IEnumerable<T>>> GetByConditionAsync(
         Expression<Func<T, bool>> expression, params string[] includes);
 
-    Task<GetSingleResponse<T>> GetSingleByConditionAsync(
+    Task<Response<T>> GetSingleByConditionAsync(
         Expression<Func<T, bool>> expression, params string[] includes);
 
-    ModifyResponse<T> Update(T entity);
-    ModifyResponse<T> Delete(T entity);
+    Response<EntityEntry<T>> Update(T entity);
+    Response<EntityEntry<T>> Delete(T entity);
 }

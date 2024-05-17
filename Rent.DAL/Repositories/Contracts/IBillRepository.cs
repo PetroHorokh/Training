@@ -6,5 +6,4 @@ namespace Rent.DAL.Repositories.Contracts;
 
 public interface IBillRepository : IRepositoryBase<Bill>
 {
-    Task CreateWithProcedure(BillToCreateDto bill);
 }

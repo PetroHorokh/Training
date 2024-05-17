@@ -33,4 +33,8 @@
     <Folder Include="Repositories\Contract\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Rent.Response.Library\Rent.Response.Library.csproj" />
+  </ItemGroup>
+
 </Project>

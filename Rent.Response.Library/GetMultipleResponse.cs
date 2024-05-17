@@ -1,4 +1,6 @@
-﻿namespace Rent.DAL.RequestsAndResponses;
+﻿using Rent.Response.Library;
+
+namespace Rent.DAL.RequestsAndResponses;
 
 public class GetMultipleResponse<T> : BaseResponse where T : class
 {

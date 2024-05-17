@@ -1,38 +1,40 @@
-﻿using Rent.DAL.DTO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface ITenantService
 {
-    Task<GetMultipleResponse<TenantToGetDto>> GetAllTenantsAsync(params string[] includes);
+    Task<Response<IEnumerable<TenantToGetDto>>> GetAllTenantsAsync(params string[] includes);
 
-    Task<GetMultipleResponse<TenantToGetDto>> GetTenantsPartialAsync(GetPartialRequest request, params string[] includes);
+    Task<Response<IEnumerable<TenantToGetDto>>> GetTenantsPartialAsync(GetPartialRequest request, params string[] includes);
 
-    Task<GetMultipleResponse<TenantToGetDto>> GetFilterTenantsAsync(GetFilteredRequest filter, params string[] includes);
+    Task<Response<IEnumerable<TenantToGetDto>>> GetFilterTenantsAsync(GetFilteredRequest filter, params string[] includes);
 
-    Task<GetMultipleResponse<BillToGetDto>> GetAllBillsAsync(params string[] includes);
+    Task<Response<IEnumerable<BillToGetDto>>> GetAllBillsAsync(params string[] includes);
 
-    Task<GetMultipleResponse<RentToGetDto>> GetAllRentsAsync(params string[] includes);
+    Task<Response<IEnumerable<RentToGetDto>>> GetAllRentsAsync(params string[] includes);
 
-    Task<GetSingleResponse<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, params string[] includes);
+    Task<Response<TenantToGetDto>> GetTenantByIdAsync(Guid tenantId, params string[] includes);
 
-    Task<GetMultipleResponse<RentToGetDto>> GetTenantRentsAsync(Guid tenantId, params string[] includes);
+    Task<Response<IEnumerable<RentToGetDto>>> GetTenantRentsAsync(Guid tenantId, params string[] includes);
 
-    Task<GetMultipleResponse<BillToGetDto>> GetTenantBillsAsync(Guid tenantId, params string[] includes);
+    Task<Response<IEnumerable<BillToGetDto>>> GetTenantBillsAsync(Guid tenantId, params string[] includes);
 
-    Task<GetMultipleResponse<PaymentToGetDto>> GetTenantPaymentsAsync(Guid tenantId, params string[] includes);
+    Task<Response<IEnumerable<PaymentToGetDto>>> GetTenantPaymentsAsync(Guid tenantId, params string[] includes);
 
-    Task<CreationResponse> CreateTenantAsync(TenantToCreateDto tenant);
+    Task<Response<Guid>> CreateTenantAsync(TenantToCreateDto tenant);
 
-    Task<CreationResponse> CreateRentAsync(RentToCreateDto rent);
+    Task<Response<Guid>> CreateRentAsync(RentToCreateDto rent);
 
-    Task<ModifyResponse<Tenant>> UpdateTenantAsync(TenantToGetDto newTenant);
+    Task<Response<EntityEntry<Tenant>>> UpdateTenantAsync(TenantToGetDto newTenant);
 
-    Task<ModifyResponse<Tenant>> DeleteTenantAsync(Guid tenantId);
+    Task<Response<EntityEntry<Tenant>>> DeleteTenantAsync(Guid tenantId);
 
-    Task<ModifyResponse<DAL.Models.Rent>> CancelRentAsync(Guid rentId);
+    Task<Response<EntityEntry<DAL.Models.Rent>>> CancelRentAsync(Guid rentId);
 
-    Task<CreationResponse> CreatePaymentAsync(PaymentToCreateDto payment);
+    Task<Response<Guid>> CreatePaymentAsync(PaymentToCreateDto payment);
 }

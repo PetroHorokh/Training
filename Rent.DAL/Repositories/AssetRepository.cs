@@ -10,16 +10,17 @@ using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class AssetRepository(RentContext context, IConfiguration configuration, ILogger<RoomRepository> logger) : RepositoryBase<Asset>(context), IAssetRepository
 {
-    public async Task<CreationResponse> CreateWithProcedure(AssetToCreateDto asset)
+    public async Task<Response<Guid>> CreateWithProcedure(AssetToCreateDto asset)
     {
         logger.LogInformation("Entering AssetRepository, method CreateWithProcedure");
 
-        CreationResponse response = new();
+        var response = new Response<Guid>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -35,13 +36,13 @@ public class AssetRepository(RentContext context, IConfiguration configuration, 
             logger.LogInformation($"Parameters: @OwnerId = {asset.OwnerId}, @RoomId = {asset.RoomId}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.AssetId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting Asset entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

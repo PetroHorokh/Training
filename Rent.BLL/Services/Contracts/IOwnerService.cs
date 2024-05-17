@@ -1,30 +1,32 @@
-﻿using Rent.DAL.DTO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.BLL.Services.Contracts;
 
 public interface IOwnerService
 {
-    Task<GetMultipleResponse<OwnerToGetDto>> GetAllOwnersAsync(params string[] includes);
+    Task<Response<IEnumerable<OwnerToGetDto>>> GetAllOwnersAsync(params string[] includes);
 
-    Task<GetMultipleResponse<OwnerToGetDto>> GetOwnersPartialAsync(GetPartialRequest request, params string[] includes);
+    Task<Response<IEnumerable<OwnerToGetDto>>> GetOwnersPartialAsync(GetPartialRequest request, params string[] includes);
 
-    Task<GetMultipleResponse<AssetToGetDto>> GetAllAssetsAsync(params string[] includes);
+    Task<Response<IEnumerable<AssetToGetDto>>> GetAllAssetsAsync(params string[] includes);
 
-    Task<GetSingleResponse<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId, params string[] includes);
+    Task<Response<OwnerToGetDto>> GetOwnerByIdAsync(Guid ownerId, params string[] includes);
 
-    Task<GetSingleResponse<AssetToGetDto>> GetAssetByIdAsync(Guid assetId, params string[] includes);
+    Task<Response<AssetToGetDto>> GetAssetByIdAsync(Guid assetId, params string[] includes);
 
-    Task<GetMultipleResponse<AssetToGetDto>> GetOwnerAssetsAsync(Guid ownerId, params string[] includes);
+    Task<Response<IEnumerable<AssetToGetDto>>> GetOwnerAssetsAsync(Guid ownerId, params string[] includes);
 
-    Task<CreationResponse> CreateOwnerAsync(OwnerToCreateDto owner);
+    Task<Response<Guid>> CreateOwnerAsync(OwnerToCreateDto owner);
 
-    Task<ModifyResponse<Owner>> UpdateOwnerAsync(OwnerToGetDto newOwner);
+    Task<Response<EntityEntry<Owner>>> UpdateOwnerAsync(OwnerToGetDto newOwner);
 
-    Task<ModifyResponse<Owner>> DeleteOwnerAsync(Guid ownerId);
+    Task<Response<EntityEntry<Owner>>> DeleteOwnerAsync(Guid ownerId);
 
-    Task<CreationResponse> CreateAssetAsync(AssetToCreateDto asset);
+    Task<Response<Guid>> CreateAssetAsync(AssetToCreateDto asset);
 
-    Task<ModifyResponse<Asset>> DeleteAssetAsync(Guid assetId);
+    Task<Response<EntityEntry<Asset>>> DeleteAssetAsync(Guid assetId);
 }

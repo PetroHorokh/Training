@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExceptionLibrary\Rent.ExceptionLibrary.csproj" />
+    <ProjectReference Include="..\ExceptionLibrary\Rent.Exception.Library.csproj" />
     <ProjectReference Include="..\Rent.Response.Library\Rent.Response.Library.csproj" />
   </ItemGroup>
 

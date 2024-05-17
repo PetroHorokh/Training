@@ -3,10 +3,11 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.RequestsAndResponses;
-using Rent.WebAPI.CustomExceptions;
+using Rent.ExceptionLibrary;
 
 namespace Rent.WebAPI.Controllers;
 
@@ -25,23 +26,23 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <returns>Returns list of <see cref="OwnerToGetDto"/> owners</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet]
-    [AllowAnonymous]
+    [Authorize]
     [ResponseCache(CacheProfileName = "Default30")]
     public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetAllOwners()
     {
         var response = await ownerService.GetAllOwnersAsync();
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Count == 0)
+        if (!response.Body!.Any())
         {
             return new NoContentResult();
         }
 
-        return new OkObjectResult(response.Collection);
+        return new OkObjectResult(response.Body);
     }
 
 
@@ -55,7 +56,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
 
     [HttpGet("{skip:int}/{take:int}")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<OwnerToGetDto>>> GetPartialOwners(int skip, int take)
     {
         if (skip < 0 || take < 0)
@@ -71,17 +72,17 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         var response = await ownerService.GetOwnersPartialAsync(request);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        if (response.Count == 0)
+        if (!response.Body!.Any())
         {
             return new NoContentResult();
         }
 
-        return new OkObjectResult(response.Collection);
+        return new OkObjectResult(response.Body);
     }
 
     /// <summary>
@@ -92,24 +93,19 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <exception cref="NoEntitiesException">Thrown when there is no such owner with provided id</exception>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpGet("{ownerId:guid}")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<ActionResult<OwnerToGetDto>> GetOwnerById(Guid ownerId)
     {
         var response = await ownerService.GetOwnerByIdAsync(ownerId);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
-        var owner = response.Entity;
+        var owner = response.Body;
 
-        if (owner is null)
-        {
-            throw new NoEntitiesException("There is no such owner with given id.");
-        }
-
-        return owner;
+        return owner ?? throw new NoEntitiesException("There is no such owner with given id.");
     }
 
     /// <summary>
@@ -119,6 +115,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <returns>Returns created status if successful</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> PostOwner([FromBody] OwnerToCreateDto owner)
     {
         if (!TryValidateModel(owner))
@@ -128,9 +125,9 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         var response = await ownerService.CreateOwnerAsync(owner);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
         return Created();
@@ -143,13 +140,14 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <returns>Returns no content if successful</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpDelete("{ownerId:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteOwner(Guid ownerId)
     {
         var response = await ownerService.DeleteOwnerAsync(ownerId);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
         return NoContent();
@@ -162,6 +160,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <returns>Returns no content if successful</returns>
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> PutOwner([FromBody] OwnerToGetDto owner)
     {
         if (!TryValidateModel(owner))
@@ -171,9 +170,9 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         var response = await ownerService.UpdateOwnerAsync(owner);
 
-        if (response.Error is not null)
+        if (!response.Exceptions.IsNullOrEmpty())
         {
-            throw response.Error;
+            return StatusCode(500, response.Exceptions);
         }
 
         return NoContent();
@@ -188,16 +187,17 @@ public class OwnerController(IOwnerService ownerService) : Controller
     /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
     /// <exception cref="ValidationException">Thrown when patched owner has invalid data</exception>
     [HttpPatch("{ownerId:guid}")]
+    [Authorize]
     public async Task<IActionResult> PatchOwner(Guid ownerId, [FromBody] JsonPatchDocument<OwnerToGetDto> patch)
     {
         var response1 = await ownerService.GetOwnerByIdAsync(ownerId);
 
-        if (response1.Error is not null)
+        if (!response1.Exceptions.IsNullOrEmpty())
         {
-            throw response1.Error;
+            return StatusCode(500, response1.Exceptions);
         }
 
-        var patched = response1.Entity!;
+        var patched = response1.Body!;
         patch.ApplyTo(patched, ModelState);
 
         if (!TryValidateModel(patched))
@@ -207,9 +207,9 @@ public class OwnerController(IOwnerService ownerService) : Controller
 
         var response2 = await ownerService.UpdateOwnerAsync(patched);
 
-        if (response2.Error is not null)
+        if (!response2.Exceptions.IsNullOrEmpty())
         {
-            throw response2.Error;
+            return StatusCode(500, response2.Exceptions);
         }
 
         return NoContent();

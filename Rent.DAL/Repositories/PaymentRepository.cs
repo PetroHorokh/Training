@@ -10,16 +10,17 @@ using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class PaymentRepository(RentContext context, IConfiguration configuration, ILogger<PaymentRepository> logger) : RepositoryBase<Payment>(context), IPaymentRepository
 {
-    public async Task<CreationResponse> CreateWithProcedure(PaymentToCreateDto payment)
+    public async Task<Response<Guid>> CreateWithProcedure(PaymentToCreateDto payment)
     {
         logger.LogInformation("Entering PaymentRepository, method CreateWithProcedure");
 
-        CreationResponse response = new();
+        var response = new Response<Guid>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -36,13 +37,13 @@ public class PaymentRepository(RentContext context, IConfiguration configuration
             logger.LogInformation($"Parameters: @TenantId = {payment.TenantId}, @BillId = {payment.BillId}, @Amount = {payment.Amount}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.PaymentId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting Payment entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

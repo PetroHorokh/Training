@@ -1,4 +1,4 @@
-﻿namespace Rent.WebAPI.CustomExceptions;
+﻿namespace Rent.ExceptionLibrary;
 
 /// <summary>
 /// Exception when internal service error has arisen.

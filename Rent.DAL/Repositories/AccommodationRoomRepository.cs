@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Rent.DAL.Context;
@@ -9,17 +8,17 @@ using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
-using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class AccommodationRoomRepository(RentContext context, IConfiguration configuration, ILogger<AccommodationRoomRepository> logger) : RepositoryBase<AccommodationRoom>(context), IAccommodationRoomRepository
 {
-    public async Task<CreationResponse> CreateWithProcedure(AccommodationRoomToCreateDto accommodationRoom)
+    public async Task<Response<Guid>> CreateWithProcedure(AccommodationRoomToCreateDto accommodationRoom)
     {
         logger.LogInformation("Entering AccommodationRoomRepository, method CreateWithProcedure");
 
-        CreationResponse response = new();
+        var response = new Response<Guid>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -37,13 +36,13 @@ public class AccommodationRoomRepository(RentContext context, IConfiguration con
                 $@"Parameters: @AccommodationId = {accommodationRoom.AccommodationId}, @RoomId = {accommodationRoom.RoomId}, @Quantity = {accommodationRoom.Quantity}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.AccommodationRoomId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting AccommodationRoom entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

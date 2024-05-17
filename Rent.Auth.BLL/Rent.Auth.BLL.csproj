@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExceptionLibrary\Rent.Exception.Library.csproj" />
     <ProjectReference Include="..\Rent.Auth.DAL\Rent.Auth.DAL.csproj" />
   </ItemGroup>
 

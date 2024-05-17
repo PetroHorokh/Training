@@ -9,10 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.DAL.AuthModels;
-using Rent.Auth.DAL.CustomExceptions;
 using Rent.Auth.DAL.Models;
-using Rent.Auth.DAL.RequestsAndResponses;
 using Rent.Auth.DAL.UnitOfWork;
+using Rent.DAL.RequestsAndResponses;
+using Rent.ExceptionLibrary;
+using Rent.Response.Library;
 
 namespace Rent.Auth.BLL.Services;
 

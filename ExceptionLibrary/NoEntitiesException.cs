@@ -1,21 +1,21 @@
-﻿namespace Rent.Auth.DAL.CustomExceptions;
+﻿namespace Rent.ExceptionLibrary;
 
 /// <summary>
-/// Exception when internal service error has arisen.
+/// Exception when no entities were found.
 /// </summary>
 [Serializable]
-public class ProcessException : Exception
+public class NoEntitiesException : Exception
 {
     /// <summary>
     /// Parameterless constructor.
     /// </summary>
-    public ProcessException() { }
+    public NoEntitiesException() { }
 
     /// <summary>
     /// Constructor with message.
     /// </summary>
     /// <param name="message">Parameter to add explanation message to the exception</param>
-    public ProcessException(string message)
+    public NoEntitiesException(string message)
         : base(message) { }
 
     /// <summary>
@@ -23,6 +23,6 @@ public class ProcessException : Exception
     /// </summary>
     /// <param name="message">Parameter to add explanation message to the custom exception</param>
     /// <param name="inner">Parameter to add inner exception message to the custom exception</param>
-    public ProcessException(string message, Exception inner)
+    public NoEntitiesException(string message, Exception inner)
         : base(message, inner) { }
 }
