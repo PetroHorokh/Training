@@ -8,6 +8,7 @@ using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using System.Collections;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Rent.MVC.Controllers;
 
@@ -30,7 +31,7 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
             {
                 var response = await ownerService.GetAllOwnersAsync();
 
-                if (response.Error is not null)
+                if (!response.Exceptions.IsNullOrEmpty())
                 {
                     return StatusCode(500);
                 }
@@ -69,14 +70,12 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
         {
             var result = await ownerService.CreateOwnerAsync(model);
 
-            if (result.Error is null)
+            if (!result.Exceptions.IsNullOrEmpty())
             {
-                return Ok();
+                return StatusCode(500);
             }
-            else
-            {
-                return StatusCode(409, result.Error.Message);
-            }
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -90,17 +89,17 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
     public async Task<IActionResult> Put(Guid key, string values)
     {
         var response = await ownerService.GetOwnerByIdAsync(key);
-        if (response.Entity is null)
+        if (response.Body is null)
             return StatusCode(409, "Object not found");
 
         var valuesDict = JsonConvert.DeserializeObject<IDictionary>(values);
-        PopulateModel(response.Entity, valuesDict!);
+        PopulateModel(response.Body, valuesDict!);
 
         if (!TryValidateModel(response))
             return BadRequest(GetFullErrorMessage(ModelState));
         try
         {
-            _ = await ownerService.UpdateOwnerAsync(response.Entity);
+            _ = await ownerService.UpdateOwnerAsync(response.Body);
 
             return Ok();
         }
@@ -117,12 +116,12 @@ public class OwnerController(IOwnerService ownerService, IConnectedArchitecture 
     {
         var response = await ownerService.GetOwnerByIdAsync(ConvertTo<System.Guid>(key));
 
-        if (response.Entity is null)
+        if (response.Body is null)
             return StatusCode(409, "Object not found");
 
         try
         {
-            _ = await ownerService.DeleteOwnerAsync(response.Entity.OwnerId);
+            _ = await ownerService.DeleteOwnerAsync(response.Body.OwnerId);
 
             return Ok();
         }

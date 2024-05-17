@@ -11,16 +11,17 @@ using Rent.DAL.RepositoryBase;
 using System.Data;
 using System.Net;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class RoomTypeRepository(RentContext context, IConfiguration configuration, ILogger<RoomTypeRepository> logger) : RepositoryBase<RoomType>(context), IRoomTypeRepository
 {
-    public async Task<CreationDictionaryResponse> CreateWithProcedure(RoomTypeToCreateDto roomType)
+    public async Task<Response<int>> CreateWithProcedure(RoomTypeToCreateDto roomType)
     {
         logger.LogInformation("Entering RoomTypeRepository, method CreateWithProcedure");
 
-        CreationDictionaryResponse response = new();
+        var response = new Response<int>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -35,13 +36,13 @@ public class RoomTypeRepository(RentContext context, IConfiguration configuratio
             logger.LogInformation($"Parameters: @Number = {roomType.Name}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.RoomTypeId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting RoomType entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

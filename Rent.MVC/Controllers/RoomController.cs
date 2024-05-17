@@ -8,6 +8,7 @@ using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
 using System.Collections;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Rent.MVC.Controllers;
 
@@ -24,12 +25,13 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
             {
                 var response = await roomService.GetAllRoomsAsync();
 
-                if (response.Error is not null)
+                if (!response.Exceptions.IsNullOrEmpty())
                 {
-                    throw response.Error;
+                    return StatusCode(409, response.Exceptions);
+
                 }
 
-                rooms = response.Collection;
+                rooms = response.Body;
 
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
@@ -65,9 +67,10 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
         {
             var response = await roomService.CreateRoomAsync(model);
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                throw response.Error;
+                return StatusCode(409, response.Exceptions);
+
             }
 
             return Ok();
@@ -85,7 +88,7 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
     {
         var response1 = await roomService.GetRoomByRoomIdAsync(key);
 
-        var room = response1.Entity;
+        var room = response1.Body;
 
         if (room is null) return StatusCode(409, "Object not found");
 
@@ -93,9 +96,10 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
         {
             var response2 = await roomService.DeleteRoomAsync(room.RoomId);
 
-            if(response2.Error is not null)
+            if (!response2.Exceptions.IsNullOrEmpty())
             {
-                throw response2.Error;
+                return StatusCode(409, response2.Exceptions);
+
             }
 
             return Ok();
@@ -113,12 +117,13 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
         {
             var response = await roomService.GetAllRoomTypesAsync();
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                throw response.Error;
+                return StatusCode(409, response.Exceptions);
+
             }
 
-            var lookup = response.Collection!.Select(i => new
+            var lookup = response.Body!.Select(i => new
             {
                 Value = i.RoomTypeId,
                 Text = i.Name
@@ -139,12 +144,13 @@ public class RoomController(IRoomService roomService, IMemoryCache memoryCache) 
         {
             var response = await roomService.GetAllAccommodationsAsync();
 
-            if (response.Error is not null)
+            if (!response.Exceptions.IsNullOrEmpty())
             {
-                throw response.Error;
+                return StatusCode(409, response.Exceptions);
+
             }
 
-            var lookup = response.Collection!.Select(i => new
+            var lookup = response.Body!.Select(i => new
             {
                 Value = i.AccommodationId,
                 Text = i.Name

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Rent.DAL.Context;
@@ -10,16 +9,17 @@ using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.RequestsAndResponses;
+using Rent.Response.Library;
 
 namespace Rent.DAL.Repositories;
 
 public class AccommodationRepository(RentContext context, IConfiguration configuration, ILogger<AccommodationRepository> logger) : RepositoryBase<Accommodation>(context), IAccommodationRepository
 {
-    public async Task<CreationDictionaryResponse> CreateWithProcedure(AccommodationToCreateDto accommodation)
+    public async Task<Response<int>> CreateWithProcedure(AccommodationToCreateDto accommodation)
     {
         logger.LogInformation("Entering AccommodationRepository, method CreateWithProcedure");
 
-        CreationDictionaryResponse response = new();
+        var response = new Response<int>();
 
         await using var connection = new SqlConnection(configuration["ConnectionStrings:RentDatabase"]);
         await connection.OpenAsync();
@@ -34,13 +34,13 @@ public class AccommodationRepository(RentContext context, IConfiguration configu
             logger.LogInformation($@"Parameters: @Name = {accommodation.Name}");
             var result = (await connection.QueryAsync(storedProcedureName, parameters,
                 commandType: CommandType.StoredProcedure)).Select(entity => entity.AccommodationId).FirstOrDefault();
-            if (result != null) response.CreatedId = result;
+            if (result != null) response.Body = result;
             logger.LogInformation("Queried stored procedure successfully");
         }
         catch (SqlException ex)
         {
             logger.LogInformation($"An error occured while inserting Accommodation entity: {ex.Message}");
-            response.Error = ex;
+            response.Exceptions.ToList().Add(ex);
         }
         await connection.CloseAsync();
 

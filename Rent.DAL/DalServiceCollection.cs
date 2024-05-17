@@ -40,11 +40,6 @@ public static class DalServiceCollection
             () => provider.GetService<IAccommodationRoomRepository>()!,
             LazyThreadSafetyMode.ExecutionAndPublication));
 
-        services.AddScoped<IAddressRepository, AddressRepository>();
-        services.AddScoped(provider => new Lazy<IAddressRepository>(
-            () => provider.GetService<IAddressRepository>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
         services.AddScoped<IAssetRepository, AssetRepository>();
         services.AddScoped(provider => new Lazy<IAssetRepository>(
             () => provider.GetService<IAssetRepository>()!,
@@ -55,11 +50,6 @@ public static class DalServiceCollection
             () => provider.GetService<IBillRepository>()!,
             LazyThreadSafetyMode.ExecutionAndPublication));
 
-        services.AddScoped<IImpostRepository, ImpostRepository>();
-        services.AddScoped(provider => new Lazy<IImpostRepository>(
-            () => provider.GetService<IImpostRepository>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddScoped(provider => new Lazy<IOwnerRepository>(
             () => provider.GetService<IOwnerRepository>()!,
@@ -68,11 +58,6 @@ public static class DalServiceCollection
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped(provider => new Lazy<IPaymentRepository>(
             () => provider.GetService<IPaymentRepository>()!,
-            LazyThreadSafetyMode.ExecutionAndPublication));
-
-        services.AddScoped<IPriceRepository, PriceRepository>();
-        services.AddScoped(provider => new Lazy<IPriceRepository>(
-            () => provider.GetService<IPriceRepository>()!,
             LazyThreadSafetyMode.ExecutionAndPublication));
 
         services.AddScoped<IRentRepository, RentRepository>();

@@ -9,8 +9,4 @@ namespace Rent.DAL.Repositories;
 
 public class BillRepository(RentContext context) : RepositoryBase<Bill>(context), IBillRepository
 {
-    public async Task CreateWithProcedure(BillToCreateDto bill)
-    {
-        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Bill_Insert] @TenantId = '{bill.TenantId}', @AssetId = '{bill.AssetId}', @Amount = {bill.BillAmount}");
-    }
 }

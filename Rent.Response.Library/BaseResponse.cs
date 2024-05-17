@@ -1,4 +1,4 @@
-﻿namespace Rent.Auth.DAL.RequestsAndResponses;
+﻿namespace Rent.Response.Library;
 
 public abstract class BaseResponse
 {
