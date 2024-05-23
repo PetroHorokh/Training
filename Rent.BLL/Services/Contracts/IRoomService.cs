@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.BLL.Services.Contracts;
 

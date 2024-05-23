@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.DAL.AuthModels;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using Rent.AWS.S3.Services.Contracts;
 using Rent.ExceptionLibrary;
-using Rent.Response.Library;
+using Rent.ResponseAndRequestLibrary;
 
 
 namespace Rent.Auth.WebAPI.Controllers;
@@ -13,10 +15,10 @@ namespace Rent.Auth.WebAPI.Controllers;
 /// 
 /// </summary>
 /// <param name="userService"></param>
-///// <param name="s3Service"></param>
+/// <param name="s3Service"></param>
 [ApiController]
 [Route("[controller]/[action]")]
-public class AuthController(IUserService userService) : Controller
+public class AuthController(IUserService userService, IS3Service s3Service) : Controller
 {
     /// <summary>
     /// Sign up user
@@ -29,9 +31,9 @@ public class AuthController(IUserService userService) : Controller
     {
         var result = await userService.SignUpAsync(user);
 
-        if (result.Error is not null)
+        if (!result.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, result.Exceptions);
         }
 
         return NoContent();
@@ -42,15 +44,15 @@ public class AuthController(IUserService userService) : Controller
     /// </summary>
     /// <param name="token">Parameter to pass old access token and refresh token</param>
     /// <returns>Return <see cref="string"/> new access token</returns>
-    /// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
+    ///// <exception cref="ProcessException">Thrown when an error occured in user service</exception>
     [HttpGet]
     public async Task<IActionResult> RenewAccessToken([FromQuery] AuthToken token)
     {
         var result = await userService.RenewAccessToken(token);
 
-        if (result.Error is not null)
+        if (!result.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, result.Exceptions);
         }
 
         return Ok(result);
@@ -67,9 +69,9 @@ public class AuthController(IUserService userService) : Controller
     {
         var result = await userService.LoginAsync(signInUser);
 
-        if (result.Error is not null)
+        if (!result.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, result.Exceptions);
         }
 
         return Ok(result);
@@ -99,9 +101,9 @@ public class AuthController(IUserService userService) : Controller
     {
         var result = await userService.ChangeEmailAsync(emailChange);
 
-        if (result.Error is not null)
+        if (!result.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, result.Exceptions);
         }
 
         return Ok(result);
@@ -119,9 +121,9 @@ public class AuthController(IUserService userService) : Controller
     {
         var result = await userService.ChangePasswordAsync(passwordChange);
 
-        if (result.Error is not null)
+        if (!result.Exceptions.IsNullOrEmpty())
         {
-            throw result.Error;
+            return StatusCode(500, result.Exceptions);
         }
 
         return Ok(result);
@@ -140,26 +142,26 @@ public class AuthController(IUserService userService) : Controller
     {
         var userId = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        //var result1 = await s3Service.SendFileToS3Bucket(file);
+        var result1 = await s3Service.SendFileToS3Bucket(file);
 
         var request = new PostImageRequest()
         {
             Image = file,
             UserId = userId,
-            //Url = result1.Entity
+            Url = result1.Body
         };
 
         var result2 = await userService.PostImage(request);
 
-        if (result2.Error is not null)
+        if (!result2.Exceptions.IsNullOrEmpty())
         {
-            throw result2.Error;
+            return StatusCode(500, result2.Exceptions);
         }
 
-        //if (result1.Error is not null)
-        //{
-        //    result2.Error = result1.Error;
-        //}
+        if (!result1.Exceptions.IsNullOrEmpty())
+        {
+            return StatusCode(500, result1.Exceptions);
+        }
 
         return NoContent();
     }

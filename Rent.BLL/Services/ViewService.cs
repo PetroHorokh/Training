@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
+using Rent.DTOs.Library;
 
 namespace Rent.BLL.Services;
 

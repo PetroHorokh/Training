@@ -1,15 +1,12 @@
-﻿using Azure;
-using DevExtreme.AspNet.Data;
+﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
 using System.Collections;
 using Microsoft.IdentityModel.Tokens;
-using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
 
 namespace Rent.MVC.Controllers;
 

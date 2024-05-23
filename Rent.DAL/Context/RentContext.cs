@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Rent.DAL.Models;
-using temp;
+using Rent.Model.Library;
 
 namespace Rent.DAL.Context;
 
@@ -33,7 +32,7 @@ public sealed partial class RentContext : DbContext
 
     public required DbSet<Price> Prices { get; set; }
 
-    public required DbSet<Models.Rent> Rents { get; set; }
+    public required DbSet<Model.Library.Rent> Rents { get; set; }
 
     public required DbSet<Room> Rooms { get; set; }
 
@@ -148,7 +147,7 @@ public sealed partial class RentContext : DbContext
                 .HasForeignKey(d => d.RoomTypeId);
         });
 
-        modelBuilder.Entity<Models.Rent>(entity =>
+        modelBuilder.Entity<Model.Library.Rent>(entity =>
         {
             entity.ToTable("Rent");
 

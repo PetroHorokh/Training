@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
+using Rent.DTOs.Library;
+using Rent.Model.Library;
 
 namespace Rent.BLL.Profiles;
 

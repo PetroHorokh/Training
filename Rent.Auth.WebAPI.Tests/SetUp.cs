@@ -5,14 +5,15 @@ using NSubstitute;
 using NSubstitute.ClearExtensions;
 using Rent.Auth.BLL.Services.Contracts;
 using Rent.Auth.WebAPI.Controllers;
+using Rent.AWS.S3.Services.Contracts;
 
 namespace Rent.Auth.WebAPI.Tests;
 
 public class SetUp
 {
     public static readonly IUserService UserService = Substitute.For<IUserService>();
-    //public static readonly IS3Service S3Service = Substitute.For<IS3Service>();
-    public required AuthController Controller = new(UserService/*, S3Service*/);
+    public static readonly IS3Service S3Service = Substitute.For<IS3Service>();
+    public required AuthController Controller = new(UserService, S3Service);
     public required IFormFile File;
 
     [OneTimeSetUp]

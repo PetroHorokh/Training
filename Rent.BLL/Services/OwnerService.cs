@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
-using Rent.DAL.RequestsAndResponses;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
+using Rent.DTOs.Library;
 using Rent.ExceptionLibrary;
-using Rent.Response.Library;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.BLL.Services;
 
@@ -41,7 +40,7 @@ public class OwnerService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<OwnerS
     /// <param name="includes">Parameter to use include with EF to add necessary related tables</param>
     /// <exception cref="ProcessException">Exception thrown when error occured while making a request to database</exception>
     /// <exception cref="AutoMapperMappingException">Exception thrown when error occured while mapping entities</exception>
-    /// <returns>Returns <see cref="GetMultipleResponse{OwnerToGetDto}"/> entity with either IEnumerable of <see cref="OwnerToGetDto"/> entities or thrown exception</returns>
+    /// <returns>Returns <see cref="Response{IEnumerable}"/> of <see cref="OwnerToGetDto"/> entity with either IEnumerable of <see cref="OwnerToGetDto"/> entities or thrown exception</returns>
     public async Task<Response<IEnumerable<OwnerToGetDto>>> GetAllOwnersAsync(params string[] includes)
     {
         var result = new Response<IEnumerable<OwnerToGetDto>>();

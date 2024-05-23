@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Rent.Auth.DAL.AuthModels;
 using Rent.Auth.DAL.Models;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.Auth.BLL.Services.Contracts;
 
 public interface IUserService
 {
-    Task<GetSingleResponse<AuthToken>> LoginAsync(SignInUser signInModel);
+    Task<Response<AuthToken>> LoginAsync(SignInUser signInModel);
 
     Task Logout();
 
-    Task<GetSingleResponse<IdentityResult>> SignUpAsync(SignUpUser signUpModel);
+    Task<Response<IdentityResult>> SignUpAsync(SignUpUser signUpModel);
 
-    Task<GetSingleResponse<string>> RenewAccessToken(AuthToken token);
+    Task<Response<string>> RenewAccessToken(AuthToken token);
 
-    Task<GetSingleResponse<IdentityResult>> ChangePasswordAsync(PasswordChange changePassword);
+    Task<Response<IdentityResult>> ChangePasswordAsync(PasswordChange changePassword);
 
-    Task<GetSingleResponse<IdentityResult>> ChangeEmailAsync(EmailChange emailChange);
+    Task<Response<IdentityResult>> ChangeEmailAsync(EmailChange emailChange);
 
-    Task<GetSingleResponse<ModifyResponse<Image>>> PostImage(PostImageRequest request);
+    Task<Response<EntityEntry<Image>>> PostImage(PostImageRequest request);
 }

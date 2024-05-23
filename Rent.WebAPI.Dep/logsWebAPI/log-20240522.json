@@ -1,0 +1,50 @@
+[08:26:39 WRN] No store type was specified for the decimal property 'BillAmount' on entity type 'Bill'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[08:26:39 WRN] No store type was specified for the decimal property 'Fine' on entity type 'Impost'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[08:26:39 WRN] No store type was specified for the decimal property 'Tax' on entity type 'Impost'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[08:26:39 WRN] No store type was specified for the decimal property 'Value' on entity type 'Price'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[08:26:39 WRN] No store type was specified for the decimal property 'Area' on entity type 'Room'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[08:26:39 WRN] No store type was specified for the decimal property 'Price' on entity type 'VwTenantAssetPayment'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+[05:29:31 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:29:31 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:29:31 WRN] No XML encryptor configured. Key {988d7629-c956-4c67-a214-05cae3be184a} may be persisted to storage in unencrypted form.
+[05:35:17 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:35:17 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:35:17 WRN] No XML encryptor configured. Key {cab3661e-1a70-401c-966b-341aac415836} may be persisted to storage in unencrypted form.
+[05:38:24 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:38:24 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:38:24 WRN] No XML encryptor configured. Key {31f28afb-f819-4de7-9954-bb3e2b7a6e15} may be persisted to storage in unencrypted form.
+[05:42:32 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:42:32 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:42:32 WRN] No XML encryptor configured. Key {f199cece-8db4-4f17-b7f4-181dc42b59d3} may be persisted to storage in unencrypted form.
+[05:42:48 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:42:48 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:42:48 WRN] No XML encryptor configured. Key {208e74c3-bd69-4d3a-b07b-eeabda69dd92} may be persisted to storage in unencrypted form.
+[05:44:56 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:44:56 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:44:56 WRN] No XML encryptor configured. Key {6da6be73-b3fc-4f84-a280-58ff621c1cdf} may be persisted to storage in unencrypted form.
+[05:46:37 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:46:37 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:46:37 WRN] No XML encryptor configured. Key {0c3ad586-d844-47eb-b12d-46b72d2f59aa} may be persisted to storage in unencrypted form.
+[05:50:03 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:50:03 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:50:03 WRN] No XML encryptor configured. Key {7d65fb53-bd0a-4c47-8a75-35c5b930ad0e} may be persisted to storage in unencrypted form.
+[05:51:59 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[05:51:59 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[05:51:59 WRN] No XML encryptor configured. Key {7aad5579-20a6-4a4c-9f28-ccc9e4460601} may be persisted to storage in unencrypted form.
+[05:56:56 WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+[05:56:56 WRN] No XML encryptor configured. Key {8c505a22-6c0a-4fd4-b4a5-3a6498d1aac9} may be persisted to storage in unencrypted form.
+[06:05:54 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[06:05:54 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[06:05:54 WRN] No XML encryptor configured. Key {9755ae0d-0e0f-45b6-b82b-833c2d0c26cc} may be persisted to storage in unencrypted form.
+[06:10:13 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[06:10:13 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[06:10:13 WRN] No XML encryptor configured. Key {dc1b0151-51ea-426c-a214-b4a1a8d05b0d} may be persisted to storage in unencrypted form.
+[06:13:07 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[06:13:07 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[06:13:07 WRN] No XML encryptor configured. Key {7dcff827-d5e5-4fe3-9f8e-1010a014109b} may be persisted to storage in unencrypted form.
+[06:13:30 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[06:13:30 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[06:13:30 WRN] No XML encryptor configured. Key {8d9112d0-d1d6-4b29-9a72-b13b2f51ef6b} may be persisted to storage in unencrypted form.
+[06:18:01 WRN] Using an in-memory repository. Keys will not be persisted to storage.
+[06:18:01 WRN] Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+[06:18:01 WRN] No XML encryptor configured. Key {1a23169d-ac5d-432c-bb1f-47e11b54d856} may be persisted to storage in unencrypted form.

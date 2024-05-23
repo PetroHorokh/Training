@@ -1,6 +1,5 @@
-﻿using Rent.DAL.DTO;
-using Rent.DAL.Models;
-using Rent.DAL.RepositoryBase;
+﻿using Rent.DAL.RepositoryBase;
+using Rent.Model.Library;
 
 namespace Rent.DAL.Repositories.Contracts;
 

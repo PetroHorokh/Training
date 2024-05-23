@@ -1,5 +1,5 @@
-﻿using Rent.DAL.DTO;
-using temp;
+﻿using Rent.DTOs.Library;
+using Rent.Model.Library;
 
 namespace Rent.BLL.Profiles;
 

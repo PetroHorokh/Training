@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Rent.AWS.Lambda">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Rent.AWS.Lambda/bin/Release/net8.0/Rent.AWS.Lambda.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -3,14 +3,13 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
 using Rent.DAL.Context;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.DAL.Repositories;
 

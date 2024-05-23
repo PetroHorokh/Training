@@ -16,17 +16,9 @@ public static class BllServiceCollection
 {
     public static IServiceCollection BllServiceInject(this IServiceCollection services)
     {
-        IConfiguration config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(config)
-            .CreateLogger();
-
-        services.AddScoped<IConfiguration>(provider => config);
         services.AddLogging(builder => builder.AddSerilog(dispose: true));
+
+        services.AddMemoryCache();
 
         services.DalServiceInject();
 
@@ -36,8 +28,6 @@ public static class BllServiceCollection
         services.AddScoped<IViewService, ViewService>();
 
         services.AddAutoMapper(typeof(MappingProfile));
-
-        services.AddMemoryCache();
 
         return services;
     }

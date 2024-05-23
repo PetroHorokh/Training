@@ -5,14 +5,13 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Rent.ADO.NET.Services.Contracts;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using System.Collections;
 using Microsoft.AspNetCore.Authorization;
 using Rent.MVC.Helpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Rent.DTOs.Library;
 
 namespace Rent.MVC.Controllers;
 

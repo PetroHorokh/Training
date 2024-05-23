@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.RequestsAndResponses;
+using Rent.DTOs.Library;
 using Rent.ExceptionLibrary;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.WebAPI.Controllers;
 
@@ -198,7 +198,7 @@ public class OwnerController(IOwnerService ownerService) : Controller
         }
 
         var patched = response1.Body!;
-        patch.ApplyTo(patched, ModelState);
+        patch.ApplyTo(patched);
 
         if (!TryValidateModel(patched))
         {

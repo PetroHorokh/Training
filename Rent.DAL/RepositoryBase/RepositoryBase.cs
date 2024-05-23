@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Rent.DAL.Context;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.DAL.RepositoryBase;
 
@@ -33,7 +32,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;
@@ -62,7 +61,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;
@@ -90,7 +89,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;
@@ -118,7 +117,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;
@@ -136,7 +135,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;
@@ -152,7 +151,7 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
         }
         catch (Exception ex)
         {
-            result.Exceptions.ToList().Add(ex);
+            result.Exceptions.Add(ex);
         }
 
         return result;

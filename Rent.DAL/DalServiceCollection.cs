@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rent.DAL.Context;
-using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.Repositories;
 using Rent.DAL.RepositoryBase;
@@ -20,11 +19,6 @@ public static class DalServiceCollection
             .AddJsonFile("./appsettings.json")
             .Build();
 
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(config)
-            .CreateLogger();
-
-        services.AddSingleton<IConfiguration>(provider => config);
         services.AddLogging(builder => builder.AddSerilog(dispose: true));
 
         services.AddDbContext<RentContext>(option

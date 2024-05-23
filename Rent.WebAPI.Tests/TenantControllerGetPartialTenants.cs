@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Rent.DAL.DTO;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.WebAPI.Tests;
 

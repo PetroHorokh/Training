@@ -2,12 +2,11 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using Rent.DAL.UnitOfWork;
 using Microsoft.IdentityModel.Tokens;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.BLL.Services;
 

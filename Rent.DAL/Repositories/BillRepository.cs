@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Rent.DAL.Context;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
+﻿using Rent.DAL.Context;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
+using Rent.Model.Library;
 
 namespace Rent.DAL.Repositories;
 

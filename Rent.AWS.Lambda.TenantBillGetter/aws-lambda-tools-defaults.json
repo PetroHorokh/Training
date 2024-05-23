@@ -1,0 +1,17 @@
+{
+  "profile": "VisualStudioAccessProvider",
+  "region": "eu-north-1",
+  "configuration": "Release",
+  "function-architecture": "x86_64",
+  "function-runtime": "dotnet8",
+  "function-memory-size": 512,
+  "function-timeout": 15,
+  "function-handler": "LambdaTest::LambdaTest.LambdaHandler::handleRequest",
+  "framework": "net8.0",
+  "function-name": "TenantBillGetter",
+  "function-description": "",
+  "package-type": "Zip",
+  "tracing-mode": "PassThrough",
+  "environment-variables": "",
+  "image-tag": ""
+}

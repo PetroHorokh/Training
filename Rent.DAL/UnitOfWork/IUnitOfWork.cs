@@ -1,6 +1,4 @@
-﻿using Rent.DAL.Models;
-using Rent.DAL.Repositories.Contracts;
-using Rent.DAL.RepositoryBase;
+﻿using Rent.DAL.Repositories.Contracts;
 
 namespace Rent.DAL.UnitOfWork;
 

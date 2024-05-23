@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rent.Response.Library\Rent.Response.Library.csproj" />
+    <ProjectReference Include="..\Rent.Dtos.Library\Rent.DTOs.Library.csproj" />
+    <ProjectReference Include="..\Rent.ExceptionLibrary\Rent.ExceptionLibrary.csproj" />
+    <ProjectReference Include="..\Rent.ResponseAndRequestLibrary\Rent.ResponseAndRequestLibrary.csproj" />
   </ItemGroup>
 
 </Project>

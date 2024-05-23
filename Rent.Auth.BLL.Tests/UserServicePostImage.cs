@@ -5,19 +5,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NSubstitute;
 using Rent.Auth.DAL.AuthModels;
 using Rent.Auth.DAL.Models;
-using Rent.Response.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.Auth.BLL.Tests;
 
 public class UserServicePostImage : SetUp
 {
     [Test]
-    public async Task PostImage_ShouldReturnImageModifyResponseGetSingleResponseWithoutException_WhenSuccessful()
+    public async Task PostImage_ShouldReturnNoExceptions_WhenSuccessful()
     {
-        UnitOfWork.Images.Add(Arg.Any<Image>()).Returns(new ModifyResponse<Image>
+        UnitOfWork.Images.Add(Arg.Any<Image>()).Returns(new Response<EntityEntry<Image>>()
         {
-            Status = null,
-            Error = null,
+            Body = null,
+            Exceptions = new List<Exception>(),
             TimeStamp = DateTime.Now
         });
 
@@ -29,17 +29,16 @@ public class UserServicePostImage : SetUp
         });
 
         Assert.NotNull(response);
-        Assert.NotNull(response.Entity);
-        Assert.Null(response.Error);
+        Assert.That(response.Exceptions, Is.Empty);
     }
 
     [Test]
     public async Task PostImage_ShouldReturnImageModifyResponseGetSingleResponseWithException_WhenExceptionThrownInDALLayer()
     {
-        UnitOfWork.Images.Add(Arg.Any<Image>()).Returns(new ModifyResponse<Image>
+        UnitOfWork.Images.Add(Arg.Any<Image>()).Returns(new Response<EntityEntry<Image>>()
         {
-            Status = null,
-            Error = new Exception(),
+            Body = null,
+            Exceptions = new List<Exception>(),
             TimeStamp = DateTime.Now
         });
 
@@ -51,7 +50,7 @@ public class UserServicePostImage : SetUp
         });
 
         Assert.NotNull(response);
-        Assert.Null(response.Entity);
-        Assert.NotNull(response.Error);
+        Assert.Null(response.Body);
+        Assert.NotNull(response.Exceptions);
     }
 }

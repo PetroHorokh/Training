@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.DAL.RepositoryBase;
 
