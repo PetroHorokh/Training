@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Rent.Auth.DAL.Models;
-using Rent.DAL.Models;
 
 namespace Rent.MVC.Helpers;
 

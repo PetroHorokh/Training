@@ -1,15 +1,14 @@
-using System.Text;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Rent.ADO.NET;
-using Rent.BLL;
 using Rent.WebAPI.Handlers;
 using Serilog;
-using System.Text.Json.Serialization;
-using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
+using System.Text.Json.Serialization;
+using Rent.BLL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +21,7 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(config)
     .CreateLogger();
 
-builder.Host.UseSerilog(Log.Logger);
+//builder.Host.UseSerilog(Log.Logger);
 
 builder.Services.AddCors(option => option.AddPolicy("Policy",
     policyBuilder =>
@@ -63,23 +62,22 @@ builder.Services.AddApiVersioning(x =>
     x.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
 })
     .AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'V";
-    options.SubstituteApiVersionInUrl = true;
-});
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.BllServiceInject();
-builder.Services.AdoNetServiceInject();
 
 builder.Services.AddAuthentication(option =>
-    {
-        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(option =>
     {
         option.SaveToken = true;
@@ -101,8 +99,8 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
 {
-    setup.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
-        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+    //setup.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+    //    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
@@ -140,8 +138,6 @@ app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
 
-app.UseSerilogRequestLogging();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -162,7 +158,7 @@ app.Use(async (context, next) =>
 
     await next();
 });
-    
+
 app.MapControllers();
 
 app.Run();

@@ -4,17 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Rent.DAL.Context;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 using System.Data;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.DAL.Repositories;
 
-public class RentRepository(RentContext context, IConfiguration configuration, ILogger<RentRepository> logger) : RepositoryBase<Models.Rent>(context), IRentRepository
+public class RentRepository(RentContext context, IConfiguration configuration, ILogger<RentRepository> logger) : RepositoryBase<Model.Library.Rent>(context), IRentRepository
 {
     public async Task<Response<Guid>> CreateWithProcedure(RentToCreateDto rent)
     {

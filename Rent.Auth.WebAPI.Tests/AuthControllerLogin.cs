@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Rent.Auth.DAL.AuthModels;
-using Rent.DAL.RequestsAndResponses;
+using Rent.ResponseAndRequestLibrary;
 
 
 namespace Rent.Auth.WebAPI.Tests;
@@ -11,26 +12,29 @@ public class AuthControllerLogin : SetUp
     [Test]
     public async Task Login_ShouldReturnOkResultWithAuthTokenGetSingleResponse_WhenCorrectlyAuthorized()
     {
-        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>()));
+        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new Response<AuthToken>()));
 
         var response = await Controller.Login(new SignInUser()) as OkObjectResult;
 
         Assert.NotNull(response);
         Assert.That(response!.StatusCode, Is.EqualTo(200));
-        Assert.That(response.Value, Is.TypeOf<GetSingleResponse<AuthToken>>());
+        Assert.That(response.Value, Is.TypeOf<Response<AuthToken>>());
     }
 
     [Test]
-    public void Login_ShouldThrowException_WhenExceptionThrownInService()
+    public async Task Login_ShouldThrowException_WhenExceptionThrownInService()
     {
-        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new GetSingleResponse<AuthToken>
+        UserService.LoginAsync(Arg.Any<SignInUser>()).Returns(Task.FromResult(new Response<AuthToken>
         {
-            Entity = null,
-            Error = new Exception(),
-            TimeStamp = DateTime.Now
+            Exceptions = [new(), new()]
         }));
 
-        Assert.ThrowsAsync<Exception>(async () => await Controller.Login(new SignInUser()));
+        var result = await Controller.Login(new SignInUser()) as ObjectResult;
+
+        Assert.NotNull(result);
+        Assert.That(result!.StatusCode, Is.EqualTo(500));
+        Assert.That(result!.Value, Is.Not.Empty);
+        Assert.That(result.Value as List<Exception>, Has.Count.EqualTo(2));
     }
 
 }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
 using System.Collections;
 using System.Globalization;
 using Rent.Auth.DAL.AuthModels;
+using Rent.DTOs.Library;
 using static System.String;
 
 namespace Rent.MVC.Controllers;

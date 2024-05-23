@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Rent.ADO.NET.Services;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
+using Rent.DTOs.Library;
 
 namespace Rent.MVC.Controllers
 {

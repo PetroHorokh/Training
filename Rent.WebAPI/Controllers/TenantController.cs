@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.RequestsAndResponses;
+using Rent.DTOs.Library;
 using Rent.ExceptionLibrary;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.WebAPI.Controllers;
 
@@ -31,6 +31,31 @@ public class TenantController(ITenantService tenantService) : Controller
     public async Task<ActionResult<IEnumerable<TenantToGetDto>>> GetAllTenants()
     {
         var response = await tenantService.GetAllTenantsAsync();
+
+        if (!response.Exceptions.IsNullOrEmpty())
+        {
+            return StatusCode(500, response.Exceptions);
+        }
+
+        if (!response.Body!.Any())
+        {
+            return new NoContentResult();
+        }
+
+        return response.Body!.ToList();
+    }
+
+    /// <summary>
+    /// Gets all data for bills
+    /// </summary>
+    /// <returns>Returns list of <see cref="BillToGetDto"/> bills</returns>
+    /// <exception cref="ProcessException">Thrown when an error occured inside services</exception>
+    [HttpGet]
+    [AllowAnonymous]
+    [ResponseCache(CacheProfileName = "Default30")]
+    public async Task<ActionResult<IEnumerable<BillToGetDto>>> GetAllBills()
+    {
+        var response = await tenantService.GetAllBillsAsync();
 
         if (!response.Exceptions.IsNullOrEmpty())
         {
@@ -226,7 +251,7 @@ public class TenantController(ITenantService tenantService) : Controller
         }
 
         var patched = response1.Body!;
-        patch.ApplyTo(patched, ModelState);
+        patch.ApplyTo(patched);
 
         if (!TryValidateModel(patched))
         {

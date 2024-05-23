@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Rent.Auth.WebAPI.ProblemDetails;
-using Rent.ExceptionLibrary;
 
 namespace Rent.Auth.WebAPI.Handlers;
 
@@ -23,22 +22,22 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
     {
         CustomProblemDetails problemDetails = exception switch
         {
-            ProcessException => new CustomProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
-            },
-            NoEntitiesException => new CustomProblemDetails
-            {
-                Status = StatusCodes.Status204NoContent, Detail = exception.Message
-            },
-            CredentialValidationException => new CustomProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
-            },
-            IdentityException => new CustomProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
-            },
+            //ProcessException => new CustomProblemDetails
+            //{
+            //    Status = StatusCodes.Status500InternalServerError, Detail = exception.Message
+            //},
+            //NoEntitiesException => new CustomProblemDetails
+            //{
+            //    Status = StatusCodes.Status204NoContent, Detail = exception.Message
+            //},
+            //CredentialValidationException => new CustomProblemDetails
+            //{
+            //    Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
+            //},
+            //IdentityException => new CustomProblemDetails
+            //{
+            //    Status = StatusCodes.Status401Unauthorized, Detail = exception.Message
+            //},
             _ => new CustomProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError, Detail = "Internal server error"

@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rent.Auth.BLL\Rent.Auth.BLL.csproj" />
+    <ProjectReference Include="..\Rent.AWS\Rent.AWS.S3.csproj" />
   </ItemGroup>
 
 </Project>

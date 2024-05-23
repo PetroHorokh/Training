@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
-using Rent.DAL.RequestsAndResponses;
-using Rent.Response.Library;
+using Rent.DTOs.Library;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.BLL.Services.Contracts;
 
@@ -34,7 +33,7 @@ public interface ITenantService
 
     Task<Response<EntityEntry<Tenant>>> DeleteTenantAsync(Guid tenantId);
 
-    Task<Response<EntityEntry<DAL.Models.Rent>>> CancelRentAsync(Guid rentId);
+    Task<Response<EntityEntry<Model.Library.Rent>>> CancelRentAsync(Guid rentId);
 
     Task<Response<Guid>> CreatePaymentAsync(PaymentToCreateDto payment);
 }

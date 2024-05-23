@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  rent.webapi:
+    image: ${DOCKER_REGISTRY-}rentwebapi
+    build:
+      context: Rent.WebAPI
+      dockerfile: Dockerfile

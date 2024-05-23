@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Rent.DAL.DTO;
-using temp;
+﻿using Rent.DTOs.Library;
 
 namespace Rent.BLL.Services.Contracts;
 

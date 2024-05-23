@@ -4,8 +4,7 @@ using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Rent.AWS.S3.Services.Contracts;
-using Rent.DAL.RequestsAndResponses;
-using Rent.ExceptionLibrary;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.AWS.S3.Services;
 
@@ -20,9 +19,9 @@ public class S3Service(IConfiguration config) : IS3Service
     /// </summary>
     /// <param name="file">Parameter with file to upload file</param>
     /// <returns></returns>
-    public async Task<GetSingleResponse<string>> SendFileToS3Bucket(IFormFile file)
+    public async Task<Response<string>> SendFileToS3Bucket(IFormFile file)
     {
-        var result = new GetSingleResponse<string>();
+        var result = new Response<string>();
 
         try
         {
@@ -43,11 +42,11 @@ public class S3Service(IConfiguration config) : IS3Service
             var fileTransferUtility = new TransferUtility(s3Client);
             result.TimeStamp = DateTime.Now;
             await fileTransferUtility.UploadAsync(filePath, bucketName, keyName);
-            result.Entity = $"https://{bucketName}.s3.{region}.amazonaws.com/{keyName}";
+            result.Body = $"https://{bucketName}.s3.{region}.amazonaws.com/{keyName}";
         }
         catch (AmazonS3Exception ex)
         {
-            result.Error = new ProcessException("An error occured while uploading file to bucket", ex);
+            result.Exceptions.Add(new Exception("An error occured while uploading file to bucket", ex));
         }
 
         return result;

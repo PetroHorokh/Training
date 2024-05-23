@@ -3,14 +3,13 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
-using Rent.DAL.Models;
-using Rent.DAL.RequestsAndResponses;
 using Rent.DAL.UnitOfWork;
-using Rent.ExceptionLibrary;
-using Rent.Response.Library;
 using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Rent.DTOs.Library;
+using Rent.ExceptionLibrary;
+using Rent.Model.Library;
+using Rent.ResponseAndRequestLibrary;
 
 namespace Rent.BLL.Services;
 
@@ -48,7 +47,7 @@ public class TenantService(
     /// <param name="includes">Parameter to use include with EF to add necessary related tables</param>
     /// <exception cref="ProcessException">Exception thrown when error occured while making a request to database</exception>
     /// <exception cref="AutoMapperMappingException">Exception thrown when error occured while mapping entities</exception>
-    /// <returns>Returns <see cref="GetMultipleResponse{TenantToGetDto}"/> entity with either IEnumerable of <see cref="TenantToGetDto"/> entities or thrown exception</returns>
+    /// <returns>Returns <see cref="Response{IEnumerable}"/> of <see cref="TenantToGetDto"/> entity with either IEnumerable of <see cref="TenantToGetDto"/> entities or thrown exception</returns>
     public async Task<Response<IEnumerable<TenantToGetDto>>> GetAllTenantsAsync(
         params string[] includes)
     {
@@ -545,9 +544,9 @@ public class TenantService(
         return result;
     }
 
-    public async Task<Response<EntityEntry<DAL.Models.Rent>>> CancelRentAsync(Guid rentId)
+    public async Task<Response<EntityEntry<Model.Library.Rent>>> CancelRentAsync(Guid rentId)
     {
-        var result = new Response<EntityEntry<DAL.Models.Rent>>();
+        var result = new Response<EntityEntry<Model.Library.Rent>>();
 
         try
         {

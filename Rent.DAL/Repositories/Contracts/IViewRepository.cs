@@ -1,5 +1,4 @@
-﻿using Rent.DAL.DTO;
-using temp;
+﻿using Rent.Model.Library;
 
 namespace Rent.DAL.Repositories.Contracts;
 

@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Rent.ADO.NET.Services.Contracts;
-using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
-using Rent.DAL.DTO;
 using System.Collections;
 using Microsoft.IdentityModel.Tokens;
+using Rent.DTOs.Library;
 
 namespace Rent.MVC.Controllers;
 
